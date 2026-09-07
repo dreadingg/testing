@@ -1026,15 +1026,14 @@
 
     <script>
         // =============================================
-        // ===== EXTERNAL TAB BLOCKER =====
+        // ===== EXTERNAL LINK BLOCKER =====
         // =============================================
         (function() {
             'use strict';
 
             // 1. BLOCK window.open() - stops popups/tabs
-            const originalOpen = window.open;
-            window.open = function(url, name, specs) {
-                console.warn('🛡️ Blocked: window.open() to', url);
+            window.open = function(url) {
+                console.warn('🛡️ Blocked popup:', url);
                 const iframe = document.getElementById('mirror-iframe');
                 if (iframe && url) {
                     iframe.src = url;
@@ -1044,24 +1043,19 @@
                 return null;
             };
 
-            // 2. BLOCK all links from opening new tabs
+            // 2. FORCE all links to open in the same page
             function fixLinks() {
                 document.querySelectorAll('a').forEach(function(link) {
                     if (link.target === '_blank' || link.target === '_new') {
                         link.target = '_self';
                         link.removeAttribute('rel');
                     }
+                    
                     link.addEventListener('click', function(e) {
-                        if (this.target === '_blank' || this.target === '_new') {
+                        const iframe = document.getElementById('mirror-iframe');
+                        if (iframe && this.href) {
                             e.preventDefault();
-                            e.stopPropagation();
-                            const iframe = document.getElementById('mirror-iframe');
-                            if (iframe && this.href) {
-                                iframe.src = this.href;
-                            } else if (this.href) {
-                                window.location.href = this.href;
-                            }
-                            return false;
+                            iframe.src = this.href;
                         }
                     });
                 });
@@ -1071,13 +1065,13 @@
             document.addEventListener('auxclick', function(e) {
                 if (e.button === 1) {
                     const link = e.target.closest('a');
-                    if (link) {
+                    if (link && link.href) {
                         e.preventDefault();
                         e.stopPropagation();
                         const iframe = document.getElementById('mirror-iframe');
-                        if (iframe && link.href) {
+                        if (iframe) {
                             iframe.src = link.href;
-                        } else if (link.href) {
+                        } else {
                             window.location.href = link.href;
                         }
                         return false;
@@ -1085,17 +1079,17 @@
                 }
             }, true);
 
-            // 4. BLOCK Ctrl+Click (opens new tab)
+            // 4. BLOCK Ctrl+Click and Shift+Click
             document.addEventListener('click', function(e) {
-                if (e.ctrlKey || e.metaKey) {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
                     const link = e.target.closest('a');
-                    if (link) {
+                    if (link && link.href) {
                         e.preventDefault();
                         e.stopPropagation();
                         const iframe = document.getElementById('mirror-iframe');
-                        if (iframe && link.href) {
+                        if (iframe) {
                             iframe.src = link.href;
-                        } else if (link.href) {
+                        } else {
                             window.location.href = link.href;
                         }
                         return false;
@@ -1103,48 +1097,28 @@
                 }
             }, true);
 
-            // 5. BLOCK Shift+Click (opens new window)
-            document.addEventListener('click', function(e) {
-                if (e.shiftKey) {
-                    const link = e.target.closest('a');
-                    if (link) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const iframe = document.getElementById('mirror-iframe');
-                        if (iframe && link.href) {
-                            iframe.src = link.href;
-                        } else if (link.href) {
-                            window.location.href = link.href;
-                        }
-                        return false;
-                    }
-                }
-            }, true);
-
-            // 6. WATCH for dynamically added links
+            // 5. WATCH for new links added to the page
             const observer = new MutationObserver(function() {
                 fixLinks();
             });
             observer.observe(document.body, { childList: true, subtree: true });
 
-            // 7. OVERRIDE anchor target property
+            // 6. OVERRIDE any attempt to set target="_blank"
             const originalSetAttribute = Element.prototype.setAttribute;
             Element.prototype.setAttribute = function(name, value) {
                 if (name === 'target' && (value === '_blank' || value === '_new')) {
-                    console.warn('🛡️ Blocked: setting target="' + value + '"');
                     return originalSetAttribute.call(this, 'target', '_self');
                 }
                 return originalSetAttribute.call(this, name, value);
             };
 
-            // 8. OVERRIDE anchor target property (direct)
+            // 7. OVERRIDE target property directly
             Object.defineProperty(HTMLAnchorElement.prototype, 'target', {
                 get: function() {
                     return this.getAttribute('target') || '';
                 },
                 set: function(value) {
                     if (value === '_blank' || value === '_new') {
-                        console.warn('🛡️ Blocked: setting target="' + value + '"');
                         this.setAttribute('target', '_self');
                     } else {
                         this.setAttribute('target', value);
@@ -1152,10 +1126,10 @@
                 }
             });
 
-            // 9. RUN on load
+            // 8. RUN on page load
             document.addEventListener('DOMContentLoaded', fixLinks);
 
-            console.log('🛡️ Mirror: External tab blocker active');
+            console.log('🛡️ Mirror: All links stay on this page');
         })();
 
         // =============================================
