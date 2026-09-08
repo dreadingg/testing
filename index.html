@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mirror</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -48,41 +49,26 @@
             z-index: 50;
             cursor: pointer;
             animation: floatBounce 2.5s ease-in-out infinite;
-            transition: opacity 0.4s ease;
             background: rgba(10, 10, 20, 0.3);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             padding: 8px 16px;
             border-radius: 20px;
             border: 1px solid rgba(26, 26, 46, 0.2);
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: border-color 0.3s;
         }
-        .floating-arrow:hover {
-            border-color: rgba(106, 106, 255, 0.3);
-        }
-        .floating-arrow .arrow-text {
-            font-size: 9px;
-            color: #555566;
-            letter-spacing: 1.5px;
-            text-transform: lowercase;
-            font-weight: 300;
-        }
-        .floating-arrow .arrow-icon {
-            font-size: 16px;
-            color: #6a6aff;
-            transition: transform 0.4s ease;
-        }
-        .floating-arrow.active .arrow-icon {
-            transform: rotate(180deg);
-        }
+        .floating-arrow:hover { border-color: rgba(106, 106, 255, 0.3); }
+        .floating-arrow .arrow-text { font-size: 9px; color: #555566; letter-spacing: 1.5px; text-transform: lowercase; }
+        .floating-arrow .arrow-icon { font-size: 16px; color: #6a6aff; transition: transform 0.4s ease; }
+        .floating-arrow.active .arrow-icon { transform: rotate(180deg); }
         @keyframes floatBounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(6px); }
         }
 
-        /* ===== CHANNELS CONTAINER ===== */
+        /* ===== CHANNELS ===== */
         .channels-container {
             position: fixed;
             top: 72px;
@@ -109,7 +95,6 @@
             padding: 8px 16px;
             background: rgba(10, 10, 20, 0.5);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(26, 26, 46, 0.2);
             border-radius: 8px;
             color: #8888aa;
@@ -128,13 +113,9 @@
             background: rgba(106, 106, 255, 0.05);
             color: #d0d0f0;
         }
-        .channel-btn .badge-channel {
-            font-size: 8px;
-            color: #444466;
-            letter-spacing: 0.5px;
-        }
+        .channel-btn .badge-channel { font-size: 8px; color: #444466; letter-spacing: 0.5px; }
 
-        /* ===== CHANNEL MODALS ===== */
+        /* ===== MODALS ===== */
         .channel-modal {
             display: none;
             position: fixed;
@@ -144,7 +125,6 @@
             height: 100vh;
             background: rgba(5, 5, 8, 0.85);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             z-index: 100;
             justify-content: center;
             align-items: center;
@@ -169,19 +149,10 @@
             transform: scale(0.95);
             transition: transform 0.4s ease;
         }
-        .channel-modal.show .modal-content {
-            transform: scale(1);
-        }
-        .channel-modal .modal-content::-webkit-scrollbar {
-            width: 3px;
-        }
-        .channel-modal .modal-content::-webkit-scrollbar-track {
-            background: rgba(8, 8, 15, 0.2);
-        }
-        .channel-modal .modal-content::-webkit-scrollbar-thumb {
-            background: #1a1a3e;
-            border-radius: 2px;
-        }
+        .channel-modal.show .modal-content { transform: scale(1); }
+        .channel-modal .modal-content::-webkit-scrollbar { width: 3px; }
+        .channel-modal .modal-content::-webkit-scrollbar-track { background: rgba(8, 8, 15, 0.2); }
+        .channel-modal .modal-content::-webkit-scrollbar-thumb { background: #1a1a3e; border-radius: 2px; }
         .channel-modal .close-modal {
             position: sticky;
             top: 0;
@@ -191,13 +162,11 @@
             color: #444466;
             font-size: 20px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
             padding: 0 4px;
             z-index: 5;
         }
-        .channel-modal .close-modal:hover {
-            color: #8888bb;
-        }
+        .channel-modal .close-modal:hover { color: #8888bb; }
         .channel-modal h2 {
             font-weight: 300;
             letter-spacing: 4px;
@@ -206,16 +175,10 @@
             margin-bottom: 16px;
             text-transform: lowercase;
         }
-        .channel-modal h2 span {
-            color: #6a6aff;
-        }
+        .channel-modal h2 span { color: #6a6aff; }
 
-        /* ===== UPDATE LOG STYLES ===== */
-        .update-log {
-            font-size: 11px;
-            line-height: 1.8;
-            color: #7777aa;
-        }
+        /* ===== UPDATE LOG ===== */
+        .update-log { font-size: 11px; line-height: 1.8; color: #7777aa; }
         .update-log .section {
             margin-top: 12px;
             padding: 8px 12px;
@@ -223,32 +186,12 @@
             border-radius: 6px;
             border-left: 2px solid rgba(106, 106, 255, 0.2);
         }
-        .update-log .section-title {
-            color: #6a6aff;
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        .update-log .item {
-            padding: 2px 0;
-            padding-left: 12px;
-            position: relative;
-            font-size: 10px;
-        }
-        .update-log .item::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: #6a6aff;
-        }
+        .update-log .section-title { color: #6a6aff; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+        .update-log .item { padding: 2px 0; padding-left: 12px; position: relative; font-size: 10px; }
+        .update-log .item::before { content: "•"; position: absolute; left: 0; color: #6a6aff; }
 
-        /* ===== INFO CHANNEL STYLES ===== */
-        .info-content {
-            font-size: 12px;
-            line-height: 1.9;
-            color: #7777aa;
-        }
+        /* ===== INFO ===== */
+        .info-content { font-size: 12px; line-height: 1.9; color: #7777aa; }
         .info-content .brand {
             font-size: 28px;
             font-weight: 700;
@@ -258,24 +201,9 @@
             text-decoration-color: #6a6aff;
             text-underline-offset: 6px;
         }
-        .info-content .subtitle {
-            font-size: 14px;
-            color: #555577;
-            letter-spacing: 2px;
-            margin: 4px 0 16px 0;
-        }
-        .info-content .paragraph {
-            font-size: 11px;
-            color: #666688;
-            line-height: 1.9;
-            margin-bottom: 12px;
-        }
-        .info-content .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 12px;
-        }
+        .info-content .subtitle { font-size: 14px; color: #555577; letter-spacing: 2px; margin: 4px 0 16px 0; }
+        .info-content .paragraph { font-size: 11px; color: #666688; line-height: 1.9; margin-bottom: 12px; }
+        .info-content .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
         .info-content .stat-box {
             background: rgba(8, 8, 15, 0.3);
             padding: 8px 12px;
@@ -283,28 +211,18 @@
             text-align: center;
             border: 1px solid rgba(26, 26, 46, 0.2);
         }
-        .info-content .stat-box .number {
-            font-size: 16px;
-            color: #6a6aff;
-            font-weight: 600;
-        }
-        .info-content .stat-box .label {
-            font-size: 8px;
-            color: #444466;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        .info-content .stat-box .number { font-size: 16px; color: #6a6aff; font-weight: 600; }
+        .info-content .stat-box .label { font-size: 8px; color: #444466; letter-spacing: 0.5px; text-transform: uppercase; }
 
         /* ===== WEB MODAL - MIRROR LOGIN ===== */
         #webModal .mirror-login {
             background: transparent;
-            padding: 16px 12px;
+            padding: 12px 8px;
             border-radius: 8px;
             border: 1px solid rgba(26, 26, 46, 0.2);
             text-align: center;
             width: 100%;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             background: rgba(5, 5, 8, 0.15);
         }
         #webModal .mirror-login input {
@@ -316,14 +234,10 @@
             color: #d0d0e0;
             font-size: 12px;
             outline: none;
-            transition: border 0.3s;
             margin-bottom: 6px;
             font-family: 'Inter', sans-serif;
         }
-        #webModal .mirror-login input:focus {
-            border-color: #6a6aff;
-            box-shadow: 0 0 16px rgba(100, 100, 255, 0.05);
-        }
+        #webModal .mirror-login input:focus { border-color: #6a6aff; box-shadow: 0 0 16px rgba(100, 100, 255, 0.05); }
         #webModal .mirror-login button {
             width: 100%;
             padding: 6px;
@@ -335,22 +249,12 @@
             font-weight: 400;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
+            transition: background 0.3s;
             text-transform: lowercase;
             font-family: 'Inter', sans-serif;
         }
-        #webModal .mirror-login button:hover {
-            background: #7a7aff;
-        }
-        #webModal .mirror-login button:active {
-            transform: scale(0.97);
-        }
-        #webModal .mirror-login .error-msg {
-            color: #ff5a6a;
-            font-size: 10px;
-            margin-top: 6px;
-            display: none;
-        }
+        #webModal .mirror-login button:hover { background: #7a7aff; }
+        #webModal .mirror-login .error-msg { color: #ff5a6a; font-size: 10px; margin-top: 6px; display: none; }
         #webModal .mirror-login .tab-container {
             display: flex;
             margin-bottom: 8px;
@@ -370,44 +274,26 @@
             border-bottom: 1.5px solid transparent;
             font-family: 'Inter', sans-serif;
         }
-        #webModal .mirror-login .tab-btn:hover {
-            color: #c0c0e0;
-            border-bottom-color: #6a6aff;
-        }
-        #webModal .mirror-login .tab-btn.active {
-            color: #c0c0e0;
-            border-bottom-color: #6a6aff;
-        }
+        #webModal .mirror-login .tab-btn:hover { color: #c0c0e0; border-bottom-color: #6a6aff; }
+        #webModal .mirror-login .tab-btn.active { color: #c0c0e0; border-bottom-color: #6a6aff; }
         #webModal .mirror-login .tab-content {
             display: none;
             text-align: left;
-            max-height: 300px;
+            max-height: 260px;
             overflow-y: auto;
             animation: fadeSlide 0.3s ease;
         }
-        #webModal .mirror-login .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeSlide {
-            0% { opacity: 0.5; transform: translateY(4px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        #webModal .mirror-login .tab-content::-webkit-scrollbar {
-            width: 2px;
-        }
-        #webModal .mirror-login .tab-content::-webkit-scrollbar-track {
-            background: rgba(8, 8, 15, 0.2);
-        }
-        #webModal .mirror-login .tab-content::-webkit-scrollbar-thumb {
-            background: #1a1a3e;
-            border-radius: 2px;
-        }
+        #webModal .mirror-login .tab-content.active { display: block; }
+        @keyframes fadeSlide { 0% { opacity: 0.5; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
+        #webModal .mirror-login .tab-content::-webkit-scrollbar { width: 2px; }
+        #webModal .mirror-login .tab-content::-webkit-scrollbar-track { background: rgba(8, 8, 15, 0.2); }
+        #webModal .mirror-login .tab-content::-webkit-scrollbar-thumb { background: #1a1a3e; border-radius: 2px; }
         #webModal .mirror-login .link-list .option {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 3px;
-            font-size: 10px;
+            padding: 3px 2px;
+            font-size: 9px;
             color: #7777aa;
             border-bottom: 1px solid rgba(10, 10, 26, 0.3);
             cursor: pointer;
@@ -415,42 +301,21 @@
             border-radius: 3px;
             font-family: 'Inter', sans-serif;
         }
-        #webModal .mirror-login .link-list .option:hover {
-            color: #d0d0f0;
-            background: rgba(10, 10, 24, 0.3);
-        }
+        #webModal .mirror-login .link-list .option:hover { color: #d0d0f0; background: rgba(10, 10, 24, 0.3); }
         #webModal .mirror-login .link-list .option .badge {
             background: rgba(8, 8, 16, 0.4);
-            padding: 0px 8px;
-            border-radius: 8px;
+            padding: 0px 6px;
+            border-radius: 6px;
             font-size: 7px;
             color: #6a6aff;
             letter-spacing: 0.3px;
             font-family: 'Inter', monospace;
-            font-weight: 400;
-            text-transform: lowercase;
+            white-space: nowrap;
         }
-        #webModal .mirror-login .link-list .option .badge.free {
-            color: #55bb99;
-        }
-        #webModal .mirror-login .link-list .option .badge.experimental {
-            color: #ff9966;
-        }
-        #webModal .mirror-login .tab-hint {
-            font-size: 7px;
-            color: rgba(42, 42, 68, 0.6);
-            margin-top: 6px;
-            text-align: center;
-        }
-        #webModal .mirror-login .selected-link {
-            font-size: 11px;
-            color: #7a7aff;
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-            text-transform: lowercase;
-            border-bottom: 1px solid rgba(20, 20, 42, 0.4);
-            padding-bottom: 6px;
-        }
+        #webModal .mirror-login .link-list .option .badge.free { color: #55bb99; }
+        #webModal .mirror-login .link-list .option .badge.experimental { color: #ff9966; }
+        #webModal .mirror-login .tab-hint { font-size: 7px; color: rgba(42, 42, 68, 0.6); margin-top: 6px; text-align: center; }
+        #webModal .mirror-login .selected-link { font-size: 11px; color: #7a7aff; margin-bottom: 8px; letter-spacing: 0.3px; text-transform: lowercase; border-bottom: 1px solid rgba(20, 20, 42, 0.4); padding-bottom: 6px; }
         #webModal .mirror-login .back-btn {
             background: transparent !important;
             border: none;
@@ -466,14 +331,9 @@
             gap: 4px;
             margin-top: 6px;
         }
-        #webModal .mirror-login .back-btn:hover {
-            color: #8888bb;
-        }
-        #webModal .mirror-login .back-btn span {
-            font-size: 9px;
-        }
+        #webModal .mirror-login .back-btn:hover { color: #8888bb; }
 
-        /* ===== SETTINGS BAR ===== */
+        /* ===== SETTINGS ===== */
         .settings-toggle {
             position: fixed;
             bottom: 60px;
@@ -492,7 +352,6 @@
             justify-content: center;
             z-index: 100;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             font-family: 'Inter', sans-serif;
         }
         .settings-toggle:hover {
@@ -500,12 +359,8 @@
             transform: scale(1.05);
             border-color: rgba(106, 106, 255, 0.3);
         }
-        .settings-toggle .icon {
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .settings-toggle.active .icon {
-            transform: rotate(90deg);
-        }
+        .settings-toggle .icon { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .settings-toggle.active .icon { transform: rotate(90deg); }
 
         .settings-panel {
             position: fixed;
@@ -516,7 +371,6 @@
             max-height: 70vh;
             background: rgba(10, 10, 20, 0.85);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(26, 26, 46, 0.3);
             border-radius: 16px;
             overflow: hidden;
@@ -535,65 +389,20 @@
             border-radius: 16px;
         }
         @media (max-width: 480px) {
-            .settings-panel.open {
-                width: calc(100vw - 40px);
-                height: 55vh;
-                bottom: 52px;
-                right: 16px;
-            }
-            .settings-toggle {
-                bottom: 52px;
-                right: 16px;
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-            .floating-arrow {
-                padding: 6px 12px;
-                top: 12px;
-            }
-            .floating-arrow .arrow-text {
-                font-size: 7px;
-            }
-            .channels-container {
-                top: 60px;
-            }
-            #webModal .modal-content {
-                padding: 16px;
-                max-height: 90vh;
-            }
-            #webModal .mirror-login .link-list .option {
-                font-size: 9px;
-                padding: 3px 2px;
-            }
+            .settings-panel.open { width: calc(100vw - 40px); height: 55vh; bottom: 52px; right: 16px; }
+            .settings-toggle { bottom: 52px; right: 16px; width: 36px; height: 36px; font-size: 14px; }
+            .floating-arrow { padding: 6px 12px; top: 12px; }
+            .floating-arrow .arrow-text { font-size: 7px; }
+            .channels-container { top: 60px; }
+            .channel-modal .modal-content { padding: 16px; max-height: 90vh; }
         }
         @media (max-width: 380px) {
-            .settings-panel.open {
-                width: calc(100vw - 24px);
-                height: 50vh;
-                bottom: 44px;
-                right: 12px;
-            }
-            .settings-toggle {
-                bottom: 44px;
-                right: 12px;
-                width: 32px;
-                height: 32px;
-                font-size: 12px;
-            }
+            .settings-panel.open { width: calc(100vw - 24px); height: 50vh; bottom: 44px; right: 12px; }
+            .settings-toggle { bottom: 44px; right: 12px; width: 32px; height: 32px; font-size: 12px; }
         }
-
-        .settings-panel::-webkit-scrollbar {
-            width: 3px;
-        }
-        .settings-panel::-webkit-scrollbar-track {
-            background: rgba(8, 8, 15, 0.2);
-        }
-        .settings-panel::-webkit-scrollbar-thumb {
-            background: #1a1a3e;
-            border-radius: 2px;
-        }
-
+        .settings-panel::-webkit-scrollbar { width: 3px; }
+        .settings-panel::-webkit-scrollbar-track { background: rgba(8, 8, 15, 0.2); }
+        .settings-panel::-webkit-scrollbar-thumb { background: #1a1a3e; border-radius: 2px; }
         .settings-panel h3 {
             font-weight: 300;
             letter-spacing: 2px;
@@ -604,24 +413,9 @@
             border-bottom: 1px solid rgba(26, 26, 46, 0.3);
             padding-bottom: 8px;
         }
-
-        .setting-group {
-            margin-bottom: 12px;
-        }
-        .setting-group label {
-            display: block;
-            font-size: 9px;
-            color: #555566;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            margin-bottom: 4px;
-        }
-
-        .cursor-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 4px;
-        }
+        .setting-group { margin-bottom: 12px; }
+        .setting-group label { display: block; font-size: 9px; color: #555566; letter-spacing: 1px; text-transform: lowercase; margin-bottom: 4px; }
+        .cursor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
         .cursor-option {
             padding: 4px 2px;
             background: rgba(8, 8, 15, 0.4);
@@ -633,29 +427,10 @@
             transition: all 0.3s ease;
             color: #555566;
         }
-        .cursor-option:hover {
-            border-color: rgba(106, 106, 255, 0.4);
-            background: rgba(106, 106, 255, 0.08);
-        }
-        .cursor-option.active {
-            border-color: #6a6aff;
-            background: rgba(106, 106, 255, 0.12);
-            box-shadow: 0 0 20px rgba(106, 106, 255, 0.06);
-        }
-        .cursor-option .label {
-            display: block;
-            font-size: 6px;
-            color: #555566;
-            margin-top: 2px;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-        }
-
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 4px;
-        }
+        .cursor-option:hover { border-color: rgba(106, 106, 255, 0.4); background: rgba(106, 106, 255, 0.08); }
+        .cursor-option.active { border-color: #6a6aff; background: rgba(106, 106, 255, 0.12); box-shadow: 0 0 20px rgba(106, 106, 255, 0.06); }
+        .cursor-option .label { display: block; font-size: 6px; color: #555566; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; }
+        .theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .theme-option {
             width: 100%;
             aspect-ratio: 1;
@@ -665,14 +440,8 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        .theme-option:hover {
-            transform: scale(1.05);
-            border-color: rgba(106, 106, 255, 0.4);
-        }
-        .theme-option.active {
-            border-color: #6a6aff;
-            box-shadow: 0 0 20px rgba(106, 106, 255, 0.1);
-        }
+        .theme-option:hover { transform: scale(1.05); border-color: rgba(106, 106, 255, 0.4); }
+        .theme-option.active { border-color: #6a6aff; box-shadow: 0 0 20px rgba(106, 106, 255, 0.1); }
         .theme-option .check {
             position: absolute;
             top: 50%;
@@ -684,9 +453,7 @@
             transition: opacity 0.3s ease;
             text-shadow: 0 0 8px rgba(0,0,0,0.5);
         }
-        .theme-option.active .check {
-            opacity: 1;
-        }
+        .theme-option.active .check { opacity: 1; }
         .theme-option .theme-label {
             position: absolute;
             bottom: 2px;
@@ -698,7 +465,6 @@
             text-transform: lowercase;
             white-space: nowrap;
         }
-
         .theme-dark { background: #050508; }
         .theme-light { background: #f0f0f5; }
         .theme-purple { background: #0a0a1a; }
@@ -712,7 +478,6 @@
         .theme-rose { background: #14080a; }
         .theme-ocean { background: #060a18; }
         .theme-sunset { background: #140a06; }
-
         .reset-btn {
             padding: 4px 14px;
             background: rgba(255, 90, 106, 0.1);
@@ -727,9 +492,12 @@
             text-transform: lowercase;
             margin-top: 4px;
         }
-        .reset-btn:hover {
-            background: rgba(255, 90, 106, 0.2);
-        }
+        .reset-btn:hover { background: rgba(255, 90, 106, 0.2); }
+
+        /* ===== CURSOR EFFECTS ===== */
+        .cursor-glow { position: fixed; pointer-events: none; z-index: 9998; border-radius: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.5s ease; }
+        .cursor-trail { position: fixed; pointer-events: none; z-index: 9997; border-radius: 50%; opacity: 0; transition: opacity 0.3s ease; }
+        .cursor-sparkle { position: fixed; pointer-events: none; z-index: 9997; border-radius: 50%; opacity: 0; transition: opacity 0.6s ease; }
 
         /* ===== FOOTER ===== */
         .footer-credit {
@@ -746,37 +514,7 @@
             transition: opacity 0.3s ease;
             z-index: 40;
         }
-        .footer-credit:hover {
-            opacity: 1;
-            color: #555577;
-        }
-
-        /* ===== CURSOR EFFECTS ===== */
-        .cursor-glow {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .cursor-trail {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9997;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .cursor-sparkle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9997;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
+        .footer-credit:hover { opacity: 1; color: #555577; }
 
         /* ===== SPLASH ===== */
         #splash {
@@ -796,12 +534,8 @@
             flex-direction: column;
             padding: 20px;
         }
-        #splash.show {
-            opacity: 1;
-        }
-        #splash.fade-out {
-            opacity: 0;
-        }
+        #splash.show { opacity: 1; }
+        #splash.fade-out { opacity: 0; }
         #splash .text {
             font-size: 26px;
             font-weight: 300;
@@ -813,10 +547,7 @@
             font-family: 'Inter', sans-serif;
             transition: opacity 0.8s ease;
         }
-        #splash .text span {
-            color: #7a7aff;
-            font-weight: 400;
-        }
+        #splash .text span { color: #7a7aff; font-weight: 400; }
         #splash .quote {
             font-size: 12px;
             color: #555588;
@@ -830,20 +561,9 @@
             font-style: italic;
             font-family: 'Inter', sans-serif;
         }
-        #splash .quote.show {
-            opacity: 1;
-        }
-        #splash .quote.fade-out {
-            opacity: 0;
-        }
-        #splash .quote .attribution {
-            font-size: 9px;
-            color: #333366;
-            letter-spacing: 0.5px;
-            display: block;
-            margin-top: 4px;
-            font-style: normal;
-        }
+        #splash .quote.show { opacity: 1; }
+        #splash .quote.fade-out { opacity: 0; }
+        #splash .quote .attribution { font-size: 9px; color: #333366; letter-spacing: 0.5px; display: block; margin-top: 4px; font-style: normal; }
 
         /* ===== IFRAME ===== */
         #iframe-container {
@@ -858,15 +578,8 @@
             transition: opacity 0.8s ease;
             z-index: 5;
         }
-        #iframe-container.fade-in {
-            opacity: 1;
-        }
-        #iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #ffffff;
-        }
+        #iframe-container.fade-in { opacity: 1; }
+        #iframe-container iframe { width: 100%; height: 100%; border: none; background: #ffffff; }
 
         .logout-btn {
             position: fixed;
@@ -888,14 +601,8 @@
             opacity: 0;
             font-family: 'Inter', sans-serif;
         }
-        .logout-btn.show {
-            opacity: 0.6;
-        }
-        .logout-btn:hover {
-            background: #14142a;
-            color: #c0c0e0;
-            opacity: 1;
-        }
+        .logout-btn.show { opacity: 0.6; }
+        .logout-btn:hover { background: #14142a; color: #c0c0e0; opacity: 1; }
     </style>
 </head>
 <body>
@@ -908,18 +615,9 @@
 
     <!-- ===== CHANNELS ===== -->
     <div class="channels-container" id="channelsContainer">
-        <button class="channel-btn" onclick="openModal('web')">
-            <span>web</span>
-            <span class="badge-channel">websites</span>
-        </button>
-        <button class="channel-btn" onclick="openModal('info')">
-            <span>info</span>
-            <span class="badge-channel">about</span>
-        </button>
-        <button class="channel-btn" onclick="openModal('updates')">
-            <span>updates</span>
-            <span class="badge-channel">changelog</span>
-        </button>
+        <button class="channel-btn" onclick="openModal('web')"><span>web</span><span class="badge-channel">websites</span></button>
+        <button class="channel-btn" onclick="openModal('info')"><span>info</span><span class="badge-channel">about</span></button>
+        <button class="channel-btn" onclick="openModal('updates')"><span>updates</span><span class="badge-channel">changelog</span></button>
     </div>
 
     <!-- ===== WEB MODAL ===== -->
@@ -928,7 +626,6 @@
             <button class="close-modal" onclick="closeModal('webModal')">✕</button>
             <h2>web <span>portal</span></h2>
             <p style="font-size:11px;color:#555577;margin-bottom:12px;">select a tab below to browse links</p>
-
             <div class="mirror-login" id="mirrorLogin">
                 <div id="linkListView">
                     <div class="tab-container">
@@ -936,8 +633,6 @@
                         <button class="tab-btn" onclick="switchTab('free')" id="tab-free-btn">free</button>
                         <button class="tab-btn" onclick="switchTab('experimental')" id="tab-experimental-btn">experimental</button>
                     </div>
-
-                    <!-- Password Protected -->
                     <div id="tab-protected" class="tab-content active">
                         <div class="link-list">
                             <div class="option" onclick="selectLink('gclassroom')"><span>gclassroom (storage)</span><span class="badge">******</span></div>
@@ -954,8 +649,6 @@
                         </div>
                         <div class="tab-hint">passwords hidden</div>
                     </div>
-
-                    <!-- Free Access -->
                     <div id="tab-free" class="tab-content">
                         <div class="link-list">
                             <div class="option" onclick="openFreeLink('https://storage.googleapis.com/fernisbest/index.html')"><span>fernisbest (storage)</span><span class="badge free">free</span></div>
@@ -1023,12 +716,10 @@
                             <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/writevc/index.html')"><span>writevc (s3)</span><span class="badge free">free</span></div>
                         </div>
                     </div>
-
-                    <!-- Experimental -->
                     <div id="tab-experimental" class="tab-content">
                         <div id="experimentalLogin" style="display:flex;flex-direction:column;align-items:center;padding:12px 0;">
                             <div style="font-size:12px;color:#8888aa;letter-spacing:1px;text-transform:lowercase;margin-bottom:8px;">enter experimental password</div>
-                            <input type="password" id="expPasswordInput" placeholder="password" style="width:100%;max-width:200px;padding:6px 10px;background:rgba(8,8,15,0.5);border:1px solid rgba(24,24,48,0.4);border-radius:4px;color:#d0d0e0;font-size:12px;outline:none;transition:border 0.3s;margin-bottom:6px;font-family:'Inter',sans-serif;">
+                            <input type="password" id="expPasswordInput" placeholder="password" style="width:100%;max-width:200px;padding:6px 10px;background:rgba(8,8,15,0.5);border:1px solid rgba(24,24,48,0.4);border-radius:4px;color:#d0d0e0;font-size:12px;outline:none;margin-bottom:6px;font-family:'Inter',sans-serif;">
                             <button onclick="checkExperimentalPassword()" style="padding:6px 20px;background:#6a6aff;color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:1px;text-transform:lowercase;">unlock</button>
                             <div id="expError" style="color:#ff5a6a;font-size:10px;margin-top:4px;display:none;">access denied</div>
                             <div style="font-size:8px;color:#333355;margin-top:4px;">hint: it's two words</div>
@@ -1075,11 +766,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Password View -->
                 <div id="passwordView" style="display:none;">
                     <div class="selected-link" id="selectedLinkDisplay">site name</div>
-                    <input type="password" id="passwordInput" placeholder="enter password" style="width:100%;padding:6px 10px;background:rgba(8,8,15,0.5);border:1px solid rgba(24,24,48,0.4);border-radius:4px;color:#d0d0e0;font-size:12px;outline:none;transition:border 0.3s;margin-bottom:6px;font-family:'Inter',sans-serif;">
+                    <input type="password" id="passwordInput" placeholder="enter password" style="width:100%;padding:6px 10px;background:rgba(8,8,15,0.5);border:1px solid rgba(24,24,48,0.4);border-radius:4px;color:#d0d0e0;font-size:12px;outline:none;margin-bottom:6px;font-family:'Inter',sans-serif;">
                     <button onclick="checkPassword()" style="width:100%;padding:6px;background:#6a6aff;color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:1px;text-transform:lowercase;">unlock</button>
                     <div id="error" style="color:#ff5a6a;font-size:10px;margin-top:6px;display:none;">access denied</div>
                     <button class="back-btn" onclick="showLinkList()"><span>←</span> <span>back</span></button>
@@ -1278,6 +967,7 @@
                 }
                 case 'trail': {
                     document.body.style.cursor = 'none';
+                    let pos = [];
                     for (let i = 0; i < 8; i++) {
                         const d = document.createElement('div');
                         d.className = 'cursor-trail';
@@ -1285,7 +975,6 @@
                         document.body.appendChild(d);
                         cursorElements.push(d);
                     }
-                    let pos = [];
                     document.addEventListener('mousemove', function(e) {
                         pos.push({x:e.clientX, y:e.clientY});
                         if (pos.length > 8) pos.shift();
@@ -1719,1770 +1408,5 @@
             document.addEventListener('DOMContentLoaded', fixLinks);
         })();
     </script>
-</body>
-</html>
-        /* ===== SETTINGS BUTTON (bottom-right corner) ===== */
-        .settings-toggle {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(106, 106, 255, 0.15);
-            border: 1px solid rgba(106, 106, 255, 0.2);
-            color: #6a6aff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .settings-toggle:hover {
-            background: rgba(106, 106, 255, 0.25);
-            transform: scale(1.05);
-            border-color: rgba(106, 106, 255, 0.4);
-        }
-        .settings-toggle .icon {
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .settings-toggle.active .icon {
-            transform: rotate(90deg);
-        }
-
-        /* ===== SETTINGS PANEL (expands from corner) ===== */
-        .settings-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            max-height: 70vh;
-            background: rgba(10, 10, 20, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(26, 26, 46, 0.3);
-            border-radius: 16px;
-            overflow: hidden;
-            z-index: 99;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0;
-            pointer-events: none;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-        .settings-panel.open {
-            width: 340px;
-            height: 440px;
-            opacity: 1;
-            pointer-events: all;
-            padding: 20px;
-            border-radius: 16px;
-        }
-        @media (max-width: 480px) {
-            .settings-panel.open {
-                width: calc(100vw - 40px);
-                height: 60vh;
-                bottom: 16px;
-                right: 16px;
-            }
-            .settings-toggle {
-                bottom: 16px;
-                right: 16px;
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-        }
-
-        .settings-panel::-webkit-scrollbar {
-            width: 3px;
-        }
-        .settings-panel::-webkit-scrollbar-track {
-            background: rgba(8, 8, 15, 0.2);
-        }
-        .settings-panel::-webkit-scrollbar-thumb {
-            background: #1a1a3e;
-            border-radius: 2px;
-        }
-
-        .settings-panel h3 {
-            font-weight: 300;
-            letter-spacing: 2px;
-            font-size: 13px;
-            color: #8888aa;
-            margin-bottom: 14px;
-            text-transform: lowercase;
-            border-bottom: 1px solid rgba(26, 26, 46, 0.3);
-            padding-bottom: 10px;
-        }
-
-        /* ===== SETTINGS SECTIONS ===== */
-        .setting-group {
-            margin-bottom: 14px;
-        }
-        .setting-group label {
-            display: block;
-            font-size: 10px;
-            color: #555566;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            margin-bottom: 6px;
-        }
-
-        /* ===== CURSOR EFFECTS GRID ===== */
-        .cursor-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-        }
-        .cursor-option {
-            padding: 6px 4px;
-            background: rgba(8, 8, 15, 0.4);
-            border: 1px solid rgba(26, 26, 46, 0.2);
-            border-radius: 6px;
-            text-align: center;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #555566;
-        }
-        .cursor-option:hover {
-            border-color: rgba(106, 106, 255, 0.4);
-            background: rgba(106, 106, 255, 0.08);
-        }
-        .cursor-option.active {
-            border-color: #6a6aff;
-            background: rgba(106, 106, 255, 0.12);
-            box-shadow: 0 0 20px rgba(106, 106, 255, 0.06);
-        }
-        .cursor-option .label {
-            display: block;
-            font-size: 7px;
-            color: #555566;
-            margin-top: 2px;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-        }
-
-        /* ===== THEME GRID ===== */
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
-        }
-        .theme-option {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 8px;
-            border: 2px solid rgba(26, 26, 46, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .theme-option:hover {
-            transform: scale(1.05);
-            border-color: rgba(106, 106, 255, 0.4);
-        }
-        .theme-option.active {
-            border-color: #6a6aff;
-            box-shadow: 0 0 20px rgba(106, 106, 255, 0.1);
-        }
-        .theme-option .check {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            text-shadow: 0 0 8px rgba(0,0,0,0.5);
-        }
-        .theme-option.active .check {
-            opacity: 1;
-        }
-        .theme-option .theme-label {
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 5px;
-            color: rgba(255,255,255,0.3);
-            letter-spacing: 0.3px;
-            text-transform: lowercase;
-            white-space: nowrap;
-        }
-
-        /* Theme Colors */
-        .theme-dark { background: #050508; }
-        .theme-light { background: #f0f0f5; }
-        .theme-purple { background: #0a0a1a; }
-        .theme-cyan { background: #050f12; }
-        .theme-pink { background: #12050f; }
-        .theme-green { background: #050f08; }
-        .theme-orange { background: #120f05; }
-        .theme-forest { background: #060d08; }
-        .theme-lavender { background: #0a0818; }
-        .theme-slate { background: #0a0a12; }
-        .theme-rose { background: #14080a; }
-        .theme-ocean { background: #060a18; }
-        .theme-sunset { background: #140a06; }
-
-        /* ===== RESET BUTTON ===== */
-        .reset-btn {
-            padding: 6px 16px;
-            background: rgba(255, 90, 106, 0.1);
-            border: 1px solid rgba(255, 90, 106, 0.2);
-            border-radius: 6px;
-            color: #ff5a6a;
-            font-size: 9px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            text-transform: lowercase;
-        }
-        .reset-btn:hover {
-            background: rgba(255, 90, 106, 0.2);
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            position: fixed;
-            bottom: 80px;
-            right: 24px;
-            font-size: 7px;
-            color: #2a2a44;
-            letter-spacing: 0.5px;
-            text-align: right;
-            z-index: 50;
-        }
-
-        /* ===== CURSOR TRAIL (JS injected) ===== */
-        .cursor-trail {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .cursor-glow {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="demo-content">
-        <h1>dreading <span>portal</span></h1>
-        <p>click the settings icon to customize<br>your cursor and theme</p>
-        <div class="badge">✦ settings available</div>
-    </div>
-
-    <!-- ===== SETTINGS TOGGLE ===== -->
-    <button class="settings-toggle" id="settings        .back-btn-wrapper.show {
-            display: block;
-        }
-        .back-btn {
-            background: transparent !important;
-            border: none;
-            color: #444466;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.3s;
-            padding: 4px 6px;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .back-btn:hover {
-            color: #8888bb;
-        }
-        .back-btn span {
-            font-size: 10px;
-        }
-
-        /* ===== FOOTER CREDIT ===== */
-        .footer-credit {
-            margin-top: 12px;
-            font-size: 9px;
-            color: #333355;
-            letter-spacing: 0.8px;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-        }
-        .footer-credit:hover {
-            opacity: 1;
-            color: #555577;
-        }
-
-        /* ===== TRANSPARENT TABS ===== */
-        .tab-container {
-            display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(18, 18, 42, 0.3);
-            position: relative;
-            background: transparent;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 6px 0;
-            background: transparent !important;
-            border: none;
-            color: #3a3a55;
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            text-transform: lowercase;
-            cursor: pointer;
-            transition: color 0.3s, border-color 0.3s;
-            border-bottom: 1.5px solid transparent;
-            font-family: 'Inter', sans-serif;
-            position: relative;
-            z-index: 2;
-        }
-        .tab-btn:hover {
-            color: #c0c0e0;
-            border-bottom-color: #6a6aff;
-        }
-        .tab-btn.active {
-            color: #c0c0e0;
-            border-bottom-color: #6a6aff;
-            background: transparent !important;
-        }
-        .tab-content {
-            display: none;
-            text-align: left;
-            max-height: 380px;
-            overflow-y: auto;
-            animation: fadeSlide 0.3s ease;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeSlide {
-            0% { opacity: 0.5; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .tab-content::-webkit-scrollbar {
-            width: 2px;
-        }
-        .tab-content::-webkit-scrollbar-track {
-            background: rgba(8, 8, 15, 0.2);
-        }
-        .tab-content::-webkit-scrollbar-thumb {
-            background: #1a1a3e;
-            border-radius: 2px;
-        }
-
-        /* ===== LIST ITEMS ===== */
-        .link-list .option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 4px;
-            font-size: 11px;
-            color: #7777aa;
-            border-bottom: 1px solid rgba(10, 10, 26, 0.3);
-            cursor: pointer;
-            transition: color 0.3s, background 0.3s;
-            border-radius: 3px;
-            font-family: 'Inter', sans-serif;
-        }
-        .link-list .option:hover {
-            color: #d0d0f0;
-            background: rgba(10, 10, 24, 0.3);
-        }
-        .link-list .option .badge {
-            background: rgba(8, 8, 16, 0.4);
-            padding: 0px 10px;
-            border-radius: 8px;
-            font-size: 8px;
-            color: #6a6aff;
-            letter-spacing: 0.5px;
-            font-family: 'Inter', monospace;
-            font-weight: 400;
-            text-transform: lowercase;
-        }
-        .link-list .option .badge.free {
-            color: #55bb99;
-        }
-        .link-list .option .badge.experimental {
-            color: #ff9966;
-        }
-
-        .tab-hint {
-            font-size: 8px;
-            color: rgba(42, 42, 68, 0.6);
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-            font-family: 'Inter', monospace;
-            text-align: center;
-        }
-
-        /* ===== EXPERIMENTAL LOGIN OVERLAY ===== */
-        #experimentalLogin {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 8, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 15;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        #experimentalLogin.show {
-            display: flex;
-        }
-        #experimentalLogin .exp-title {
-            font-size: 14px;
-            color: #8888aa;
-            letter-spacing: 2px;
-            text-transform: lowercase;
-            margin-bottom: 12px;
-            font-weight: 300;
-        }
-        #experimentalLogin input {
-            width: 100%;
-            max-width: 250px;
-            padding: 8px 12px;
-            background: rgba(8, 8, 15, 0.5);
-            border: 1px solid rgba(24, 24, 48, 0.4);
-            border-radius: 5px;
-            color: #d0d0e0;
-            font-size: 13px;
-            outline: none;
-            transition: border 0.3s;
-            margin-bottom: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-        #experimentalLogin input:focus {
-            border-color: #6a6aff;
-            box-shadow: 0 0 16px rgba(100, 100, 255, 0.05);
-        }
-        #experimentalLogin input::placeholder {
-            color: #3a3a55;
-            font-weight: 300;
-            letter-spacing: 0.3px;
-        }
-        #experimentalLogin button {
-            padding: 8px 24px;
-            background: #6a6aff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 1.2px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            text-transform: lowercase;
-            font-family: 'Inter', sans-serif;
-        }
-        #experimentalLogin button:hover {
-            background: #7a7aff;
-        }
-        #experimentalLogin button:active {
-            transform: scale(0.97);
-        }
-        #experimentalLogin .exp-error {
-            color: #ff5a6a;
-            font-size: 11px;
-            margin-top: 8px;
-            display: none;
-            letter-spacing: 0.3px;
-        }
-        #experimentalLogin .exp-hint {
-            font-size: 9px;
-            color: #333355;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== SPLASH SCREEN ===== */
-        #splash {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #050508;
-            z-index: 20;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            pointer-events: none;
-            flex-direction: column;
-            padding: 20px;
-        }
-        #splash.show {
-            opacity: 1;
-        }
-        #splash.fade-out {
-            opacity: 0;
-        }
-        #splash .text {
-            font-size: 26px;
-            font-weight: 300;
-            letter-spacing: 6px;
-            color: #d0d0e8;
-            text-transform: lowercase;
-            text-align: center;
-            padding: 14px 14px 0 14px;
-            font-family: 'Inter', sans-serif;
-            transition: opacity 0.8s ease;
-        }
-        #splash .text span {
-            color: #7a7aff;
-            font-weight: 400;
-        }
-        #splash .quote {
-            font-size: 12px;
-            color: #555588;
-            letter-spacing: 1px;
-            text-align: center;
-            padding: 8px 20px 14px 20px;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            max-width: 520px;
-            line-height: 1.5;
-            font-style: italic;
-            font-family: 'Inter', sans-serif;
-        }
-        #splash .quote.show {
-            opacity: 1;
-        }
-        #splash .quote.fade-out {
-            opacity: 0;
-        }
-        #splash .quote .attribution {
-            font-size: 9px;
-            color: #333366;
-            letter-spacing: 0.5px;
-            display: block;
-            margin-top: 4px;
-            font-style: normal;
-        }
-        @media (max-width: 480px) {
-            #splash .text {
-                font-size: 18px;
-                letter-spacing: 4px;
-                padding: 12px 12px 0 12px;
-            }
-            #splash .quote {
-                font-size: 10px;
-                padding: 6px 14px 10px 14px;
-                letter-spacing: 0.5px;
-            }
-            #login {
-                padding: 16px 14px;
-            }
-            .link-list .option {
-                font-size: 10px;
-                padding: 5px 3px;
-            }
-            .tab-btn {
-                font-size: 9px;
-                padding: 5px 0;
-            }
-            .footer-credit {
-                font-size: 7px;
-                margin-top: 8px;
-                letter-spacing: 0.5px;
-            }
-            #experimentalLogin .exp-title {
-                font-size: 12px;
-            }
-            #experimentalLogin input {
-                font-size: 12px;
-                padding: 6px 10px;
-            }
-            #experimentalLogin button {
-                font-size: 11px;
-                padding: 6px 18px;
-            }
-        }
-
-        /* ===== IFRAME CONTAINER ===== */
-        #iframe-container {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: #050508;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            z-index: 5;
-        }
-        #iframe-container.fade-in {
-            opacity: 1;
-        }
-        #iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #ffffff;
-        }
-
-        /* ===== LOGOUT BUTTON ===== */
-        .logout-btn {
-            position: fixed;
-            top: 14px;
-            right: 16px;
-            z-index: 9999;
-            background: rgba(8, 8, 15, 0.92);
-            color: #444466;
-            border: 1px solid #14142a;
-            padding: 3px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            transition: background 0.3s, color 0.3s, opacity 0.6s ease;
-            display: none;
-            backdrop-filter: blur(6px);
-            opacity: 0;
-            font-family: 'Inter', sans-serif;
-        }
-        .logout-btn.show {
-            opacity: 0.6;
-        }
-        .logout-btn:hover {
-            background: #14142a;
-            color: #c0c0e0;
-            opacity: 1;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="main-wrapper">
-        <!-- login screen -->
-        <div id="login">
-            <div id="linkListView">
-                <!-- ===== TRANSPARENT TABS ===== -->
-                <div class="tab-container">
-                    <button class="tab-btn active" 
-                            onmouseenter="startHoverTimer('protected')" 
-                            onmouseleave="clearHoverTimer()" 
-                            id="tab-protected-btn">password</button>
-                    <button class="tab-btn" 
-                            onmouseenter="startHoverTimer('free')" 
-                            onmouseleave="clearHoverTimer()" 
-                            id="tab-free-btn">free</button>
-                    <button class="tab-btn" 
-                            onmouseenter="startHoverTimer('experimental')" 
-                            onmouseleave="clearHoverTimer()" 
-                            id="tab-experimental-btn">experimental</button>
-                </div>
-
-                <!-- ===== TAB 1: PASSWORD PROTECTED ===== -->
-                <div id="tab-protected" class="tab-content active">
-                    <div class="link-list">
-                        <div class="option" onclick="selectLink('gclassroom')">
-                            <span>gclassroom (storage)</span>
-                            <span class="badge">******</span>
-                        </div>
-                        <div class="option" onclick="selectLink('clever-s3')">
-                            <span>cleverlearning (s3)</span>
-                            <span class="badge">******</span>
-                        </div>
-                        <div class="option" onclick="selectLink('clever')">
-                            <span>cleverlearning (s3 alt)</span>
-                            <span class="badge">****</span>
-                        </div>
-                        <div class="option" onclick="selectLink('pages')">
-                            <span>opiumbest (github)</span>
-                            <span class="badge">*****</span>
-                        </div>
-                        <div class="option" onclick="selectLink('opium-s3')">
-                            <span>opiumisbest (s3)</span>
-                            <span class="badge">******</span>
-                        </div>
-                        <div class="option" onclick="selectLink('opium')">
-                            <span>opiumisbest (s3 alt)</span>
-                            <span class="badge">*****</span>
-                        </div>
-                        <div class="option" onclick="selectLink('best')">
-                            <span>opiumbest (storage)</span>
-                            <span class="badge">****</span>
-                        </div>
-                        <div class="option" onclick="selectLink('svg-cdn')">
-                            <span>svg (jsdelivr)</span>
-                            <span class="badge">***</span>
-                        </div>
-                        <div class="option" onclick="selectLink('cdn')">
-                            <span>svg (cdn)</span>
-                            <span class="badge">***</span>
-                        </div>
-                        <div class="option" onclick="selectLink('statically')">
-                            <span>svg (statically)</span>
-                            <span class="badge">***</span>
-                        </div>
-                        <div class="option" onclick="selectLink('raw-esm')">
-                            <span>svg (raw.esm)</span>
-                            <span class="badge">***</span>
-                        </div>
-                    </div>
-                    <div class="tab-hint">passwords hidden</div>
-                </div>
-
-                <!-- ===== TAB 2: QUICK ACCESS ===== -->
-                <div id="tab-free" class="tab-content">
-                    <div class="link-list">
-                        <div class="option" onclick="openFreeLink('https://storage.googleapis.com/fernisbest/index.html')">
-                            <span>fernisbest (storage)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fernisbest/index.html')">
-                            <span>fernisbest (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fernlinks/index.html')">
-                            <span>fernlinks (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/classworks/index.html')">
-                            <span>classworks (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bull33/index.html')">
-                            <span>bull33 (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullbestyoutuber/index.html')">
-                            <span>bullbestyoutuber (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bulledu/index.html')">
-                            <span>bulledu (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullguardian/index.html')">
-                            <span>bullguardian (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullisgoated/index.html')">
-                            <span>bullisgoated (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bulllightspeed/index.html')">
-                            <span>bulllightspeed (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullmath/index.html')">
-                            <span>bullmath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullubg/index.html')">
-                            <span>bullubg (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/iloveliteratures/index.html')">
-                            <span>iloveliteratures (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/ilovemaths/index.html')">
-                            <span>ilovemaths (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/lsrelay-extension-production/index.html')">
-                            <span>lsrelay-extension (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/macrolo/index.html')">
-                            <span>macrolo (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/macrologoat/index.html')">
-                            <span>macrologoat (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/macrolomath/index.html')">
-                            <span>macrolomath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/angelfern/index.html')">
-                            <span>angelfern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/deaganfern/index.html')">
-                            <span>deaganfern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullbestyoutuber.s3.amazonaws.com/index.html')">
-                            <span>bullbestyoutuber (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bulledu.s3.amazonaws.com/index.html')">
-                            <span>bulledu (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullguardian.s3.amazonaws.com/index.html')">
-                            <span>bullguardian (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullisgoated.s3.amazonaws.com/index.html')">
-                            <span>bullisgoated (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bulllightspeed.s3.amazonaws.com/index.html')">
-                            <span>bulllightspeed (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullmath.s3.amazonaws.com/index.html')">
-                            <span>bullmath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullubg.s3.amazonaws.com/index.html')">
-                            <span>bullubg (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://iloveliteratures.s3.amazonaws.com/index.html')">
-                            <span>iloveliteratures (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://ilovemaths.s3.amazonaws.com/index.html')">
-                            <span>ilovemaths (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://lsrelay-extension-production.s3.amazonaws.com/index.html')">
-                            <span>lsrelay-extension (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://macrolo.s3.amazonaws.com/index.html')">
-                            <span>macrolo (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://macrologoat.s3.amazonaws.com/index.html')">
-                            <span>macrologoat (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://macrolomath.s3.amazonaws.com/index.html')">
-                            <span>macrolomath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://angelfern.s3.amazonaws.com/index.html')">
-                            <span>angelfern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://deaganfern.s3.amazonaws.com/index.html')">
-                            <span>deaganfern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://bullreading.s3.amazonaws.com/index.html')">
-                            <span>bullreading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/bullreading/index.html')">
-                            <span>bullreading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://fern-s3t.s3.amazonaws.com/index.html')">
-                            <span>fern-s3t (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fern-s3t/index.html')">
-                            <span>fern-s3t (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://fernvcsa.s3.amazonaws.com/index.html')">
-                            <span>fernvcsa (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fernvcsa/index.html')">
-                            <span>fernvcsa (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://fsmath.s3.amazonaws.com/index.html')">
-                            <span>fsmath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fsmath/index.html')">
-                            <span>fsmath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://fsreading.s3.amazonaws.com/index.html')">
-                            <span>fsreading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fsreading/index.html')">
-                            <span>fsreading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://fstudentsareinventors.s3.amazonaws.com/index.html')">
-                            <span>fstudentsareinventors (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/fstudentsareinventors/index.html')">
-                            <span>fstudentsareinventors (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://glwithfinals.s3.amazonaws.com/index.html')">
-                            <span>glwithfinals (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/glwithfinals/index.html')">
-                            <span>glwithfinals (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://mathvc.s3.amazonaws.com/index.html')">
-                            <span>mathvc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/mathvc/index.html')">
-                            <span>mathvc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://onelastlink.s3.amazonaws.com/index.html')">
-                            <span>onelastlink (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/onelastlink/index.html')">
-                            <span>onelastlink (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://readvc.s3.amazonaws.com/index.html')">
-                            <span>readvc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/readvc/index.html')">
-                            <span>readvc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://vcsafern.s3.amazonaws.com/index.html')">
-                            <span>vcsafern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/vcsafern/index.html')">
-                            <span>vcsafern (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://vcsamath.s3.amazonaws.com/index.html')">
-                            <span>vcsamath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/vcsamath/index.html')">
-                            <span>vcsamath (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://vcsareading.s3.amazonaws.com/index.html')">
-                            <span>vcsareading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/vcsareading/index.html')">
-                            <span>vcsareading (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://writevc.s3.amazonaws.com/index.html')">
-                            <span>writevc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                        <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/writevc/index.html')">
-                            <span>writevc (s3)</span>
-                            <span class="badge free">free</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== TAB 3: EXPERIMENTAL (with password) ===== -->
-                <div id="tab-experimental" class="tab-content">
-                    <!-- Experimental Login Overlay -->
-                    <div id="experimentalLogin" class="show">
-                        <div class="exp-title">enter experimental password</div>
-                        <input type="password" id="expPasswordInput" placeholder="password" autofocus>
-                        <button onclick="checkExperimentalPassword()">unlock</button>
-                        <div class="exp-error" id="expError">access denied</div>
-                        <div class="exp-hint">hint: it's two words</div>
-                    </div>
-                    <!-- Experimental Links (hidden until password) -->
-                    <div id="experimentalLinks" style="display:none;">
-                        <div class="link-list">
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg')">
-                                <span>homework (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2/main.svg')">
-                                <span>copy-2 (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2@main/main.svg')">
-                                <span>copy-2 (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/pineapple-petezah/homework/main.svg')">
-                                <span>homework (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://zxgzmbkfogafegoaenus.supabase.co/storage/v1/object/public/test/PETEZAH/main.svg')">
-                                <span>supabase (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/timmy-tuffnuckles.svg')">
-                                <span>timmy-tuffnuckles</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg')">
-                                <span>homeworkpractive (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/english.svg')">
-                                <span>english</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg')">
-                                <span>petezahiscool (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/boii.svg')">
-                                <span>boii</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://quantil.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg')">
-                                <span>pizza (quantil)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://gcore.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg')">
-                                <span>pizza (gcore)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://fastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg')">
-                                <span>pizza (fastly)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://originfastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg')">
-                                <span>pizza (originfastly)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg')">
-                                <span>homework (main)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <!-- Bullproxy -->
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/bullproxy/index.html')">
-                                <span>bullproxy (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://bullproxy.s3.amazonaws.com/index.html')">
-                                <span>bullproxy (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/bulldebut/index.html')">
-                                <span>bulldebut (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://bulldebut.s3.amazonaws.com/index.html')">
-                                <span>bulldebut (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/finallybull/index.html')">
-                                <span>finallybull (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://finallybull.s3.amazonaws.com/index.html')">
-                                <span>finallybull (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/rahisbullsgoat/index.html')">
-                                <span>rahisbullsgoat (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://rahisbullsgoat.s3.amazonaws.com/index.html')">
-                                <span>rahisbullsgoat (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/m0ths/index.html')">
-                                <span>m0ths (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://m0ths.s3.amazonaws.com/index.html')">
-                                <span>m0ths (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/6q85/index.html')">
-                                <span>6q85 (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://6q85.s3.amazonaws.com/index.html')">
-                                <span>6q85 (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/sk7v/index.html')">
-                                <span>sk7v (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://sk7v.s3.amazonaws.com/index.html')">
-                                <span>sk7v (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/oiop/index.html')">
-                                <span>oiop (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://oiop.s3.amazonaws.com/index.html')">
-                                <span>oiop (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/iuyt/index.html')">
-                                <span>iuyt (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://iuyt.s3.amazonaws.com/index.html')">
-                                <span>iuyt (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://s3.amazonaws.com/jlkl/index.html')">
-                                <span>jlkl (s3)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                            <div class="option" onclick="openExperimentalLink('https://jlkl.s3.amazonaws.com/index.html')">
-                                <span>jlkl (s3 aws)</span>
-                                <span class="badge experimental">exp</span>
-                            </div>
-                        </div>
-                        <div class="tab-hint">experimental unlocked</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- password view (hidden initially) -->
-            <div id="passwordView" style="display:none;">
-                <div class="selected-link" id="selectedLinkDisplay">site name</div>
-                <input type="password" id="passwordInput" placeholder="enter password" autofocus>
-                <button onclick="checkPassword()">unlock</button>
-                <div id="error">access denied</div>
-                <!-- ===== BACK BUTTON - UNDER UNLOCK ===== -->
-                <div class="back-btn-wrapper show" id="backBtnWrapper">
-                    <button class="back-btn" onclick="showLinkList()">
-                        <span>←</span> <span>back</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== FOOTER CREDIT ===== -->
-        <div class="footer-credit">made by dreadingg | gio &lt;3</div>
-    </div>
-
-    <!-- splash screen -->
-    <div id="splash">
-        <div class="text" id="splashText">fall <span>productions</span></div>
-        <div class="quote" id="splashQuote"></div>
-    </div>
-
-    <!-- mirror content -->
-    <div id="iframe-container">
-        <iframe id="mirror-iframe" src=""></iframe>
-        <button class="logout-btn" onclick="logout()">exit</button>
-    </div>
-
-    <script>
-        // =============================================
-        // ===== EXTERNAL LINK BLOCKER =====
-        // =============================================
-        (function() {
-            'use strict';
-
-            // 1. BLOCK window.open() - stops popups/tabs
-            window.open = function(url) {
-                console.warn('🛡️ Blocked popup:', url);
-                const iframe = document.getElementById('mirror-iframe');
-                if (iframe && url) {
-                    iframe.src = url;
-                } else if (url) {
-                    window.location.href = url;
-                }
-                return null;
-            };
-
-            // 2. FORCE all links to open in the same page
-            function fixLinks() {
-                document.querySelectorAll('a').forEach(function(link) {
-                    if (link.target === '_blank' || link.target === '_new') {
-                        link.target = '_self';
-                        link.removeAttribute('rel');
-                    }
-                    
-                    link.addEventListener('click', function(e) {
-                        const iframe = document.getElementById('mirror-iframe');
-                        if (iframe && this.href) {
-                            e.preventDefault();
-                            iframe.src = this.href;
-                        }
-                    });
-                });
-            }
-
-            // 3. BLOCK middle-click (opens new tab)
-            document.addEventListener('auxclick', function(e) {
-                if (e.button === 1) {
-                    const link = e.target.closest('a');
-                    if (link && link.href) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const iframe = document.getElementById('mirror-iframe');
-                        if (iframe) {
-                            iframe.src = link.href;
-                        } else {
-                            window.location.href = link.href;
-                        }
-                        return false;
-                    }
-                }
-            }, true);
-
-            // 4. BLOCK Ctrl+Click and Shift+Click
-            document.addEventListener('click', function(e) {
-                if (e.ctrlKey || e.metaKey || e.shiftKey) {
-                    const link = e.target.closest('a');
-                    if (link && link.href) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const iframe = document.getElementById('mirror-iframe');
-                        if (iframe) {
-                            iframe.src = link.href;
-                        } else {
-                            window.location.href = link.href;
-                        }
-                        return false;
-                    }
-                }
-            }, true);
-
-            // 5. WATCH for new links added to the page
-            const observer = new MutationObserver(function() {
-                fixLinks();
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            // 6. OVERRIDE any attempt to set target="_blank"
-            const originalSetAttribute = Element.prototype.setAttribute;
-            Element.prototype.setAttribute = function(name, value) {
-                if (name === 'target' && (value === '_blank' || value === '_new')) {
-                    return originalSetAttribute.call(this, 'target', '_self');
-                }
-                return originalSetAttribute.call(this, name, value);
-            };
-
-            // 7. OVERRIDE target property directly
-            Object.defineProperty(HTMLAnchorElement.prototype, 'target', {
-                get: function() {
-                    return this.getAttribute('target') || '';
-                },
-                set: function(value) {
-                    if (value === '_blank' || value === '_new') {
-                        this.setAttribute('target', '_self');
-                    } else {
-                        this.setAttribute('target', value);
-                    }
-                }
-            });
-
-            // 8. RUN on page load
-            document.addEventListener('DOMContentLoaded', fixLinks);
-
-            console.log('🛡️ Mirror: All links stay on this page');
-        })();
-
-        // =============================================
-        // ===== ORIGINAL MIRROR JAVASCRIPT =====
-        // =============================================
-
-        // ===== HOVER DELAY TIMER =====
-        let hoverTimer = null;
-        const HOVER_DELAY = 400;
-
-        function startHoverTimer(tab) {
-            clearHoverTimer();
-            hoverTimer = setTimeout(() => {
-                switchTab(tab);
-            }, HOVER_DELAY);
-        }
-
-        function clearHoverTimer() {
-            if (hoverTimer) {
-                clearTimeout(hoverTimer);
-                hoverTimer = null;
-            }
-        }
-
-        // ===== QUOTES DATABASE =====
-        const quotes = [
-            { text: "the unexamined life is not worth living", attribution: "socrates" },
-            { text: "i think, therefore i am", attribution: "descartes" },
-            { text: "the only true wisdom is in knowing you know nothing", attribution: "socrates" },
-            { text: "to be or not to be, that is the question", attribution: "shakespeare" },
-            { text: "the cave you fear to enter holds the treasure you seek", attribution: "joseph campbell" },
-            { text: "life is really simple, but we insist on making it complicated", attribution: "confucius" },
-            { text: "the journey of a thousand miles begins with one step", attribution: "lao tzu" },
-            { text: "he who has a why to live can bear almost any how", attribution: "nietzsche" },
-            { text: "we suffer more often in imagination than in reality", attribution: "seneca" },
-            { text: "the only thing i know is that i know nothing", attribution: "socrates" },
-            { text: "it does not matter how slowly you go as long as you do not stop", attribution: "confucius" },
-            { text: "the mind is everything. what you think you become", attribution: "buddha" },
-            { text: "we are what we repeatedly do. excellence, then, is not an act, but a habit", attribution: "aristotle" },
-            { text: "the function of prayer is not to influence god, but to change the nature of the one who prays", attribution: "kierkegaard" },
-            { text: "life can only be understood backwards; but it must be lived forwards", attribution: "kierkegaard" },
-            { text: "the greater the difficulty, the more the glory in surmounting it", attribution: "epicurus" },
-            { text: "it is not death that a man should fear, but he should fear never beginning to live", attribution: "marcus aurelius" },
-            { text: "the happiness of your life depends upon the quality of your thoughts", attribution: "marcus aurelius" },
-            { text: "we have two ears and one mouth so we can listen twice as much as we speak", attribution: "epictetus" },
-            { text: "first say to yourself what you would be; and then do what you have to do", attribution: "epictetus" },
-            { text: "the soul is dyed the color of its thoughts", attribution: "marcus aurelius" },
-            { text: "be kind, for everyone you meet is fighting a hard battle", attribution: "plato" },
-            { text: "the measure of a man is what he does with power", attribution: "plato" },
-            { text: "the secret of change is to focus all your energy not on fighting the old, but on building the new", attribution: "socrates" },
-            { text: "there is only one good, knowledge, and one evil, ignorance", attribution: "socrates" },
-            { text: "the greatest wealth is to live content with little", attribution: "plato" },
-            { text: "the beginning is the most important part of the work", attribution: "plato" },
-            { text: "character is simply habit long continued", attribution: "plutarch" },
-            { text: "the whole is greater than the sum of its parts", attribution: "aristotle" },
-            { text: "knowing yourself is the beginning of all wisdom", attribution: "aristotle" },
-            { text: "the more you know, the more you realize you don't know", attribution: "aristotle" },
-            { text: "i cannot teach anybody anything. i can only make them think", attribution: "socrates" },
-            { text: "the only real failure is the failure to try", attribution: "seneca" },
-            { text: "luck is what happens when preparation meets opportunity", attribution: "seneca" },
-            { text: "the greatest minds are capable of the greatest vices as well as of the greatest virtues", attribution: "descartes" },
-            { text: "doubt is the origin of wisdom", attribution: "descartes" },
-            { text: "the more we know, the more we know we don't know", attribution: "lao tzu" },
-            { text: "the way out is through the door. why is it that no one will use it?", attribution: "confucius" },
-            { text: "the man who moves a mountain begins by carrying away small stones", attribution: "confucius" },
-            { text: "everything has beauty, but not everyone sees it", attribution: "confucius" },
-            { text: "the world is a book and those who do not travel read only one page", attribution: "augustine" },
-            { text: "the heart has its reasons which reason knows nothing of", attribution: "pascal" },
-            { text: "the more we try to understand, the more mysterious it becomes", attribution: "pascal" },
-            { text: "all our knowledge begins with the senses, proceeds then to the understanding, and ends with reason", attribution: "kant" },
-            { text: "the only thing necessary for the triumph of evil is for good men to do nothing", attribution: "edmund burke" },
-            { text: "life is not about finding yourself. life is about creating yourself", attribution: "george bernard shaw" },
-            { text: "the power of accurate observation is commonly called cynicism by those who have not got it", attribution: "george bernard shaw" },
-            { text: "the only way to find true happiness is to risk being completely cut open", attribution: "chuck palahniuk" },
-            { text: "you are not a drop in the ocean. you are the entire ocean in a drop", attribution: "rumi" },
-            { text: "the wound is the place where the light enters you", attribution: "rumi" },
-            { text: "oscar gucci morty", attribution: "" },
-            { text: "julian gucci morty", attribution: "" },
-            { text: "jacob gucci morty", attribution: "" },
-            { text: "cameron gucci morty", attribution: "" },
-            { text: "gio gucci morty", attribution: "" },
-            { text: "saul gucci morty", attribution: "" },
-            { text: "ian gucci morty", attribution: "" }
-        ];
-
-        // ===== PASSWORD-PROTECTED LINKS =====
-        const links = {
-            "gclassroom": "https://storage.googleapis.com/gclassroom/index.html",
-            "clever-s3": "https://cleverlearning.s3.amazonaws.com/index.html",
-            "clever": "https://s3.amazonaws.com/cleverlearning/index.html",
-            "pages": "https://opiumbest.github.io/",
-            "opium-s3": "https://opiumisbest.s3.amazonaws.com/index.html",
-            "opium": "https://s3.amazonaws.com/opiumisbest/index.html",
-            "best": "https://storage.googleapis.com/opiumbest/index.html",
-            "svg-cdn": "https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg",
-            "cdn": "https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg",
-            "statically": "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg",
-            "raw-esm": "https://raw.esm.sh/gh/OpiumBest/svg/index.svg"
-        };
-
-        const splashTexts = {
-            "gclassroom": "gclassroom",
-            "clever-s3": "clever learning",
-            "clever": "clever learning",
-            "pages": "github pages",
-            "opium-s3": "opium best",
-            "opium": "opium best",
-            "best": "opium storage",
-            "svg-cdn": "svg mirror",
-            "cdn": "cdn mirror",
-            "statically": "svg static",
-            "raw-esm": "svg raw"
-        };
-
-        const displayNames = {
-            "gclassroom": "gclassroom (storage)",
-            "clever-s3": "cleverlearning (s3)",
-            "clever": "cleverlearning (s3 alt)",
-            "pages": "opiumbest (github)",
-            "opium-s3": "opiumisbest (s3)",
-            "opium": "opiumisbest (s3 alt)",
-            "best": "opiumbest (storage)",
-            "svg-cdn": "svg (jsdelivr)",
-            "cdn": "svg (cdn)",
-            "statically": "svg (statically)",
-            "raw-esm": "svg (raw.esm)"
-        };
-
-        const passwords = {
-            "gclassroom": "clever",
-            "clever-s3": "clever",
-            "clever": "fall",
-            "pages": "pages",
-            "opium-s3": "opium",
-            "opium": "opium",
-            "best": "best",
-            "svg-cdn": "svg",
-            "cdn": "cdn",
-            "statically": "svg",
-            "raw-esm": "svg"
-        };
-
-        let selectedKey = null;
-        let currentTab = 'protected';
-
-        // ===== TAB SWITCHING =====
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tab + '-btn').classList.add('active');
-            
-            const currentContent = document.querySelector('.tab-content.active');
-            const newContent = document.getElementById('tab-' + tab);
-            
-            if (currentContent === newContent) return;
-            
-            if (currentContent) {
-                currentContent.style.opacity = '0';
-                currentContent.style.transform = 'translateY(6px)';
-                setTimeout(() => {
-                    currentContent.classList.remove('active');
-                    currentContent.style.opacity = '';
-                    currentContent.style.transform = '';
-                }, 250);
-            }
-            
-            setTimeout(() => {
-                newContent.classList.add('active');
-                newContent.style.opacity = '0';
-                newContent.style.transform = 'translateY(6px)';
-                requestAnimationFrame(() => {
-                    newContent.style.opacity = '1';
-                    newContent.style.transform = 'translateY(0)';
-                    newContent.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-                    setTimeout(() => {
-                        newContent.style.opacity = '';
-                        newContent.style.transform = '';
-                        newContent.style.transition = '';
-                    }, 300);
-                });
-            }, 250);
-            
-            // Reset experimental login when switching away
-            if (tab !== 'experimental') {
-                document.getElementById('experimentalLogin').classList.remove('show');
-                document.getElementById('experimentalLogin').style.display = 'none';
-                document.getElementById('experimentalLinks').style.display = 'none';
-                document.getElementById('expError').style.display = 'none';
-                document.getElementById('expPasswordInput').value = '';
-            } else {
-                document.getElementById('experimentalLogin').style.display = 'flex';
-                document.getElementById('experimentalLogin').classList.add('show');
-                document.getElementById('experimentalLinks').style.display = 'none';
-                document.getElementById('expError').style.display = 'none';
-                document.getElementById('expPasswordInput').value = '';
-                document.getElementById('expPasswordInput').focus();
-            }
-        }
-
-        // ===== EXPERIMENTAL PASSWORD =====
-        const EXP_PASSWORD = "dreading bro";
-
-        function checkExperimentalPassword() {
-            const input = document.getElementById('expPasswordInput');
-            const error = document.getElementById('expError');
-            const password = input.value.trim().toLowerCase();
-
-            if (password === EXP_PASSWORD) {
-                document.getElementById('experimentalLogin').classList.remove('show');
-                document.getElementById('experimentalLogin').style.display = 'none';
-                document.getElementById('experimentalLinks').style.display = 'block';
-                error.style.display = 'none';
-                input.value = '';
-            } else {
-                error.textContent = 'access denied';
-                error.style.display = 'block';
-                input.value = '';
-                input.focus();
-                input.style.borderColor = '#ff5a6a';
-                setTimeout(() => input.style.borderColor = '#181830', 800);
-            }
-        }
-
-        document.getElementById('expPasswordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkExperimentalPassword();
-            }
-        });
-
-        // ===== EXPERIMENTAL LINK FUNCTION =====
-        function openExperimentalLink(url) {
-            document.getElementById('login').classList.add('fade-out');
-            
-            const splash = document.getElementById('splash');
-            const textElement = document.getElementById('splashText');
-            const quoteElement = document.getElementById('splashQuote');
-            
-            textElement.innerHTML = 'experimental';
-            textElement.style.opacity = '1';
-            
-            const randomQuote = getRandomQuote();
-            if (randomQuote.attribution) {
-                quoteElement.innerHTML = `"${randomQuote.text}" <span class="attribution">— ${randomQuote.attribution}</span>`;
-            } else {
-                quoteElement.textContent = randomQuote.text;
-            }
-            quoteElement.classList.remove('show', 'fade-out');
-            
-            splash.style.display = 'flex';
-            
-            setTimeout(() => {
-                splash.classList.add('show');
-                
-                setTimeout(() => {
-                    quoteElement.classList.add('show');
-                }, 500);
-                
-                setTimeout(() => {
-                    quoteElement.classList.remove('show');
-                    quoteElement.classList.add('fade-out');
-                    textElement.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        splash.classList.remove('show');
-                        splash.classList.add('fade-out');
-                        
-                        setTimeout(() => {
-                            splash.style.display = 'none';
-                            splash.classList.remove('fade-out');
-                            textElement.style.opacity = '1';
-                            
-                            document.getElementById('mirror-iframe').src = url;
-                            document.getElementById('iframe-container').style.display = 'block';
-                            setTimeout(() => {
-                                document.getElementById('iframe-container').classList.add('fade-in');
-                            }, 50);
-                            
-                            const logoutBtn = document.querySelector('.logout-btn');
-                            logoutBtn.style.display = 'block';
-                            setTimeout(() => logoutBtn.classList.add('show'), 300);
-                        }, 800);
-                    }, 400);
-                }, 2500);
-            }, 50);
-        }
-
-        // ===== FREE LINK FUNCTION =====
-        function openFreeLink(url) {
-            document.getElementById('login').classList.add('fade-out');
-            
-            const splash = document.getElementById('splash');
-            const textElement = document.getElementById('splashText');
-            const quoteElement = document.getElementById('splashQuote');
-            
-            textElement.style.opacity = '1';
-            quoteElement.classList.remove('show', 'fade-out');
-            
-            const randomQuote = getRandomQuote();
-            if (randomQuote.attribution) {
-                quoteElement.innerHTML = `"${randomQuote.text}" <span class="attribution">— ${randomQuote.attribution}</span>`;
-            } else {
-                quoteElement.textContent = randomQuote.text;
-            }
-            
-            splash.style.display = 'flex';
-            
-            setTimeout(() => {
-                splash.classList.add('show');
-                
-                setTimeout(() => {
-                    quoteElement.classList.add('show');
-                }, 500);
-                
-                setTimeout(() => {
-                    quoteElement.classList.remove('show');
-                    quoteElement.classList.add('fade-out');
-                    textElement.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        splash.classList.remove('show');
-                        splash.classList.add('fade-out');
-                        
-                        setTimeout(() => {
-                            splash.style.display = 'none';
-                            splash.classList.remove('fade-out');
-                            textElement.style.opacity = '1';
-                            
-                            document.getElementById('mirror-iframe').src = url;
-                            document.getElementById('iframe-container').style.display = 'block';
-                            setTimeout(() => {
-                                document.getElementById('iframe-container').classList.add('fade-in');
-                            }, 50);
-                            
-                            const logoutBtn = document.querySelector('.logout-btn');
-                            logoutBtn.style.display = 'block';
-                            setTimeout(() => logoutBtn.classList.add('show'), 300);
-                        }, 800);
-                    }, 400);
-                }, 2500);
-            }, 50);
-        }
-
-        // ===== PASSWORD FUNCTIONS =====
-        function selectLink(key) {
-            selectedKey = key;
-            document.getElementById('linkListView').style.display = 'none';
-            document.getElementById('passwordView').style.display = 'block';
-            document.getElementById('selectedLinkDisplay').textContent = displayNames[key] || key;
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordInput').focus();
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('passwordInput').placeholder = 'enter password';
-        }
-
-        function showLinkList() {
-            selectedKey = null;
-            document.getElementById('linkListView').style.display = 'block';
-            document.getElementById('passwordView').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordInput').placeholder = 'enter password';
-        }
-
-        function getRandomQuote() {
-            return quotes[Math.floor(Math.random() * quotes.length)];
-        }
-
-        function checkPassword() {
-            const input = document.getElementById('passwordInput');
-            const error = document.getElementById('error');
-            const password = input.value.trim().toLowerCase();
-
-            if (!selectedKey) {
-                error.textContent = 'select a site first';
-                error.style.display = 'block';
-                return;
-            }
-
-            if (password === passwords[selectedKey]) {
-                document.getElementById('login').classList.add('fade-out');
-                error.style.display = 'none';
-                
-                const splash = document.getElementById('splash');
-                const textElement = document.getElementById('splashText');
-                const quoteElement = document.getElementById('splashQuote');
-                const splashText = splashTexts[selectedKey] || "fall productions";
-                
-                textElement.innerHTML = splashText.replace(/ /g, ' <span>') + '</span>';
-                const words = splashText.split(' ');
-                if (words.length > 1) {
-                    const lastWord = words.pop();
-                    textElement.innerHTML = words.join(' ') + ' <span>' + lastWord + '</span>';
-                } else {
-                    textElement.innerHTML = '<span>' + splashText + '</span>';
-                }
-                textElement.style.opacity = '1';
-                
-                const randomQuote = getRandomQuote();
-                if (randomQuote.attribution) {
-                    quoteElement.innerHTML = `"${randomQuote.text}" <span class="attribution">— ${randomQuote.attribution}</span>`;
-                } else {
-                    quoteElement.textContent = randomQuote.text;
-                }
-                quoteElement.classList.remove('show', 'fade-out');
-                
-                splash.style.display = 'flex';
-                
-                setTimeout(() => {
-                    splash.classList.add('show');
-                    
-                    setTimeout(() => {
-                        quoteElement.classList.add('show');
-                    }, 500);
-                    
-                    setTimeout(() => {
-                        quoteElement.classList.remove('show');
-                        quoteElement.classList.add('fade-out');
-                        textElement.style.opacity = '0';
-                        
-                        setTimeout(() => {
-                            splash.classList.remove('show');
-                            splash.classList.add('fade-out');
-                            
-                            setTimeout(() => {
-                                splash.style.display = 'none';
-                                splash.classList.remove('fade-out');
-                                textElement.style.opacity = '1';
-                                
-                                document.getElementById('mirror-iframe').src = links[selectedKey];
-                                document.getElementById('iframe-container').style.display = 'block';
-                                setTimeout(() => {
-                                    document.getElementById('iframe-container').classList.add('fade-in');
-                                }, 50);
-                                
-                                const logoutBtn = document.querySelector('.logout-btn');
-                                logoutBtn.style.display = 'block';
-                                setTimeout(() => logoutBtn.classList.add('show'), 300);
-                            }, 800);
-                        }, 400);
-                    }, 2500);
-                }, 50);
-                
-            } else {
-                error.textContent = 'access denied';
-                error.style.display = 'block';
-                input.value = '';
-                input.focus();
-                input.style.borderColor = '#ff5a6a';
-                setTimeout(() => input.style.borderColor = '#181830', 800);
-            }
-        }
-
-        function logout() {
-            const container = document.getElementById('iframe-container');
-            container.classList.remove('fade-in');
-
-            const logoutBtn = document.querySelector('.logout-btn');
-            logoutBtn.classList.remove('show');
-
-            setTimeout(() => {
-                container.style.display = 'none';
-                logoutBtn.style.display = 'none';
-                document.getElementById('mirror-iframe').src = '';
-                document.getElementById('login').classList.remove('fade-out');
-                showLinkList();
-            }, 500);
-        }
-
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-    </script>
-
 </body>
 </html>
