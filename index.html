@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mirror</title>
+    <title>Settings</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -18,102 +19,373 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: auto;
+            overflow: hidden;
             padding: 16px;
+            transition: background 0.5s ease, color 0.5s ease;
         }
-        .main-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 400px;
+        /* ===== THEMES ===== */
+        body.theme-dark {
+            background: #050508;
+            color: #e0e0e0;
         }
-        #login {
-            background: transparent;
-            padding: 24px 20px;
-            border-radius: 10px;
-            border: 1px solid rgba(26, 26, 46, 0.3);
-            box-shadow: none;
+        body.theme-light {
+            background: #f0f0f5;
+            color: #1a1a2e;
+        }
+        body.theme-purple {
+            background: #0a0a1a;
+            color: #d0c0ff;
+        }
+        body.theme-cyan {
+            background: #050f12;
+            color: #b0e0e6;
+        }
+        body.theme-pink {
+            background: #12050f;
+            color: #ffc0d0;
+        }
+        body.theme-green {
+            background: #050f08;
+            color: #b0e0b0;
+        }
+        body.theme-orange {
+            background: #120f05;
+            color: #ffd0a0;
+        }
+        body.theme-forest {
+            background: #060d08;
+            color: #a0c0a0;
+        }
+        body.theme-lavender {
+            background: #0a0818;
+            color: #c8b8f0;
+        }
+        body.theme-slate {
+            background: #0a0a12;
+            color: #b0b8c8;
+        }
+        body.theme-rose {
+            background: #14080a;
+            color: #f0b8b8;
+        }
+        body.theme-ocean {
+            background: #060a18;
+            color: #90b8e0;
+        }
+        body.theme-sunset {
+            background: #140a06;
+            color: #f0c8a0;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .demo-content {
             text-align: center;
-            width: 100%;
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            z-index: 10;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            background: rgba(5, 5, 8, 0.25);
+            max-width: 500px;
+            padding: 20px;
         }
-        #login.fade-out {
-            opacity: 0;
-            transform: scale(0.96);
-            pointer-events: none;
-        }
-        #login .selected-link {
-            font-size: 12px;
-            color: #7a7aff;
-            margin-bottom: 12px;
-            letter-spacing: 0.3px;
-            text-transform: lowercase;
-            border-bottom: 1px solid rgba(20, 20, 42, 0.4);
-            padding-bottom: 8px;
-        }
-        #login input {
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(8, 8, 15, 0.5);
-            border: 1px solid rgba(24, 24, 48, 0.4);
-            border-radius: 5px;
-            color: #d0d0e0;
-            font-size: 13px;
-            outline: none;
-            transition: border 0.3s;
-            margin-bottom: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-        #login input:focus {
-            border-color: #6a6aff;
-            box-shadow: 0 0 16px rgba(100, 100, 255, 0.05);
-        }
-        #login input::placeholder {
-            color: #3a3a55;
+        .demo-content h1 {
             font-weight: 300;
-            letter-spacing: 0.3px;
+            letter-spacing: 6px;
+            font-size: 28px;
+            margin-bottom: 12px;
+            transition: color 0.5s ease;
         }
-        #login button {
-            width: 100%;
-            padding: 8px;
-            background: #6a6aff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 1.2px;
+        .demo-content h1 span {
+            color: #6a6aff;
+            transition: color 0.5s ease;
+        }
+        .demo-content p {
+            font-size: 13px;
+            color: #666688;
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+            transition: color 0.5s ease;
+        }
+        .demo-content .badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 16px;
+            background: rgba(106, 106, 255, 0.1);
+            border: 1px solid rgba(106, 106, 255, 0.2);
+            border-radius: 20px;
+            font-size: 10px;
+            color: #6a6aff;
+            letter-spacing: 1px;
+            transition: all 0.5s ease;
+        }
+
+        /* ===== SETTINGS BUTTON (bottom-right corner) ===== */
+        .settings-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(106, 106, 255, 0.15);
+            border: 1px solid rgba(106, 106, 255, 0.2);
+            color: #6a6aff;
+            font-size: 18px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .settings-toggle:hover {
+            background: rgba(106, 106, 255, 0.25);
+            transform: scale(1.05);
+            border-color: rgba(106, 106, 255, 0.4);
+        }
+        .settings-toggle .icon {
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .settings-toggle.active .icon {
+            transform: rotate(90deg);
+        }
+
+        /* ===== SETTINGS PANEL (expands from corner) ===== */
+        .settings-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            max-height: 70vh;
+            background: rgba(10, 10, 20, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 26, 46, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            z-index: 99;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+        .settings-panel.open {
+            width: 340px;
+            height: 440px;
+            opacity: 1;
+            pointer-events: all;
+            padding: 20px;
+            border-radius: 16px;
+        }
+        @media (max-width: 480px) {
+            .settings-panel.open {
+                width: calc(100vw - 40px);
+                height: 60vh;
+                bottom: 16px;
+                right: 16px;
+            }
+            .settings-toggle {
+                bottom: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+
+        .settings-panel::-webkit-scrollbar {
+            width: 3px;
+        }
+        .settings-panel::-webkit-scrollbar-track {
+            background: rgba(8, 8, 15, 0.2);
+        }
+        .settings-panel::-webkit-scrollbar-thumb {
+            background: #1a1a3e;
+            border-radius: 2px;
+        }
+
+        .settings-panel h3 {
+            font-weight: 300;
+            letter-spacing: 2px;
+            font-size: 13px;
+            color: #8888aa;
+            margin-bottom: 14px;
             text-transform: lowercase;
+            border-bottom: 1px solid rgba(26, 26, 46, 0.3);
+            padding-bottom: 10px;
+        }
+
+        /* ===== SETTINGS SECTIONS ===== */
+        .setting-group {
+            margin-bottom: 14px;
+        }
+        .setting-group label {
+            display: block;
+            font-size: 10px;
+            color: #555566;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            margin-bottom: 6px;
+        }
+
+        /* ===== CURSOR EFFECTS GRID ===== */
+        .cursor-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .cursor-option {
+            padding: 6px 4px;
+            background: rgba(8, 8, 15, 0.4);
+            border: 1px solid rgba(26, 26, 46, 0.2);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555566;
+        }
+        .cursor-option:hover {
+            border-color: rgba(106, 106, 255, 0.4);
+            background: rgba(106, 106, 255, 0.08);
+        }
+        .cursor-option.active {
+            border-color: #6a6aff;
+            background: rgba(106, 106, 255, 0.12);
+            box-shadow: 0 0 20px rgba(106, 106, 255, 0.06);
+        }
+        .cursor-option .label {
+            display: block;
+            font-size: 7px;
+            color: #555566;
+            margin-top: 2px;
             font-family: 'Inter', sans-serif;
-        }
-        #login button:hover {
-            background: #7a7aff;
-        }
-        #login button:active {
-            transform: scale(0.97);
-        }
-        #error {
-            color: #ff5a6a;
-            font-size: 11px;
-            margin-top: 10px;
-            display: none;
             letter-spacing: 0.3px;
         }
 
-        /* ===== BACK BUTTON - UNDER UNLOCK, CENTERED + TRANSPARENT ===== */
-        .back-btn-wrapper {
-            text-align: center;
-            margin-top: 10px;
-            display: none;
+        /* ===== THEME GRID ===== */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
         }
-        .back-btn-wrapper.show {
+        .theme-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid rgba(26, 26, 46, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .theme-option:hover {
+            transform: scale(1.05);
+            border-color: rgba(106, 106, 255, 0.4);
+        }
+        .theme-option.active {
+            border-color: #6a6aff;
+            box-shadow: 0 0 20px rgba(106, 106, 255, 0.1);
+        }
+        .theme-option .check {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+        .theme-option.active .check {
+            opacity: 1;
+        }
+        .theme-option .theme-label {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.3px;
+            text-transform: lowercase;
+            white-space: nowrap;
+        }
+
+        /* Theme Colors */
+        .theme-dark { background: #050508; }
+        .theme-light { background: #f0f0f5; }
+        .theme-purple { background: #0a0a1a; }
+        .theme-cyan { background: #050f12; }
+        .theme-pink { background: #12050f; }
+        .theme-green { background: #050f08; }
+        .theme-orange { background: #120f05; }
+        .theme-forest { background: #060d08; }
+        .theme-lavender { background: #0a0818; }
+        .theme-slate { background: #0a0a12; }
+        .theme-rose { background: #14080a; }
+        .theme-ocean { background: #060a18; }
+        .theme-sunset { background: #140a06; }
+
+        /* ===== RESET BUTTON ===== */
+        .reset-btn {
+            padding: 6px 16px;
+            background: rgba(255, 90, 106, 0.1);
+            border: 1px solid rgba(255, 90, 106, 0.2);
+            border-radius: 6px;
+            color: #ff5a6a;
+            font-size: 9px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: lowercase;
+        }
+        .reset-btn:hover {
+            background: rgba(255, 90, 106, 0.2);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            font-size: 7px;
+            color: #2a2a44;
+            letter-spacing: 0.5px;
+            text-align: right;
+            z-index: 50;
+        }
+
+        /* ===== CURSOR TRAIL (JS injected) ===== */
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="demo-content">
+        <h1>dreading <span>portal</span></h1>
+        <p>click the settings icon to customize<br>your cursor and theme</p>
+        <div class="badge">✦ settings available</div>
+    </div>
+
+    <!-- ===== SETTINGS TOGGLE ===== -->
+    <button class="settings-toggle" id="settings        .back-btn-wrapper.show {
             display: block;
         }
         .back-btn {
