@@ -566,7 +566,7 @@
             font-weight: normal;
         }
 
-        /* FULLSCREEN OVERLAY - completely separate from main UI */
+        /* FULLSCREEN OVERLAY - completely separate */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -673,7 +673,7 @@
     <div class="shooting-star"></div>
 </div>
 
-<!-- FULLSCREEN OVERLAY - completely separate -->
+<!-- FULLSCREEN OVERLAY -->
 <div class="fullscreen-overlay" id="fullscreenOverlay">
     <div class="fullscreen-controls">
         <span class="fullscreen-title">Fullscreen View</span>
@@ -1037,7 +1037,7 @@
     }
 
     // ============================================================
-    // FULLSCREEN - FIXED with overlay
+    // FULLSCREEN - FIXED with working exit button
     // ============================================================
     function enterFullscreen(wrapperId) {
         var wrapper = document.getElementById(wrapperId);
@@ -1046,14 +1046,11 @@
         var fullscreenIframe = document.getElementById('fullscreenIframe');
         
         if (iframe) {
-            // Copy the iframe src to the fullscreen iframe
             var src = iframe.src;
             if (src && src !== 'about:blank') {
                 fullscreenIframe.src = src;
             } else {
-                // If no link loaded, show a message
                 fullscreenIframe.src = 'about:blank';
-                // We'll show a message via the overlay
             }
             overlay.classList.add('active');
         }
