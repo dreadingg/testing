@@ -299,13 +299,6 @@
             color: #888;
             margin-top: 4px;
         }
-        .info-text .highlight {
-            background: #f8f9fa;
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin: 16px 0;
-            border-left: 4px solid #4a90d9;
-        }
         .tag {
             display: inline-block;
             background: #f0f0f0;
@@ -475,12 +468,6 @@
                     <span class="number">ALWAYS</span>
                     <span class="label">UPDATED</span>
                 </div>
-            </div>
-            
-            <div class="highlight">
-                <strong>Passwords:</strong><br>
-                Pass tab: <code>new update</code><br>
-                Exp tab: <code>dreading bro</code>
             </div>
         </div>
     </div>
@@ -874,63 +861,4 @@
     }
 
     document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
-    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            unlockPass();
-        }
-    });
-
-    // ============================================================
-    // EXP UNLOCK (password: dreading bro)
-    // ============================================================
-    function unlockExp() {
-        var input = document.getElementById('expPasswordInput');
-        var entered = input.value.trim();
-        if (entered === EXP_PASSWORD) {
-            document.getElementById('expContent').classList.remove('locked');
-            document.getElementById('expErrorMsg').classList.remove('show');
-            input.value = '';
-            document.getElementById('expUnlockBtn').textContent = 'unlocked';
-            document.getElementById('expUnlockBtn').style.opacity = '0.6';
-            
-            if (expLinks.length > 0) {
-                var firstLink = document.querySelector('#expLinks .link-chip');
-                if (firstLink) {
-                    loadGenericLink(firstLink, expLinks[0], 'exp');
-                }
-            }
-        } else {
-            document.getElementById('expErrorMsg').classList.add('show');
-            setTimeout(function() {
-                document.getElementById('expErrorMsg').classList.remove('show');
-            }, 2000);
-        }
-    }
-
-    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
-    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            unlockExp();
-        }
-    });
-
-    // ============================================================
-    // INIT
-    // ============================================================
-    renderLinks('passLinks', passLinks, 'pass');
-    renderLinks('expLinks', expLinks, 'exp');
-    renderLinks('freeLinks', freeLinks, 'free');
-
-    window.onload = function() {
-        // Updates tab is now default
-    };
-
-    console.log('Pass password: "new update"');
-    console.log('Exp password: "dreading bro"');
-    console.log('Exp tab: ' + expLinks.length + ' links');
-    console.log('Free tab: ' + freeLinks.length + ' links');
-    console.log('Pass tab: ' + passLinks.length + ' links');
-</script>
-
-</body>
-</html>
+    document.getElementById
