@@ -23,6 +23,7 @@
             overflow: hidden;
             padding: 16px;
             transition: background 0.8s ease, color 0.8s ease;
+            cursor: default;
         }
 
         /* ===== BACKGROUND CANVAS ===== */
@@ -289,6 +290,69 @@
         body.theme-sunset #bgCanvas { opacity: 0.35; }
 
         /* =============================================
+           RAINBOW THEME
+           ============================================= */
+        body.theme-rainbow {
+            --accent: #ff6b6b;
+            --accent-hover: #ffd93d;
+            --accent-dim: rgba(255, 107, 107, 0.15);
+            --accent-dim-hover: rgba(255, 215, 0, 0.25);
+            --bg: rgba(5, 5, 8, 0.25);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0ff;
+            --text-muted: #9999bb;
+            --panel-bg: rgba(10, 10, 30, 0.5);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --badge-bg: rgba(255, 255, 255, 0.08);
+            --shadow: rgba(255, 200, 200, 0.1);
+            --border-hover: rgba(255, 215, 0, 0.3);
+            --bg-opacity: 0.35;
+            --rainbow-gradient: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcbff, #ff6b9d, #ff6b6b);
+        }
+        body.theme-rainbow #bgCanvas { opacity: 0.35; }
+        body.theme-rainbow .floating-arrow .arrow-icon { color: #ffd93d; }
+        body.theme-rainbow .floating-arrow .arrow-text { color: #ff6b9d; }
+        body.theme-rainbow .channel-btn .badge-channel { color: #6bcbff; }
+        body.theme-rainbow .channel-btn:hover { border-color: #ffd93d; }
+        body.theme-rainbow .settings-toggle { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); }
+        body.theme-rainbow .settings-toggle:hover { border-color: #ffd93d; }
+        body.theme-rainbow .cursor-option.active { border-color: #ff6b6b; }
+        body.theme-rainbow .theme-option.active { border-color: #ffd93d; }
+        body.theme-rainbow .bg-option.active { border-color: #6bcbff; }
+        body.theme-rainbow #webModal .mirror-login .tab-btn.active { color: #ffd93d; border-bottom-color: #ffd93d; }
+        body.theme-rainbow #webModal .mirror-login .link-list .option .badge { color: #6bcbff; }
+        body.theme-rainbow .footer-credit { color: #ff6b9d; }
+        body.theme-rainbow .footer-credit:hover { color: #ffd93d; }
+        body.theme-rainbow .floating-arrow {
+            border-image: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcbff, #ff6b9d) 1;
+            border-image-slice: 1;
+            border-width: 1px;
+            border-style: solid;
+        }
+        body.theme-rainbow .channel-btn {
+            border-image: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcbff, #ff6b9d) 1;
+            border-image-slice: 1;
+            border-width: 1px;
+            border-style: solid;
+        }
+        body.theme-rainbow #webModal .mirror-login button {
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcbff, #ff6b9d);
+            background-size: 300% 100%;
+            animation: rainbowMove 3s ease infinite;
+        }
+        body.theme-rainbow .settings-toggle {
+            background: linear-gradient(135deg, #ff6b6b33, #ffd93d33, #6bcbff33, #ff6b9d33);
+            background-size: 300% 300%;
+            animation: rainbowMove 4s ease infinite;
+        }
+        @keyframes rainbowMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* =============================================
            FLOATING ARROW
            ============================================= */
         .floating-arrow {
@@ -431,10 +495,12 @@
             padding: 20px;
             opacity: 0;
             transition: opacity 0.4s ease;
+            pointer-events: none;
         }
         .channel-modal.show {
             display: flex;
             opacity: 1;
+            pointer-events: all;
         }
         .channel-modal .modal-content {
             background: var(--panel-bg);
@@ -907,6 +973,16 @@
         .theme-rose { background: #14080a; }
         .theme-ocean { background: #060a18; }
         .theme-sunset { background: #140a06; }
+        .theme-rainbow {
+            background: linear-gradient(135deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff);
+            background-size: 300% 300%;
+            animation: rainbowBg 3s ease infinite;
+        }
+        @keyframes rainbowBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
         /* =============================================
            BACKGROUND SELECTOR
@@ -953,9 +1029,31 @@
         /* =============================================
            CURSOR EFFECTS
            ============================================= */
-        .cursor-glow { position: fixed; pointer-events: none; z-index: 9998; border-radius: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.5s ease, background 0.5s ease; }
-        .cursor-trail { position: fixed; pointer-events: none; z-index: 9997; border-radius: 50%; opacity: 0; transition: opacity 0.3s ease, background 0.5s ease; }
-        .cursor-sparkle { position: fixed; pointer-events: none; z-index: 9997; border-radius: 50%; opacity: 0; transition: opacity 0.6s ease, background 0.5s ease; }
+        .cursor-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9997;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9997;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
 
         /* =============================================
            FOOTER
@@ -1110,22 +1208,95 @@
                         <button class="tab-btn" onclick="switchTab('free')" id="tab-free-btn">free</button>
                         <button class="tab-btn" onclick="switchTab('experimental')" id="tab-experimental-btn">experimental</button>
                     </div>
+
+                    <!-- ===== TAB 1: PASSWORD PROTECTED ===== -->
                     <div id="tab-protected" class="tab-content active">
                         <div class="link-list">
-                            <div class="option" onclick="selectLink('gclassroom')"><span>gclassroom (storage)</span><span class="badge">******</span></div>
-                            <div class="option" onclick="selectLink('clever-s3')"><span>cleverlearning (s3)</span><span class="badge">******</span></div>
-                            <div class="option" onclick="selectLink('clever')"><span>cleverlearning (s3 alt)</span><span class="badge">****</span></div>
-                            <div class="option" onclick="selectLink('pages')"><span>opiumbest (github)</span><span class="badge">*****</span></div>
-                            <div class="option" onclick="selectLink('opium-s3')"><span>opiumisbest (s3)</span><span class="badge">******</span></div>
-                            <div class="option" onclick="selectLink('opium')"><span>opiumisbest (s3 alt)</span><span class="badge">*****</span></div>
-                            <div class="option" onclick="selectLink('best')"><span>opiumbest (storage)</span><span class="badge">****</span></div>
-                            <div class="option" onclick="selectLink('svg-cdn')"><span>svg (jsdelivr)</span><span class="badge">***</span></div>
-                            <div class="option" onclick="selectLink('cdn')"><span>svg (cdn)</span><span class="badge">***</span></div>
-                            <div class="option" onclick="selectLink('statically')"><span>svg (statically)</span><span class="badge">***</span></div>
-                            <div class="option" onclick="selectLink('raw-esm')"><span>svg (raw.esm)</span><span class="badge">***</span></div>
+                            <!-- OFFICIAL -->
+                            <div class="option" onclick="selectLink('opium-best')">
+                                <span>opium.best (official)</span>
+                                <span class="badge">****</span>
+                            </div>
+                            <!-- UNBLOCKED LINKS -->
+                            <div class="option" onclick="selectLink('svg-jsdelivr')">
+                                <span>svg (jsdelivr)</span>
+                                <span class="badge">***</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opium-storage')">
+                                <span>opiumbest (storage)</span>
+                                <span class="badge">****</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opium-s3')">
+                                <span>opiumbest (s3)</span>
+                                <span class="badge">*****</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opium-s3-aws')">
+                                <span>opiumbest (s3 aws)</span>
+                                <span class="badge">*****</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opium-npm')">
+                                <span>opiumbest (npm)</span>
+                                <span class="badge">****</span>
+                            </div>
+                            <div class="option" onclick="selectLink('pages')">
+                                <span>opiumbest (github)</span>
+                                <span class="badge">*****</span>
+                            </div>
+                            <div class="option" onclick="selectLink('svg-bcdn')">
+                                <span>svg (b-cdn)</span>
+                                <span class="badge">***</span>
+                            </div>
+                            <div class="option" onclick="selectLink('svg-statically')">
+                                <span>svg (statically)</span>
+                                <span class="badge">***</span>
+                            </div>
+                            <div class="option" onclick="selectLink('svg-raw-esm')">
+                                <span>svg (raw.esm)</span>
+                                <span class="badge">***</span>
+                            </div>
+                            <!-- UNBLOCKED, BRANDED, PARTNERSHIP -->
+                            <div class="option" onclick="selectLink('opiumbull-s3')">
+                                <span>opiumbull (s3)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opiumbull-storage')">
+                                <span>opiumbull (storage)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('bull33-jsdelivr')">
+                                <span>bull33 (jsdelivr)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('bull33-raw-esm')">
+                                <span>bull33 (raw.esm)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('bull33-statically')">
+                                <span>bull33 (statically)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('opiumbull-s3-aws')">
+                                <span>opiumbull (s3 aws)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <!-- UNBRANDED UNBLOCKED -->
+                            <div class="option" onclick="selectLink('clever-s3')">
+                                <span>cleverlearning (s3)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('clever-s3-aws')">
+                                <span>cleverlearning (s3 aws)</span>
+                                <span class="badge">******</span>
+                            </div>
+                            <div class="option" onclick="selectLink('gclassroom')">
+                                <span>gclassroom (storage)</span>
+                                <span class="badge">******</span>
+                            </div>
                         </div>
                         <div class="tab-hint">passwords hidden</div>
                     </div>
+
+                    <!-- ===== TAB 2: FREE ACCESS ===== -->
                     <div id="tab-free" class="tab-content">
                         <div class="link-list">
                             <div class="option" onclick="openFreeLink('https://storage.googleapis.com/fernisbest/index.html')"><span>fernisbest (storage)</span><span class="badge free">free</span></div>
@@ -1193,6 +1364,8 @@
                             <div class="option" onclick="openFreeLink('https://s3.amazonaws.com/writevc/index.html')"><span>writevc (s3)</span><span class="badge free">free</span></div>
                         </div>
                     </div>
+
+                    <!-- ===== TAB 3: EXPERIMENTAL ===== -->
                     <div id="tab-experimental" class="tab-content">
                         <div id="experimentalLogin" style="display:flex;flex-direction:column;align-items:center;padding:12px 0;">
                             <div style="font-size:12px;color:var(--text-secondary);letter-spacing:1px;text-transform:lowercase;margin-bottom:8px;transition:color 0.8s ease;">enter experimental password</div>
@@ -1243,6 +1416,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Password View -->
                 <div id="passwordView" style="display:none;">
                     <div class="selected-link" id="selectedLinkDisplay">site name</div>
                     <input type="password" id="passwordInput" placeholder="enter password" style="width:100%;padding:6px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);font-size:12px;outline:none;margin-bottom:6px;font-family:'Inter',sans-serif;transition:background 0.8s ease,border-color 0.8s ease,color 0.8s ease;">
@@ -1285,27 +1460,19 @@
                 <div class="update-date">📅 12:32, Tuesday</div>
                 <div class="section">
                     <div class="section-title">[ new features ]</div>
-                    <div class="item new">added 16 terminal script backgrounds (pipes, matrix, clock, starfield, fire, life, snow, rain, spinner, fireworks, water, galaxy, trees, moon, earth, banner)</div>
-                    <div class="item new">added background selector in settings</div>
-                    <div class="item new">all backgrounds change colors with themes</div>
-                    <div class="item new">added 10 cursor effects (glow, trail, sparkle, ring, cross, dot, heart, star, moon)</div>
-                    <div class="item new">added 13 color themes</div>
-                    <div class="item new">added settings panel with cursor, theme, and background controls</div>
-                    <div class="item new">settings now save to localStorage (remember your preferences)</div>
+                    <div class="item new">added 19 new password-protected links</div>
+                    <div class="item new">added official opium.best link</div>
+                    <div class="item new">added unblocked, branded partnership links</div>
+                    <div class="item new">added unbranded unblocked links</div>
+                    <div class="item new">fixed cursor effects on hover/click</div>
                 </div>
                 <div class="section">
                     <div class="section-title">[ ui improvements ]</div>
-                    <div class="item">removed main login password - open straight to channels</div>
-                    <div class="item">channels and settings always visible</div>
-                    <div class="item">random closing animations for channels</div>
-                    <div class="item">all colors smoothly transition with themes</div>
+                    <div class="item">cursor effects now work on all interactive elements</div>
                 </div>
                 <div class="section">
                     <div class="section-title">[ bug fixes ]</div>
-                    <div class="item">fixed all elements changing colors with themes</div>
-                    <div class="item">fixed cursor effects not working on hover/click</div>
-                    <div class="item">fixed fireworks background not looping</div>
-                    <div class="item">fixed background switching breaking other backgrounds</div>
+                    <div class="item">fixed cursor not working on mirror elements</div>
                 </div>
             </div>
         </div>
@@ -1325,22 +1492,22 @@
         <div class="setting-group">
             <label>background</label>
             <div class="bg-grid">
-                <div class="bg-option active" data-bg="pipes" onclick="saveAndApplyBg('pipes', this)">pipes</div>
-                <div class="bg-option" data-bg="matrix" onclick="saveAndApplyBg('matrix', this)">matrix</div>
-                <div class="bg-option" data-bg="clock" onclick="saveAndApplyBg('clock', this)">clock</div>
-                <div class="bg-option" data-bg="starfield" onclick="saveAndApplyBg('starfield', this)">stars</div>
-                <div class="bg-option" data-bg="fire" onclick="saveAndApplyBg('fire', this)">fire</div>
-                <div class="bg-option" data-bg="life" onclick="saveAndApplyBg('life', this)">life</div>
-                <div class="bg-option" data-bg="snow" onclick="saveAndApplyBg('snow', this)">snow</div>
-                <div class="bg-option" data-bg="rain" onclick="saveAndApplyBg('rain', this)">rain</div>
-                <div class="bg-option" data-bg="spinner" onclick="saveAndApplyBg('spinner', this)">spinner</div>
-                <div class="bg-option" data-bg="fireworks" onclick="saveAndApplyBg('fireworks', this)">fireworks</div>
-                <div class="bg-option" data-bg="water" onclick="saveAndApplyBg('water', this)">water</div>
-                <div class="bg-option" data-bg="galaxy" onclick="saveAndApplyBg('galaxy', this)">galaxy</div>
-                <div class="bg-option" data-bg="trees" onclick="saveAndApplyBg('trees', this)">trees</div>
-                <div class="bg-option" data-bg="moon" onclick="saveAndApplyBg('moon', this)">moon</div>
-                <div class="bg-option" data-bg="earth" onclick="saveAndApplyBg('earth', this)">earth</div>
-                <div class="bg-option" data-bg="banner" onclick="saveAndApplyBg('banner', this)">banner</div>
+                <div class="bg-option active" data-bg="pipes" onclick="setBackground('pipes', this)">pipes</div>
+                <div class="bg-option" data-bg="matrix" onclick="setBackground('matrix', this)">matrix</div>
+                <div class="bg-option" data-bg="clock" onclick="setBackground('clock', this)">clock</div>
+                <div class="bg-option" data-bg="starfield" onclick="setBackground('starfield', this)">stars</div>
+                <div class="bg-option" data-bg="fire" onclick="setBackground('fire', this)">fire</div>
+                <div class="bg-option" data-bg="life" onclick="setBackground('life', this)">life</div>
+                <div class="bg-option" data-bg="snow" onclick="setBackground('snow', this)">snow</div>
+                <div class="bg-option" data-bg="rain" onclick="setBackground('rain', this)">rain</div>
+                <div class="bg-option" data-bg="spinner" onclick="setBackground('spinner', this)">spinner</div>
+                <div class="bg-option" data-bg="fireworks" onclick="setBackground('fireworks', this)">fireworks</div>
+                <div class="bg-option" data-bg="water" onclick="setBackground('water', this)">water</div>
+                <div class="bg-option" data-bg="galaxy" onclick="setBackground('galaxy', this)">galaxy</div>
+                <div class="bg-option" data-bg="trees" onclick="setBackground('trees', this)">trees</div>
+                <div class="bg-option" data-bg="moon" onclick="setBackground('moon', this)">moon</div>
+                <div class="bg-option" data-bg="earth" onclick="setBackground('earth', this)">earth</div>
+                <div class="bg-option" data-bg="banner" onclick="setBackground('banner', this)">banner</div>
             </div>
         </div>
 
@@ -1348,16 +1515,16 @@
         <div class="setting-group">
             <label>cursor effects</label>
             <div class="cursor-grid">
-                <div class="cursor-option active" data-cursor="default" onclick="saveAndApplyCursor('default', this)"><span>⬛</span><span class="label">default</span></div>
-                <div class="cursor-option" data-cursor="glow" onclick="saveAndApplyCursor('glow', this)"><span>💜</span><span class="label">glow</span></div>
-                <div class="cursor-option" data-cursor="trail" onclick="saveAndApplyCursor('trail', this)"><span>✨</span><span class="label">trail</span></div>
-                <div class="cursor-option" data-cursor="sparkle" onclick="saveAndApplyCursor('sparkle', this)"><span>⭐</span><span class="label">sparkle</span></div>
-                <div class="cursor-option" data-cursor="ring" onclick="saveAndApplyCursor('ring', this)"><span>⭕</span><span class="label">ring</span></div>
-                <div class="cursor-option" data-cursor="cross" onclick="saveAndApplyCursor('cross', this)"><span>✚</span><span class="label">cross</span></div>
-                <div class="cursor-option" data-cursor="dot" onclick="saveAndApplyCursor('dot', this)"><span>●</span><span class="label">dot</span></div>
-                <div class="cursor-option" data-cursor="heart" onclick="saveAndApplyCursor('heart', this)"><span>❤</span><span class="label">heart</span></div>
-                <div class="cursor-option" data-cursor="star" onclick="saveAndApplyCursor('star', this)"><span>★</span><span class="label">star</span></div>
-                <div class="cursor-option" data-cursor="moon" onclick="saveAndApplyCursor('moon', this)"><span>🌙</span><span class="label">moon</span></div>
+                <div class="cursor-option active" data-cursor="default" onclick="setCursor('default', this)"><span>⬛</span><span class="label">default</span></div>
+                <div class="cursor-option" data-cursor="glow" onclick="setCursor('glow', this)"><span>💜</span><span class="label">glow</span></div>
+                <div class="cursor-option" data-cursor="trail" onclick="setCursor('trail', this)"><span>✨</span><span class="label">trail</span></div>
+                <div class="cursor-option" data-cursor="sparkle" onclick="setCursor('sparkle', this)"><span>⭐</span><span class="label">sparkle</span></div>
+                <div class="cursor-option" data-cursor="ring" onclick="setCursor('ring', this)"><span>⭕</span><span class="label">ring</span></div>
+                <div class="cursor-option" data-cursor="cross" onclick="setCursor('cross', this)"><span>✚</span><span class="label">cross</span></div>
+                <div class="cursor-option" data-cursor="dot" onclick="setCursor('dot', this)"><span>●</span><span class="label">dot</span></div>
+                <div class="cursor-option" data-cursor="heart" onclick="setCursor('heart', this)"><span>❤</span><span class="label">heart</span></div>
+                <div class="cursor-option" data-cursor="star" onclick="setCursor('star', this)"><span>★</span><span class="label">star</span></div>
+                <div class="cursor-option" data-cursor="moon" onclick="setCursor('moon', this)"><span>🌙</span><span class="label">moon</span></div>
             </div>
         </div>
 
@@ -1365,19 +1532,20 @@
         <div class="setting-group">
             <label>themes</label>
             <div class="theme-grid">
-                <div class="theme-option theme-dark active" data-theme="dark" onclick="saveAndApplyTheme('dark', this)"><span class="check">✓</span><span class="theme-label">dark</span></div>
-                <div class="theme-option theme-light" data-theme="light" onclick="saveAndApplyTheme('light', this)"><span class="check">✓</span><span class="theme-label">light</span></div>
-                <div class="theme-option theme-purple" data-theme="purple" onclick="saveAndApplyTheme('purple', this)"><span class="check">✓</span><span class="theme-label">purple</span></div>
-                <div class="theme-option theme-cyan" data-theme="cyan" onclick="saveAndApplyTheme('cyan', this)"><span class="check">✓</span><span class="theme-label">cyan</span></div>
-                <div class="theme-option theme-pink" data-theme="pink" onclick="saveAndApplyTheme('pink', this)"><span class="check">✓</span><span class="theme-label">pink</span></div>
-                <div class="theme-option theme-green" data-theme="green" onclick="saveAndApplyTheme('green', this)"><span class="check">✓</span><span class="theme-label">green</span></div>
-                <div class="theme-option theme-orange" data-theme="orange" onclick="saveAndApplyTheme('orange', this)"><span class="check">✓</span><span class="theme-label">orange</span></div>
-                <div class="theme-option theme-forest" data-theme="forest" onclick="saveAndApplyTheme('forest', this)"><span class="check">✓</span><span class="theme-label">forest</span></div>
-                <div class="theme-option theme-lavender" data-theme="lavender" onclick="saveAndApplyTheme('lavender', this)"><span class="check">✓</span><span class="theme-label">lavender</span></div>
-                <div class="theme-option theme-slate" data-theme="slate" onclick="saveAndApplyTheme('slate', this)"><span class="check">✓</span><span class="theme-label">slate</span></div>
-                <div class="theme-option theme-rose" data-theme="rose" onclick="saveAndApplyTheme('rose', this)"><span class="check">✓</span><span class="theme-label">rose</span></div>
-                <div class="theme-option theme-ocean" data-theme="ocean" onclick="saveAndApplyTheme('ocean', this)"><span class="check">✓</span><span class="theme-label">ocean</span></div>
-                <div class="theme-option theme-sunset" data-theme="sunset" onclick="saveAndApplyTheme('sunset', this)"><span class="check">✓</span><span class="theme-label">sunset</span></div>
+                <div class="theme-option theme-dark active" data-theme="dark" onclick="setTheme('dark', this)"><span class="check">✓</span><span class="theme-label">dark</span></div>
+                <div class="theme-option theme-light" data-theme="light" onclick="setTheme('light', this)"><span class="check">✓</span><span class="theme-label">light</span></div>
+                <div class="theme-option theme-purple" data-theme="purple" onclick="setTheme('purple', this)"><span class="check">✓</span><span class="theme-label">purple</span></div>
+                <div class="theme-option theme-cyan" data-theme="cyan" onclick="setTheme('cyan', this)"><span class="check">✓</span><span class="theme-label">cyan</span></div>
+                <div class="theme-option theme-pink" data-theme="pink" onclick="setTheme('pink', this)"><span class="check">✓</span><span class="theme-label">pink</span></div>
+                <div class="theme-option theme-green" data-theme="green" onclick="setTheme('green', this)"><span class="check">✓</span><span class="theme-label">green</span></div>
+                <div class="theme-option theme-orange" data-theme="orange" onclick="setTheme('orange', this)"><span class="check">✓</span><span class="theme-label">orange</span></div>
+                <div class="theme-option theme-forest" data-theme="forest" onclick="setTheme('forest', this)"><span class="check">✓</span><span class="theme-label">forest</span></div>
+                <div class="theme-option theme-lavender" data-theme="lavender" onclick="setTheme('lavender', this)"><span class="check">✓</span><span class="theme-label">lavender</span></div>
+                <div class="theme-option theme-slate" data-theme="slate" onclick="setTheme('slate', this)"><span class="check">✓</span><span class="theme-label">slate</span></div>
+                <div class="theme-option theme-rose" data-theme="rose" onclick="setTheme('rose', this)"><span class="check">✓</span><span class="theme-label">rose</span></div>
+                <div class="theme-option theme-ocean" data-theme="ocean" onclick="setTheme('ocean', this)"><span class="check">✓</span><span class="theme-label">ocean</span></div>
+                <div class="theme-option theme-sunset" data-theme="sunset" onclick="setTheme('sunset', this)"><span class="check">✓</span><span class="theme-label">sunset</span></div>
+                <div class="theme-option theme-rainbow" data-theme="rainbow" onclick="setTheme('rainbow', this)"><span class="check">✓</span><span class="theme-label">🌈</span></div>
             </div>
         </div>
 
@@ -1402,8 +1570,1394 @@
     </div>
 
     <!-- =============================================
-    JAVASCRIPT
+    JAVASCRIPT - ALL IN ONE
     ============================================= -->
-    <script src="script.js"></script>
+    <script>
+        // =============================================
+        // ===== BACKGROUND ENGINE =====
+        // =============================================
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let bgType = 'pipes';
+        let animFrame;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // ===== GET THEME COLOR =====
+        function getThemeColor() {
+            const body = document.body;
+            if (body.classList.contains('theme-purple')) return '#9b6bff';
+            if (body.classList.contains('theme-cyan')) return '#4dd0e1';
+            if (body.classList.contains('theme-pink')) return '#ff6b9d';
+            if (body.classList.contains('theme-green')) return '#66bb6a';
+            if (body.classList.contains('theme-orange')) return '#ffa726';
+            if (body.classList.contains('theme-forest')) return '#4caf50';
+            if (body.classList.contains('theme-lavender')) return '#b39ddb';
+            if (body.classList.contains('theme-slate')) return '#78909c';
+            if (body.classList.contains('theme-rose')) return '#ef5350';
+            if (body.classList.contains('theme-ocean')) return '#42a5f5';
+            if (body.classList.contains('theme-sunset')) return '#ff7043';
+            if (body.classList.contains('theme-light')) return '#6a6aff';
+            if (body.classList.contains('theme-rainbow')) {
+                const colors = ['#ff6b6b', '#ffd93d', '#6bcbff', '#ff6b9d'];
+                const index = Math.floor(Date.now() / 800) % colors.length;
+                return colors[index];
+            }
+            return '#6a6aff';
+        }
+
+        function getThemeSecondary() {
+            const body = document.body;
+            if (body.classList.contains('theme-purple')) return '#6a5a99';
+            if (body.classList.contains('theme-cyan')) return '#4a7a80';
+            if (body.classList.contains('theme-pink')) return '#884466';
+            if (body.classList.contains('theme-green')) return '#4a7a4a';
+            if (body.classList.contains('theme-orange')) return '#886040';
+            if (body.classList.contains('theme-forest')) return '#4a604a';
+            if (body.classList.contains('theme-lavender')) return '#685880';
+            if (body.classList.contains('theme-slate')) return '#505868';
+            if (body.classList.contains('theme-rose')) return '#805050';
+            if (body.classList.contains('theme-ocean')) return '#405870';
+            if (body.classList.contains('theme-sunset')) return '#805840';
+            if (body.classList.contains('theme-light')) return '#8888aa';
+            if (body.classList.contains('theme-rainbow')) {
+                const colors = ['#ff9b9b', '#ffe99d', '#9bd9ff', '#ff9bc9'];
+                const index = Math.floor(Date.now() / 800 + 1) % colors.length;
+                return colors[index];
+            }
+            return '#555566';
+        }
+
+        // =============================================
+        // ===== PIPES BACKGROUND =====
+        // =============================================
+        let pipes = [];
+
+        function createPipe() {
+            const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+            const startX = Math.random() * canvas.width;
+            const startY = Math.random() * canvas.height;
+            const dir = dirs[Math.floor(Math.random() * dirs.length)];
+            const len = Math.floor(Math.random() * 15 + 10);
+            const color = getThemeColor();
+            return {
+                x: startX,
+                y: startY,
+                dir: dir,
+                length: len,
+                color: color,
+                segments: [{ x: startX, y: startY }],
+                life: 1
+            };
+        }
+
+        function updatePipes() {
+            const color = getThemeColor();
+            pipes.forEach(pipe => {
+                pipe.color = color;
+                const segs = pipe.segments;
+                const last = segs[segs.length - 1];
+                const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+                if (Math.random() < 0.3) {
+                    const newDir = dirs[Math.floor(Math.random() * dirs.length)];
+                    if (newDir.dx !== -pipe.dir.dx || newDir.dy !== -pipe.dir.dy) {
+                        pipe.dir = newDir;
+                    }
+                }
+                const step = 4;
+                const nx = last.x + pipe.dir.dx * step;
+                const ny = last.y + pipe.dir.dy * step;
+                if (nx < 0 || nx > canvas.width || ny < 0 || ny > canvas.height) {
+                    pipe.dir = dirs[Math.floor(Math.random() * dirs.length)];
+                    return;
+                }
+                segs.push({ x: nx, y: ny });
+                if (segs.length > pipe.length) segs.shift();
+                pipe.life = 1;
+            });
+            if (pipes.length < 20 && Math.random() < 0.02) pipes.push(createPipe());
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].life -= 0.002;
+                if (pipes[i].life <= 0 || pipes[i].segments.length < 2) pipes.splice(i, 1);
+            }
+        }
+
+        function drawPipes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pipes.forEach(pipe => {
+                const segs = pipe.segments;
+                if (segs.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(segs[0].x, segs[0].y);
+                for (let i = 1; i < segs.length; i++) ctx.lineTo(segs[i].x, segs[i].y);
+                ctx.strokeStyle = pipe.color;
+                ctx.globalAlpha = 0.4 * pipe.life;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = pipe.color;
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        // =============================================
+        // ===== MATRIX BACKGROUND =====
+        // =============================================
+        let matrixColumns = [];
+        let matrixChars = [];
+
+        function initMatrix() {
+            const cols = Math.floor(canvas.width / 20);
+            matrixColumns = [];
+            matrixChars = [];
+            for (let i = 0; i < cols; i++) {
+                matrixColumns[i] = Math.random() * canvas.height / 20;
+                matrixChars[i] = [];
+                for (let j = 0; j < 30; j++) {
+                    const charCode = 0x30A0 + Math.random() * 96;
+                    matrixChars[i][j] = String.fromCharCode(charCode);
+                }
+            }
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            const secondary = getThemeSecondary();
+            const cols = Math.floor(canvas.width / 20);
+            for (let i = 0; i < cols; i++) {
+                const y = matrixColumns[i] * 20;
+                for (let j = 0; j < 6; j++) {
+                    const idx = (Math.floor(matrixColumns[i]) + j) % matrixChars[i].length;
+                    const alpha = 1 - (j / 6);
+                    ctx.fillStyle = j === 0 ? color : secondary;
+                    ctx.globalAlpha = alpha * 0.6;
+                    ctx.font = '16px monospace';
+                    ctx.fillText(matrixChars[i][idx], i * 20, y + j * 20);
+                }
+                matrixColumns[i] += 0.1;
+                if (matrixColumns[i] * 20 > canvas.height) {
+                    matrixColumns[i] = 0;
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== CLOCK BACKGROUND =====
+        // =============================================
+        function drawClock() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            const color = getThemeColor();
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.4;
+            ctx.font = `${Math.min(canvas.width, canvas.height) * 0.12}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 20;
+            ctx.fillText(time, canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== STARFIELD BACKGROUND =====
+        // =============================================
+        let stars = [];
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    z: Math.random() * canvas.width,
+                    speed: 2 + Math.random() * 6
+                });
+            }
+        }
+
+        function drawStarfield() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            stars.forEach(star => {
+                star.z -= star.speed;
+                if (star.z <= 0) {
+                    star.x = Math.random() * canvas.width;
+                    star.y = Math.random() * canvas.height;
+                    star.z = canvas.width;
+                }
+                const sx = (star.x - canvas.width / 2) * (canvas.width / star.z) + canvas.width / 2;
+                const sy = (star.y - canvas.height / 2) * (canvas.width / star.z) + canvas.height / 2;
+                const size = (canvas.width - star.z) / canvas.width * 4 + 1;
+                ctx.globalAlpha = (canvas.width - star.z) / canvas.width * 0.6;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(sx, sy, Math.max(size, 0.5), 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== FIRE BACKGROUND =====
+        // =============================================
+        let fireParticles = [];
+
+        function initFire() {
+            fireParticles = [];
+            for (let i = 0; i < 100; i++) {
+                fireParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: 2 + Math.random() * 4,
+                    speed: 0.5 + Math.random() * 1.5,
+                    life: Math.random()
+                });
+            }
+        }
+
+        function drawFire() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            fireParticles.forEach(p => {
+                p.y -= p.speed;
+                p.life -= 0.005;
+                if (p.life <= 0 || p.y < 0) {
+                    p.x = Math.random() * canvas.width;
+                    p.y = canvas.height;
+                    p.life = 1;
+                    p.size = 2 + Math.random() * 4;
+                }
+                const alpha = p.life * 0.5;
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = color;
+                const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== GAME OF LIFE BACKGROUND =====
+        // =============================================
+        let lifeGrid = [];
+        let lifeSize = 40;
+
+        function initLife() {
+            lifeGrid = [];
+            const cols = Math.floor(canvas.width / lifeSize);
+            const rows = Math.floor(canvas.height / lifeSize);
+            for (let i = 0; i < rows; i++) {
+                lifeGrid[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    lifeGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
+                }
+            }
+        }
+
+        function drawLife() {
+            const color = getThemeColor();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cols = Math.floor(canvas.width / lifeSize);
+            const rows = Math.floor(canvas.height / lifeSize);
+            const newGrid = [];
+            for (let i = 0; i < rows; i++) {
+                newGrid[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    let neighbors = 0;
+                    for (let di = -1; di <= 1; di++) {
+                        for (let dj = -1; dj <= 1; dj++) {
+                            if (di === 0 && dj === 0) continue;
+                            const ni = i + di,
+                                nj = j + dj;
+                            if (ni >= 0 && ni < rows && nj >= 0 && nj < cols) {
+                                neighbors += lifeGrid[ni][nj];
+                            }
+                        }
+                    }
+                    const alive = lifeGrid[i][j];
+                    if (alive && (neighbors < 2 || neighbors > 3)) newGrid[i][j] = 0;
+                    else if (!alive && neighbors === 3) newGrid[i][j] = 1;
+                    else newGrid[i][j] = alive;
+                    if (newGrid[i][j]) {
+                        ctx.fillStyle = color;
+                        ctx.globalAlpha = 0.5;
+                        ctx.fillRect(j * lifeSize, i * lifeSize, lifeSize, lifeSize);
+                    }
+                }
+            }
+            lifeGrid = newGrid;
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== SNOW BACKGROUND =====
+        // =============================================
+        let snowflakes = [];
+
+        function initSnow() {
+            snowflakes = [];
+            for (let i = 0; i < 100; i++) {
+                snowflakes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: 1 + Math.random() * 3,
+                    speed: 0.5 + Math.random() * 1.5,
+                    drift: Math.random() * 2 - 1
+                });
+            }
+        }
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            snowflakes.forEach(s => {
+                s.y += s.speed;
+                s.x += s.drift * 0.3;
+                if (s.y > canvas.height) { s.y = -10;
+                    s.x = Math.random() * canvas.width; }
+                if (s.x < 0) s.x = canvas.width;
+                if (s.x > canvas.width) s.x = 0;
+                ctx.globalAlpha = 0.6;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== RAIN BACKGROUND =====
+        // =============================================
+        let raindrops = [];
+
+        function initRain() {
+            raindrops = [];
+            for (let i = 0; i < 150; i++) {
+                raindrops.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    speed: 5 + Math.random() * 10,
+                    length: 10 + Math.random() * 20
+                });
+            }
+        }
+
+        function drawRain() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            raindrops.forEach(r => {
+                r.y += r.speed;
+                if (r.y > canvas.height) { r.y = -r.length;
+                    r.x = Math.random() * canvas.width; }
+                ctx.globalAlpha = 0.3;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x - 2, r.y + r.length);
+                ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== SPINNER BACKGROUND =====
+        // =============================================
+        let spinnerAngle = 0;
+        const spinners = ['◐', '◓', '◑', '◒'];
+
+        function drawSpinner() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            spinnerAngle += 0.05;
+            const idx = Math.floor(spinnerAngle) % 4;
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = color;
+            const size = Math.min(canvas.width, canvas.height) * 0.3;
+            ctx.font = `${size}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 30;
+            ctx.fillText(spinners[idx], canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== FIREWORKS BACKGROUND =====
+        // =============================================
+        let fireworks = [];
+
+        function initFireworks() {
+            fireworks = [];
+            for (let i = 0; i < 5; i++) {
+                createFirework();
+            }
+        }
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.6;
+            const particles = [];
+            const count = 30 + Math.random() * 40;
+            const color = getThemeColor();
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 1 + Math.random() * 3;
+                particles.push({
+                    x: x,
+                    y: y,
+                    dx: Math.cos(angle) * speed,
+                    dy: Math.sin(angle) * speed,
+                    life: 1,
+                    size: 2 + Math.random() * 3,
+                    color: color
+                });
+            }
+            fireworks.push({ particles: particles, age: 0 });
+        }
+
+        function drawFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            fireworks.forEach(fw => {
+                fw.age++;
+                fw.particles.forEach(p => {
+                    p.x += p.dx;
+                    p.y += p.dy;
+                    p.dy += 0.05;
+                    p.life -= 0.008;
+                    ctx.globalAlpha = p.life * 0.6;
+                    ctx.fillStyle = p.color || color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            });
+            fireworks = fireworks.filter(fw => fw.particles.some(p => p.life > 0));
+            if (fireworks.length < 3 && Math.random() < 0.02) createFirework();
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== WATER RIPPLE BACKGROUND =====
+        // =============================================
+        let ripples = [];
+
+        function initWater() {
+            ripples = [];
+            for (let i = 0; i < 5; i++) {
+                ripples.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: 5,
+                    maxRadius: 50 + Math.random() * 100,
+                    speed: 0.5 + Math.random() * 1,
+                    life: 1
+                });
+            }
+        }
+
+        function drawWater() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            ripples.forEach(r => {
+                r.radius += r.speed;
+                r.life -= 0.005;
+                if (r.life <= 0 || r.radius > r.maxRadius) {
+                    r.x = Math.random() * canvas.width;
+                    r.y = Math.random() * canvas.height;
+                    r.radius = 5;
+                    r.maxRadius = 50 + Math.random() * 100;
+                    r.speed = 0.5 + Math.random() * 1;
+                    r.life = 1;
+                }
+                ctx.globalAlpha = r.life * 0.3;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== GALAXY BACKGROUND =====
+        // =============================================
+        let galaxyAngle = 0;
+        let galaxyStars = [];
+
+        function initGalaxy() {
+            galaxyStars = [];
+            for (let i = 0; i < 200; i++) {
+                const radius = 50 + Math.random() * 200;
+                const angle = Math.random() * Math.PI * 2;
+                const height = (Math.random() - 0.5) * 40;
+                galaxyStars.push({
+                    radius: radius,
+                    angle: angle,
+                    height: height,
+                    size: 1 + Math.random() * 2,
+                    speed: 0.005 + Math.random() * 0.01
+                });
+            }
+        }
+
+        function drawGalaxy() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            galaxyAngle += 0.005;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            galaxyStars.forEach(s => {
+                const a = s.angle + galaxyAngle * s.speed * 10;
+                const x = cx + Math.cos(a) * s.radius + (s.height * 0.3);
+                const y = cy + Math.sin(a) * s.radius * 0.4 + s.height;
+                ctx.globalAlpha = 0.5;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== TREES BACKGROUND =====
+        // =============================================
+        let trees = [];
+
+        function initTrees() {
+            trees = [];
+            for (let i = 0; i < 10; i++) {
+                trees.push({
+                    x: Math.random() * canvas.width,
+                    height: 50 + Math.random() * 100,
+                    width: 10 + Math.random() * 20,
+                    growth: 0
+                });
+            }
+        }
+
+        function drawTrees() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            trees.forEach(t => {
+                t.growth += 0.005;
+                if (t.growth > 1) t.growth = 1;
+                const h = t.height * t.growth;
+                const w = t.width * t.growth;
+                ctx.globalAlpha = 0.3;
+                ctx.fillStyle = color;
+                ctx.fillRect(t.x - w / 6, canvas.height - h, w / 3, h);
+                for (let i = 0; i < 5; i++) {
+                    const cy = canvas.height - h + i * (h / 5);
+                    const cw = w * (1 - i / 6);
+                    ctx.beginPath();
+                    ctx.arc(t.x, cy, cw, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== MOON BACKGROUND =====
+        // =============================================
+        let moonPhase = 0;
+
+        function drawMoon() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            moonPhase += 0.005;
+            const phases = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+            const idx = Math.floor(moonPhase) % phases.length;
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = color;
+            const size = Math.min(canvas.width, canvas.height) * 0.2;
+            ctx.font = `${size}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 40;
+            ctx.fillText(phases[idx], canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== EARTH BACKGROUND =====
+        // =============================================
+        let earthAngle = 0;
+
+        function drawEarth() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            earthAngle += 0.02;
+            const size = Math.min(canvas.width, canvas.height) * 0.15;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            ctx.globalAlpha = 0.25;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, size, 0, Math.PI * 2);
+            ctx.stroke();
+            for (let i = -3; i <= 3; i++) {
+                const y = cy + i * (size / 4);
+                const w = Math.sqrt(size * size - (i * size / 4) * (i * size / 4));
+                ctx.beginPath();
+                ctx.ellipse(cx, y, w, size * 0.05, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            for (let i = 0; i < 6; i++) {
+                const angle = earthAngle + i * Math.PI / 3;
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, size * 0.2, size, angle, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== BANNER BACKGROUND =====
+        // =============================================
+        let bannerText = ['dreading', 'portal', 'unblocked', 'links'];
+        let bannerIdx = 0;
+        let bannerTimer = 0;
+
+        function drawBanner() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getThemeColor();
+            bannerTimer++;
+            if (bannerTimer > 60) { bannerTimer = 0;
+                bannerIdx = (bannerIdx + 1) % bannerText.length; }
+            const text = bannerText[bannerIdx];
+            ctx.globalAlpha = 0.2;
+            ctx.fillStyle = color;
+            const size = Math.min(canvas.width, canvas.height) * 0.08;
+            ctx.font = `${size}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 30;
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+        }
+
+        // =============================================
+        // ===== BACKGROUND RENDERER =====
+        // =============================================
+        const bgRenderers = {
+            pipes: { init: () => { pipes = [];
+                    for (let i = 0; i < 15; i++) pipes.push(createPipe()); }, draw: drawPipes, update: updatePipes },
+            matrix: { init: initMatrix, draw: drawMatrix },
+            clock: { init: () => {}, draw: drawClock },
+            starfield: { init: initStars, draw: drawStarfield },
+            fire: { init: initFire, draw: drawFire },
+            life: { init: initLife, draw: drawLife },
+            snow: { init: initSnow, draw: drawSnow },
+            rain: { init: initRain, draw: drawRain },
+            spinner: { init: () => {}, draw: drawSpinner },
+            fireworks: { init: initFireworks, draw: drawFireworks },
+            water: { init: initWater, draw: drawWater },
+            galaxy: { init: initGalaxy, draw: drawGalaxy },
+            trees: { init: initTrees, draw: drawTrees },
+            moon: { init: () => {}, draw: drawMoon },
+            earth: { init: () => {}, draw: drawEarth },
+            banner: { init: () => {}, draw: drawBanner }
+        };
+
+        let currentBg = 'pipes';
+
+        function setBackground(type, el) {
+            currentBg = type;
+            document.querySelectorAll('.bg-option').forEach(opt => opt.classList.remove('active'));
+            if (el) el.classList.add('active');
+            if (bgRenderers[type].init) bgRenderers[type].init();
+        }
+
+        function renderBackground() {
+            const renderer = bgRenderers[currentBg];
+            if (!renderer) return;
+            if (renderer.update) renderer.update();
+            renderer.draw();
+            requestAnimationFrame(renderBackground);
+        }
+
+        bgRenderers.pipes.init();
+        renderBackground();
+
+        // =============================================
+        // ===== CHANNELS =====
+        // =============================================
+        let closingAnimations = ['slide', 'fade', 'scale', 'rotate', 'bounce'];
+
+        function toggleChannels() {
+            const container = document.getElementById('channelsContainer');
+            const arrow = document.getElementById('floatingArrow');
+            if (container.classList.contains('show')) {
+                const anim = closingAnimations[Math.floor(Math.random() * closingAnimations.length)];
+                container.classList.add('closing-' + anim);
+                setTimeout(() => {
+                    container.classList.remove('show', 'closing-' + anim);
+                }, 400);
+            } else {
+                container.classList.add('show');
+            }
+            arrow.classList.toggle('active');
+        }
+
+        function openModal(type) {
+            const modals = { 'web': 'webModal', 'info': 'infoModal', 'updates': 'updatesModal' };
+            document.getElementById(modals[type]).classList.add('show');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('channelsContainer').classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.channel-modal').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // =============================================
+        // ===== SETTINGS =====
+        // =============================================
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('open');
+            document.getElementById('settingsToggle').classList.toggle('active');
+        }
+
+        // =============================================
+        // ===== CURSOR EFFECTS (FIXED) =====
+        // =============================================
+        let cursorElements = [];
+        let cursorActive = false;
+        let cursorType = 'default';
+
+        function setCursor(type, el) {
+            cursorType = type;
+            document.querySelectorAll('.cursor-option').forEach(opt => opt.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            // Remove existing cursor elements
+            cursorElements.forEach(e => e.remove());
+            cursorElements = [];
+
+            const color = getThemeColor();
+
+            // Reset cursor
+            document.body.style.cursor = 'default';
+
+            switch (type) {
+                case 'default':
+                    document.body.style.cursor = 'default';
+                    break;
+                case 'glow': {
+                    document.body.style.cursor = 'none';
+                    const g = document.createElement('div');
+                    g.className = 'cursor-glow';
+                    g.style.cssText =
+                        `width:40px;height:40px;background:radial-gradient(circle,${color}44,transparent 70%);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);`;
+                    document.body.appendChild(g);
+                    cursorElements.push(g);
+                    const handler = function(e) {
+                        g.style.left = e.clientX + 'px';
+                        g.style.top = e.clientY + 'px';
+                        g.style.opacity = '1';
+                    };
+                    document.addEventListener('mousemove', handler);
+                    cursorElements.push({ remove: () => document.removeEventListener('mousemove', handler) });
+                    break;
+                }
+                case 'trail': {
+                    document.body.style.cursor = 'none';
+                    let pos = [];
+                    for (let i = 0; i < 8; i++) {
+                        const d = document.createElement('div');
+                        d.className = 'cursor-trail';
+                        d.style.cssText =
+                            `width:${6 - i * 0.5}px;height:${6 - i * 0.5}px;background:${color}${Math.floor(80 - i * 10).toString(16).padStart(2, '0')};border-radius:50%;position:fixed;pointer-events:none;z-index:9997;transition:all 0.1s ease;`;
+                        document.body.appendChild(d);
+                        cursorElements.push(d);
+                    }
+                    const handler = function(e) {
+                        pos.push({ x: e.clientX, y: e.clientY });
+                        if (pos.length > 8) pos.shift();
+                        cursorElements.forEach((d, i) => {
+                            const p = pos[pos.length - 1 - i];
+                            if (p) {
+                                d.style.left = (p.x - parseFloat(d.style.width) / 2) + 'px';
+                                d.style.top = (p.y - parseFloat(d.style.height) / 2) + 'px';
+                                d.style.opacity = '1';
+                            }
+                        });
+                    };
+                    document.addEventListener('mousemove', handler);
+                    cursorElements.push({ remove: () => document.removeEventListener('mousemove', handler) });
+                    break;
+                }
+                case 'sparkle': {
+                    document.body.style.cursor = 'none';
+                    const s = document.createElement('div');
+                    s.className = 'cursor-sparkle';
+                    s.style.cssText =
+                        `width:20px;height:20px;background:radial-gradient(circle,${color}cc,transparent 70%);border-radius:50%;position:fixed;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);`;
+                    document.body.appendChild(s);
+                    cursorElements.push(s);
+                    const handler = function(e) {
+                        s.style.left = e.clientX + 'px';
+                        s.style.top = e.clientY + 'px';
+                        s.style.opacity = '1';
+                    };
+                    document.addEventListener('mousemove', handler);
+                    cursorElements.push({ remove: () => document.removeEventListener('mousemove', handler) });
+                    break;
+                }
+                case 'ring': {
+                    document.body.style.cursor = 'none';
+                    const r = document.createElement('div');
+                    r.className = 'cursor-glow';
+                    r.style.cssText =
+                        `width:50px;height:50px;border:2px solid ${color}66;border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);`;
+                    document.body.appendChild(r);
+                    cursorElements.push(r);
+                    const handler = function(e) {
+                        r.style.left = e.clientX + 'px';
+                        r.style.top = e.clientY + 'px';
+                        r.style.opacity = '1';
+                    };
+                    document.addEventListener('mousemove', handler);
+                    cursorElements.push({ remove: () => document.removeEventListener('mousemove', handler) });
+                    break;
+                }
+                case 'cross':
+                    document.body.style.cursor = 'crosshair';
+                    break;
+                case 'dot': {
+                    document.body.style.cursor = 'none';
+                    const d = document.createElement('div');
+                    d.className = 'cursor-trail';
+                    d.style.cssText =
+                        `width:6px;height:6px;background:${color};border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);`;
+                    document.body.appendChild(d);
+                    cursorElements.push(d);
+                    const handler = function(e) {
+                        d.style.left = e.clientX + 'px';
+                        d.style.top = e.clientY + 'px';
+                        d.style.opacity = '1';
+                    };
+                    document.addEventListener('mousemove', handler);
+                    cursorElements.push({ remove: () => document.removeEventListener('mousemove', handler) });
+                    break;
+                }
+                case 'heart':
+                    document.body.style.cursor =
+                        "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path fill=\"%23ff6b6b\" d=\"M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\"/></svg>') 12 12, auto";
+                    break;
+                case 'star':
+                    document.body.style.cursor =
+                        "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><polygon fill=\"%23ffd700\" points=\"12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26\"/></svg>') 12 12, auto";
+                    break;
+                case 'moon':
+                    document.body.style.cursor =
+                        "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path fill=\"%23c0b0e0\" d=\"M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z\"/><path fill=\"%23c0b0e0\" d=\"M12 4a8 8 0 0 0-8 8a8 8 0 0 0 8 8a8 8 0 0 0 8-8a8 8 0 0 0-8-8Zm0 2a6 6 0 0 1 6 6a6 6 0 0 1-6 6a6 6 0 0 1-6-6a6 6 0 0 1 6-6Z\"/></svg>') 12 12, auto";
+                    break;
+            }
+        }
+
+        function setTheme(theme, el) {
+            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+            el.classList.add('active');
+            document.body.className = 'theme-' + theme;
+            const color = getThemeColor();
+            pipes.forEach(pipe => pipe.color = color);
+            if (currentBg === 'fireworks') initFireworks();
+            if (currentBg === 'fire') initFire();
+            if (currentBg === 'water') initWater();
+            if (currentBg === 'trees') initTrees();
+            if (currentBg === 'galaxy') initGalaxy();
+            if (currentBg === 'starfield') initStars();
+            if (currentBg === 'snow') initSnow();
+            if (currentBg === 'rain') initRain();
+            if (currentBg === 'life') initLife();
+
+            // Re-apply cursor if non-default
+            if (cursorType !== 'default') {
+                const el = document.querySelector(`.cursor-option[data-cursor="${cursorType}"]`);
+                if (el) setCursor(cursorType, el);
+            }
+        }
+
+        function resetSettings() {
+            document.querySelectorAll('.cursor-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.cursor-option[data-cursor="default"]').classList.add('active');
+            setCursor('default', document.querySelector('.cursor-option[data-cursor="default"]'));
+            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.theme-option.theme-dark').classList.add('active');
+            document.body.className = 'theme-dark';
+            document.getElementById('settingsPanel').classList.remove('open');
+            document.getElementById('settingsToggle').classList.remove('active');
+            setBackground('pipes', document.querySelector('.bg-option[data-bg="pipes"]'));
+        }
+
+        // =============================================
+        // ===== MIRROR FUNCTIONS =====
+        // =============================================
+        const quotes = [
+            { text: "the unexamined life is not worth living", attribution: "socrates" },
+            { text: "i think, therefore i am", attribution: "descartes" },
+            { text: "the only true wisdom is in knowing you know nothing", attribution: "socrates" },
+            { text: "to be or not to be, that is the question", attribution: "shakespeare" },
+            { text: "the cave you fear to enter holds the treasure you seek", attribution: "joseph campbell" },
+            { text: "life is really simple, but we insist on making it complicated", attribution: "confucius" },
+            { text: "the journey of a thousand miles begins with one step", attribution: "lao tzu" },
+            { text: "he who has a why to live can bear almost any how", attribution: "nietzsche" },
+            { text: "we suffer more often in imagination than in reality", attribution: "seneca" },
+            { text: "the only thing i know is that i know nothing", attribution: "socrates" },
+            { text: "it does not matter how slowly you go as long as you do not stop", attribution: "confucius" },
+            { text: "the mind is everything. what you think you become", attribution: "buddha" },
+            { text: "we are what we repeatedly do. excellence, then, is not an act, but a habit", attribution: "aristotle" },
+            { text: "the function of prayer is not to influence god, but to change the nature of the one who prays", attribution: "kierkegaard" },
+            { text: "life can only be understood backwards; but it must be lived forwards", attribution: "kierkegaard" },
+            { text: "the greater the difficulty, the more the glory in surmounting it", attribution: "epicurus" },
+            { text: "it is not death that a man should fear, but he should fear never beginning to live", attribution: "marcus aurelius" },
+            { text: "the happiness of your life depends upon the quality of your thoughts", attribution: "marcus aurelius" },
+            { text: "we have two ears and one mouth so we can listen twice as much as we speak", attribution: "epictetus" },
+            { text: "first say to yourself what you would be; and then do what you have to do", attribution: "epictetus" },
+            { text: "the soul is dyed the color of its thoughts", attribution: "marcus aurelius" },
+            { text: "be kind, for everyone you meet is fighting a hard battle", attribution: "plato" },
+            { text: "the measure of a man is what he does with power", attribution: "plato" },
+            { text: "the secret of change is to focus all your energy not on fighting the old, but on building the new", attribution: "socrates" },
+            { text: "there is only one good, knowledge, and one evil, ignorance", attribution: "socrates" },
+            { text: "the greatest wealth is to live content with little", attribution: "plato" },
+            { text: "the beginning is the most important part of the work", attribution: "plato" },
+            { text: "character is simply habit long continued", attribution: "plutarch" },
+            { text: "the whole is greater than the sum of its parts", attribution: "aristotle" },
+            { text: "knowing yourself is the beginning of all wisdom", attribution: "aristotle" },
+            { text: "the more you know, the more you realize you don't know", attribution: "aristotle" },
+            { text: "i cannot teach anybody anything. i can only make them think", attribution: "socrates" },
+            { text: "the only real failure is the failure to try", attribution: "seneca" },
+            { text: "luck is what happens when preparation meets opportunity", attribution: "seneca" },
+            { text: "the greatest minds are capable of the greatest vices as well as of the greatest virtues", attribution: "descartes" },
+            { text: "doubt is the origin of wisdom", attribution: "descartes" },
+            { text: "the more we know, the more we know we don't know", attribution: "lao tzu" },
+            { text: "the way out is through the door. why is it that no one will use it?", attribution: "confucius" },
+            { text: "the man who moves a mountain begins by carrying away small stones", attribution: "confucius" },
+            { text: "everything has beauty, but not everyone sees it", attribution: "confucius" },
+            { text: "the world is a book and those who do not travel read only one page", attribution: "augustine" },
+            { text: "the heart has its reasons which reason knows nothing of", attribution: "pascal" },
+            { text: "the more we try to understand, the more mysterious it becomes", attribution: "pascal" },
+            { text: "all our knowledge begins with the senses, proceeds then to the understanding, and ends with reason", attribution: "kant" },
+            { text: "the only thing necessary for the triumph of evil is for good men to do nothing", attribution: "edmund burke" },
+            { text: "life is not about finding yourself. life is about creating yourself", attribution: "george bernard shaw" },
+            { text: "the power of accurate observation is commonly called cynicism by those who have not got it", attribution: "george bernard shaw" },
+            { text: "the only way to find true happiness is to risk being completely cut open", attribution: "chuck palahniuk" },
+            { text: "you are not a drop in the ocean. you are the entire ocean in a drop", attribution: "rumi" },
+            { text: "the wound is the place where the light enters you", attribution: "rumi" },
+            { text: "oscar gucci morty", attribution: "" },
+            { text: "julian gucci morty", attribution: "" },
+            { text: "jacob gucci morty", attribution: "" },
+            { text: "cameron gucci morty", attribution: "" },
+            { text: "gio gucci morty", attribution: "" },
+            { text: "saul gucci morty", attribution: "" },
+            { text: "ian gucci morty", attribution: "" }
+        ];
+
+        // ===== LINKS =====
+        const links = {
+            // OFFICIAL
+            "opium-best": "https://opium.best/",
+            // UNBLOCKED
+            "svg-jsdelivr": "https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg",
+            "opium-storage": "https://storage.googleapis.com/opiumbest/index.html",
+            "opium-s3": "https://s3.amazonaws.com/opiumbest/index.html",
+            "opium-s3-aws": "https://opiumbest.s3.amazonaws.com/index.html",
+            "opium-npm": "https://cdn.jsdelivr.net/npm/opiumbest/index.svg",
+            "pages": "https://opiumbest.github.io/",
+            "svg-bcdn": "https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg",
+            "svg-statically": "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg",
+            "svg-raw-esm": "https://raw.esm.sh/gh/OpiumBest/svg/index.svg",
+            // UNBLOCKED, BRANDED, PARTNERSHIP
+            "opiumbull-s3": "https://s3.amazonaws.com/opiumbull/index.html",
+            "opiumbull-storage": "https://storage.googleapis.com/opiumbull/index.html",
+            "bull33-jsdelivr": "https://cdn.jsdelivr.net/gh/opiumbest/bull33/index.svg",
+            "bull33-raw-esm": "https://raw.esm.sh/gh/OpiumBest/bull33/index.svg",
+            "bull33-statically": "https://cdn.statically.io/gh/OpiumBest/bull33@main/index.svg",
+            "opiumbull-s3-aws": "https://opiumbull.s3.amazonaws.com/index.html",
+            // UNBRANDED UNBLOCKED
+            "clever-s3": "https://s3.amazonaws.com/cleverlearning/index.html",
+            "clever-s3-aws": "https://cleverlearning.s3.amazonaws.com/index.html",
+            "gclassroom": "https://storage.googleapis.com/gclassroom/index.html"
+        };
+
+        const splashTexts = {
+            "opium-best": "opium official",
+            "svg-jsdelivr": "svg mirror",
+            "opium-storage": "opium best",
+            "opium-s3": "opium best",
+            "opium-s3-aws": "opium best",
+            "opium-npm": "opium npm",
+            "pages": "github pages",
+            "svg-bcdn": "svg mirror",
+            "svg-statically": "svg static",
+            "svg-raw-esm": "svg raw",
+            "opiumbull-s3": "opium bull",
+            "opiumbull-storage": "opium bull",
+            "bull33-jsdelivr": "bull33",
+            "bull33-raw-esm": "bull33",
+            "bull33-statically": "bull33",
+            "opiumbull-s3-aws": "opium bull",
+            "clever-s3": "clever learning",
+            "clever-s3-aws": "clever learning",
+            "gclassroom": "gclassroom"
+        };
+
+        const displayNames = {
+            "opium-best": "opium.best (official)",
+            "svg-jsdelivr": "svg (jsdelivr)",
+            "opium-storage": "opiumbest (storage)",
+            "opium-s3": "opiumbest (s3)",
+            "opium-s3-aws": "opiumbest (s3 aws)",
+            "opium-npm": "opiumbest (npm)",
+            "pages": "opiumbest (github)",
+            "svg-bcdn": "svg (b-cdn)",
+            "svg-statically": "svg (statically)",
+            "svg-raw-esm": "svg (raw.esm)",
+            "opiumbull-s3": "opiumbull (s3)",
+            "opiumbull-storage": "opiumbull (storage)",
+            "bull33-jsdelivr": "bull33 (jsdelivr)",
+            "bull33-raw-esm": "bull33 (raw.esm)",
+            "bull33-statically": "bull33 (statically)",
+            "opiumbull-s3-aws": "opiumbull (s3 aws)",
+            "clever-s3": "cleverlearning (s3)",
+            "clever-s3-aws": "cleverlearning (s3 aws)",
+            "gclassroom": "gclassroom (storage)"
+        };
+
+        const passwords = {
+            "opium-best": "fall",
+            "svg-jsdelivr": "svg",
+            "opium-storage": "best",
+            "opium-s3": "opium",
+            "opium-s3-aws": "opium",
+            "opium-npm": "best",
+            "pages": "pages",
+            "svg-bcdn": "svg",
+            "svg-statically": "svg",
+            "svg-raw-esm": "svg",
+            "opiumbull-s3": "opium",
+            "opiumbull-storage": "best",
+            "bull33-jsdelivr": "bull",
+            "bull33-raw-esm": "bull",
+            "bull33-statically": "bull",
+            "opiumbull-s3-aws": "opium",
+            "clever-s3": "clever",
+            "clever-s3-aws": "clever",
+            "gclassroom": "clever"
+        };
+
+        let selectedKey = null;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tab + '-btn').classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            if (tab !== 'experimental') {
+                document.getElementById('experimentalLogin').style.display = 'flex';
+                document.getElementById('experimentalLinks').style.display = 'none';
+                document.getElementById('expError').style.display = 'none';
+                document.getElementById('expPasswordInput').value = '';
+            }
+        }
+
+        const EXP_PASSWORD = "dreading bro";
+
+        function checkExperimentalPassword() {
+            const input = document.getElementById('expPasswordInput');
+            const error = document.getElementById('expError');
+            if (input.value.trim().toLowerCase() === EXP_PASSWORD) {
+                document.getElementById('experimentalLogin').style.display = 'none';
+                document.getElementById('experimentalLinks').style.display = 'block';
+                error.style.display = 'none';
+                input.value = '';
+            } else {
+                error.textContent = 'access denied';
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#ff5a6a';
+                setTimeout(() => input.style.borderColor = '#181830', 800);
+            }
+        }
+
+        function openExperimentalLink(url) {
+            document.getElementById('webModal').classList.remove('show');
+            document.body.style.overflow = '';
+            const splash = document.getElementById('splash');
+            const textEl = document.getElementById('splashText');
+            const quoteEl = document.getElementById('splashQuote');
+            textEl.innerHTML = 'experimental';
+            textEl.style.opacity = '1';
+            const rq = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteEl.innerHTML = rq.attribution ? `"${rq.text}" <span class="attribution">— ${rq.attribution}</span>` : rq.text;
+            quoteEl.classList.remove('show', 'fade-out');
+            splash.style.display = 'flex';
+            setTimeout(() => {
+                splash.classList.add('show');
+                setTimeout(() => quoteEl.classList.add('show'), 500);
+                setTimeout(() => {
+                    quoteEl.classList.remove('show');
+                    quoteEl.classList.add('fade-out');
+                    textEl.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.classList.remove('show');
+                        splash.classList.add('fade-out');
+                        setTimeout(() => {
+                            splash.style.display = 'none';
+                            splash.classList.remove('fade-out');
+                            textEl.style.opacity = '1';
+                            document.getElementById('mirror-iframe').src = url;
+                            document.getElementById('iframe-container').style.display = 'block';
+                            setTimeout(() => document.getElementById('iframe-container').classList.add('fade-in'), 50);
+                            document.querySelector('.logout-btn').style.display = 'block';
+                            setTimeout(() => document.querySelector('.logout-btn').classList.add('show'), 300);
+                        }, 800);
+                    }, 400);
+                }, 2500);
+            }, 50);
+        }
+
+        function openFreeLink(url) {
+            document.getElementById('webModal').classList.remove('show');
+            document.body.style.overflow = '';
+            const splash = document.getElementById('splash');
+            const textEl = document.getElementById('splashText');
+            const quoteEl = document.getElementById('splashQuote');
+            textEl.style.opacity = '1';
+            quoteEl.classList.remove('show', 'fade-out');
+            const rq = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteEl.innerHTML = rq.attribution ? `"${rq.text}" <span class="attribution">— ${rq.attribution}</span>` : rq.text;
+            splash.style.display = 'flex';
+            setTimeout(() => {
+                splash.classList.add('show');
+                setTimeout(() => quoteEl.classList.add('show'), 500);
+                setTimeout(() => {
+                    quoteEl.classList.remove('show');
+                    quoteEl.classList.add('fade-out');
+                    textEl.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.classList.remove('show');
+                        splash.classList.add('fade-out');
+                        setTimeout(() => {
+                            splash.style.display = 'none';
+                            splash.classList.remove('fade-out');
+                            textEl.style.opacity = '1';
+                            document.getElementById('mirror-iframe').src = url;
+                            document.getElementById('iframe-container').style.display = 'block';
+                            setTimeout(() => document.getElementById('iframe-container').classList.add('fade-in'), 50);
+                            document.querySelector('.logout-btn').style.display = 'block';
+                            setTimeout(() => document.querySelector('.logout-btn').classList.add('show'), 300);
+                        }, 800);
+                    }, 400);
+                }, 2500);
+            }, 50);
+        }
+
+        function selectLink(key) {
+            selectedKey = key;
+            document.getElementById('linkListView').style.display = 'none';
+            document.getElementById('passwordView').style.display = 'block';
+            document.getElementById('selectedLinkDisplay').textContent = displayNames[key] || key;
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('passwordInput').placeholder = 'enter password';
+        }
+
+        function showLinkList() {
+            selectedKey = null;
+            document.getElementById('linkListView').style.display = 'block';
+            document.getElementById('passwordView').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('error');
+            const password = input.value.trim().toLowerCase();
+            if (!selectedKey) { error.textContent = 'select a site first';
+                error.style.display = 'block'; return; }
+            if (password === passwords[selectedKey]) {
+                document.getElementById('webModal').classList.remove('show');
+                document.body.style.overflow = '';
+                const splash = document.getElementById('splash');
+                const textEl = document.getElementById('splashText');
+                const quoteEl = document.getElementById('splashQuote');
+                const st = splashTexts[selectedKey] || "fall productions";
+                textEl.innerHTML = st.replace(/ /g, ' <span>') + '</span>';
+                const words = st.split(' ');
+                if (words.length > 1) { const last = words.pop();
+                    textEl.innerHTML = words.join(' ') + ' <span>' + last + '</span>'; } else { textEl.innerHTML =
+                        '<span>' + st + '</span>'; }
+                textEl.style.opacity = '1';
+                const rq = quotes[Math.floor(Math.random() * quotes.length)];
+                quoteEl.innerHTML = rq.attribution ? `"${rq.text}" <span class="attribution">— ${rq.attribution}</span>` :
+                    rq.text;
+                quoteEl.classList.remove('show', 'fade-out');
+                splash.style.display = 'flex';
+                setTimeout(() => {
+                    splash.classList.add('show');
+                    setTimeout(() => quoteEl.classList.add('show'), 500);
+                    setTimeout(() => {
+                        quoteEl.classList.remove('show');
+                        quoteEl.classList.add('fade-out');
+                        textEl.style.opacity = '0';
+                        setTimeout(() => {
+                            splash.classList.remove('show');
+                            splash.classList.add('fade-out');
+                            setTimeout(() => {
+                                splash.style.display = 'none';
+                                splash.classList.remove('fade-out');
+                                textEl.style.opacity = '1';
+                                document.getElementById('mirror-iframe').src = links[
+                                selectedKey];
+                                document.getElementById('iframe-container').style.display =
+                                    'block';
+                                setTimeout(() => document.getElementById(
+                                    'iframe-container').classList.add('fade-in'),
+                                    50);
+                                document.querySelector('.logout-btn').style.display = 'block';
+                                setTimeout(() => document.querySelector('.logout-btn')
+                                    .classList.add('show'), 300);
+                            }, 800);
+                        }, 400);
+                    }, 2500);
+                }, 50);
+            } else {
+                error.textContent = 'access denied';
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#ff5a6a';
+                setTimeout(() => input.style.borderColor = '#181830', 800);
+            }
+        }
+
+        function logout() {
+            const container = document.getElementById('iframe-container');
+            container.classList.remove('fade-in');
+            document.querySelector('.logout-btn').classList.remove('show');
+            setTimeout(() => {
+                container.style.display = 'none';
+                document.querySelector('.logout-btn').style.display = 'none';
+                document.getElementById('mirror-iframe').src = '';
+                showLinkList();
+                document.getElementById('webModal').classList.add('show');
+            }, 500);
+        }
+
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter')
+            checkPassword(); });
+        document.getElementById('expPasswordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter')
+            checkExperimentalPassword(); });
+
+        // =============================================
+        // ===== EXTERNAL TAB BLOCKER =====
+        // =============================================
+        (function() {
+            'use strict';
+            window.open = function(url) {
+                const iframe = document.getElementById('mirror-iframe');
+                if (iframe && url) iframe.src = url;
+                else if (url) window.location.href = url;
+                return null;
+            };
+
+            function fixLinks() {
+                document.querySelectorAll('a').forEach(function(link) {
+                    if (link.target === '_blank' || link.target === '_new') { link.target = '_self';
+                        link.removeAttribute('rel'); }
+                    link.addEventListener('click', function(e) {
+                        const iframe = document.getElementById('mirror-iframe');
+                        if (iframe && this.href) { e.preventDefault();
+                            iframe.src = this.href; }
+                    });
+                });
+            }
+            document.addEventListener('auxclick', function(e) {
+                if (e.button === 1) {
+                    const link = e.target.closest('a');
+                    if (link && link.href) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const iframe = document.getElementById('mirror-iframe');
+                        if (iframe) iframe.src = link.href;
+                        else window.location.href = link.href;
+                        return false;
+                    }
+                }
+            }, true);
+            document.addEventListener('click', function(e) {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                    const link = e.target.closest('a');
+                    if (link && link.href) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const iframe = document.getElementById('mirror-iframe');
+                        if (iframe) iframe.src = link.href;
+                        else window.location.href = link.href;
+                        return false;
+                    }
+                }
+            }, true);
+            const observer = new MutationObserver(fixLinks);
+            observer.observe(document.body, { childList: true, subtree: true });
+            const origSet = Element.prototype.setAttribute;
+            Element.prototype.setAttribute = function(name, value) {
+                if (name === 'target' && (value === '_blank' || value === '_new')) return origSet.call(this, 'target',
+                    '_self');
+                return origSet.call(this, name, value);
+            };
+            Object.defineProperty(HTMLAnchorElement.prototype, 'target', {
+                get: function() { return this.getAttribute('target') || ''; },
+                set: function(value) { this.setAttribute('target', (value === '_blank' || value === '_new') ?
+                        '_self' : value); }
+            });
+            document.addEventListener('DOMContentLoaded', fixLinks);
+        })();
+    </script>
 </body>
-</html>
+    </html>
