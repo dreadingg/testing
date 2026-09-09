@@ -10,62 +10,286 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background: #f0f2f5;
+            background: #0a0a1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+
+        /* Galaxy Background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at 20% 50%, #1a0533 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, #0d1b3e 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, #1a0a2e 0%, transparent 60%),
+                        #0a0a1a;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
+                radial-gradient(1px 1px at 200px 60px, #fff, transparent),
+                radial-gradient(2px 2px at 250px 20px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 300px 90px, #eee, transparent),
+                radial-gradient(2px 2px at 350px 50px, #fff, transparent),
+                radial-gradient(1px 1px at 400px 30px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 450px 70px, #ddd, transparent),
+                radial-gradient(1px 1px at 500px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 550px 80px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 600px 20px, #eee, transparent),
+                radial-gradient(2px 2px at 650px 60px, #fff, transparent),
+                radial-gradient(1px 1px at 700px 90px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 750px 30px, #ddd, transparent),
+                radial-gradient(1px 1px at 800px 50px, #fff, transparent),
+                radial-gradient(2px 2px at 850px 70px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 900px 40px, #eee, transparent),
+                radial-gradient(2px 2px at 950px 80px, #fff, transparent),
+                radial-gradient(1px 1px at 1000px 20px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 1050px 60px, #ddd, transparent),
+                radial-gradient(1px 1px at 1100px 90px, #fff, transparent);
+            background-size: 200px 200px;
+            opacity: 0.6;
+            animation: twinkle 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.4; }
+            100% { opacity: 0.8; }
+        }
+
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+        }
+        .nebula-1 {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            left: -100px;
+            background: radial-gradient(circle, #6c2bd9, transparent 70%);
+            animation: floatNebula 20s ease-in-out infinite alternate;
+        }
+        .nebula-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -50px;
+            right: -50px;
+            background: radial-gradient(circle, #1a5fb4, transparent 70%);
+            animation: floatNebula 25s ease-in-out infinite alternate-reverse;
+        }
+        .nebula-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #9b4dff, transparent 70%);
+            animation: floatNebula 30s ease-in-out infinite alternate;
+            opacity: 0.15;
+        }
+
+        @keyframes floatNebula {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.2); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
             background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.3);
+            animation: shoot 8s linear infinite;
+        }
+        .shooting-star:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        .shooting-star:nth-child(2) {
+            top: 30%;
+            left: 60%;
+            animation-delay: 4s;
+        }
+        .shooting-star:nth-child(3) {
+            top: 60%;
+            left: 30%;
+            animation-delay: 2s;
+        }
+        .shooting-star:nth-child(4) {
+            top: 80%;
+            left: 70%;
+            animation-delay: 6s;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            15% {
+                transform: translate(-200px, 100px) scale(0);
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Main wrapper */
+        .main-wrapper {
+            position: relative;
+            z-index: 5;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Arrow toggle - positioned outside the container */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 20;
+        }
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .toggle-btn .arrow {
+            display: inline-block;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            line-height: 1;
+        }
+        .toggle-btn .arrow.down {
+            transform: rotate(180deg);
+        }
+
+        /* Container wrapper - collapsible */
+        .container-wrapper {
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: top center;
+            overflow: hidden;
+        }
+        .container-wrapper.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleY(0);
+            margin-top: -10px;
+        }
+        .container-wrapper.expanded {
+            max-height: 3000px;
+            opacity: 1;
+            pointer-events: all;
+            transform: scaleY(1);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
+
         h1 {
             font-size: 28px;
             font-weight: normal;
-            color: #1a1a2e;
+            color: #e8e0f0;
             margin-bottom: 30px;
+            text-shadow: 0 2px 20px rgba(100, 50, 200, 0.3);
         }
         h1 span {
-            color: #888;
+            color: #8a7aaa;
             font-size: 18px;
             font-weight: 300;
         }
+
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 15px;
             flex-wrap: wrap;
         }
         .tab-btn {
             padding: 10px 24px;
             border: none;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
             font-family: Arial, sans-serif;
-            color: #555;
+            color: #a898b8;
+            border: 1px solid transparent;
+            position: relative;
+            z-index: 10;
         }
         .tab-btn:hover {
-            background: #f0f0f0;
+            background: rgba(255, 255, 255, 0.08);
+            color: #d0c8e0;
         }
         .tab-btn.active {
-            background: #e8eaed;
+            background: rgba(120, 60, 200, 0.25);
             font-weight: 600;
-            color: #1a1a2e;
+            color: #d8c8f0;
+            border-color: rgba(120, 60, 200, 0.3);
         }
+
         .panel {
             display: none;
             padding: 20px 0;
+            position: relative;
+            z-index: 5;
         }
         .panel.active {
             display: block;
         }
+
         .link-grid {
             display: flex;
             flex-wrap: wrap;
@@ -74,47 +298,53 @@
             max-height: 200px;
             overflow-y: auto;
             padding: 10px;
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
-            border: 1px solid #eee;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .link-grid::-webkit-scrollbar {
             width: 6px;
         }
         .link-grid::-webkit-scrollbar-thumb {
-            background: #ccc;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 3px;
         }
+        .link-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
         .link-chip {
             display: inline-block;
-            background: #e8eaed;
+            background: rgba(255, 255, 255, 0.06);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid transparent;
-            color: #1a1a2e;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #c8bcd8;
             text-decoration: none;
             white-space: nowrap;
         }
         .link-chip:hover {
-            background: #d0d2d5;
-            border-color: #aaa;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(120, 60, 200, 0.3);
             transform: scale(1.02);
+            color: #e8e0f0;
         }
         .link-chip.active-link {
-            background: #e3f0ff;
-            border-color: #4a90d9;
-            color: #1a5276;
+            background: rgba(120, 60, 200, 0.2);
+            border-color: rgba(120, 60, 200, 0.4);
+            color: #d8c8f0;
         }
+
         .iframe-wrapper {
             position: relative;
             width: 100%;
-            border: 1px solid #eee;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 12px;
             overflow: hidden;
-            background: #fafafa;
+            background: rgba(0, 0, 0, 0.3);
             margin-top: 10px;
         }
         .iframe-wrapper iframe {
@@ -123,66 +353,75 @@
             border: none;
             display: block;
         }
+
         .iframe-controls {
             display: flex;
             gap: 10px;
             padding: 10px 15px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #eee;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-wrap: wrap;
         }
         .iframe-controls button {
             padding: 6px 16px;
-            background: #e0e0e0;
-            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             font-family: Arial, sans-serif;
-            transition: 0.2s;
+            transition: 0.3s;
+            color: #b0a0c0;
         }
         .iframe-controls button:hover {
-            background: #d0d0d0;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d8c8f0;
         }
         .iframe-controls button.fullscreen-btn {
-            background: #4a90d9;
-            color: white;
+            background: rgba(80, 40, 160, 0.3);
+            border-color: rgba(120, 60, 200, 0.2);
+            color: #b8a8d0;
         }
         .iframe-controls button.fullscreen-btn:hover {
-            background: #357abd;
+            background: rgba(80, 40, 160, 0.4);
         }
         .iframe-controls button.exit-btn {
-            background: #e74c3c;
-            color: white;
+            background: rgba(200, 50, 50, 0.15);
+            border-color: rgba(200, 50, 50, 0.15);
+            color: #c88080;
         }
         .iframe-controls button.exit-btn:hover {
-            background: #c0392b;
+            background: rgba(200, 50, 50, 0.25);
         }
+
         .no-iframe {
             padding: 60px 40px;
             text-align: center;
-            color: #999;
+            color: #6a5a7a;
         }
         .no-iframe span {
             font-size: 48px;
             display: block;
             margin-bottom: 10px;
         }
+
         .update-item {
             padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             display: flex;
             gap: 15px;
+            color: #c8bcd8;
         }
         .update-item .date {
-            background: #f0f0f0;
+            background: rgba(255, 255, 255, 0.06);
             padding: 2px 12px;
             border-radius: 12px;
             font-size: 12px;
-            color: #666;
+            color: #8a7aaa;
         }
+
         .password-box {
-            background: #f0f2f5;
+            background: rgba(255, 255, 255, 0.04);
             padding: 15px 20px;
             border-radius: 12px;
             margin: 15px 0;
@@ -190,90 +429,106 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .password-box input {
             padding: 8px 14px;
-            border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 8px;
             font-size: 14px;
             flex: 1;
             min-width: 150px;
             font-family: Arial, sans-serif;
+            color: #e8e0f0;
+            outline: none;
+        }
+        .password-box input::placeholder {
+            color: #6a5a7a;
+        }
+        .password-box input:focus {
+            border-color: rgba(120, 60, 200, 0.3);
         }
         .password-box button {
             padding: 8px 20px;
-            background: #e0e0e0;
-            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-family: Arial, sans-serif;
+            color: #b0a0c0;
+            transition: 0.3s;
         }
         .password-box button:hover {
-            background: #d0d0d0;
+            background: rgba(255, 255, 255, 0.1);
         }
         .error {
-            color: #d32f2f;
+            color: #c87070;
             display: none;
             font-size: 14px;
         }
         .error.show {
             display: inline;
         }
+
         .locked .link-chip {
-            opacity: 0.4;
+            opacity: 0.3;
             filter: blur(1px);
             cursor: not-allowed;
         }
         .locked .link-chip:hover {
             transform: none;
-            background: #f0f2f5;
-            border-color: transparent;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.04);
         }
+
         .badge {
-            background: #fff3e0;
-            color: #e65100;
+            background: rgba(200, 100, 50, 0.15);
+            color: #c89070;
             padding: 2px 12px;
             border-radius: 12px;
             font-size: 12px;
             margin-left: 10px;
         }
         .badge-free {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: rgba(50, 200, 100, 0.1);
+            color: #80c890;
             padding: 2px 12px;
             border-radius: 12px;
             font-size: 12px;
             margin-left: 10px;
         }
         .badge-pass {
-            background: #e3f2fd;
-            color: #1565c0;
+            background: rgba(80, 80, 220, 0.12);
+            color: #8090c8;
             padding: 2px 12px;
             border-radius: 12px;
             font-size: 12px;
             margin-left: 10px;
         }
+
         .divider {
             height: 1px;
-            background: #eee;
+            background: rgba(255, 255, 255, 0.04);
             margin: 20px 0;
         }
         .meta {
-            color: #999;
+            color: #6a5a7a;
             font-size: 13px;
             margin-top: 10px;
         }
+
         .info-text {
             font-size: 15px;
             line-height: 1.7;
-            color: #444;
+            color: #c8bcd8;
             max-width: 800px;
         }
         .info-text h2 {
             font-size: 24px;
             font-weight: 600;
-            color: #1a1a2e;
+            color: #e8e0f0;
             margin-bottom: 12px;
         }
         .info-text .stats {
@@ -283,55 +538,60 @@
             flex-wrap: wrap;
         }
         .info-text .stats div {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.03);
             padding: 15px 25px;
             border-radius: 12px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .info-text .stats div .number {
             font-size: 28px;
             font-weight: 600;
-            color: #1a1a2e;
+            color: #e8e0f0;
             display: block;
         }
         .info-text .stats div .label {
             font-size: 13px;
-            color: #888;
+            color: #7a6a8a;
             margin-top: 4px;
         }
         .tag {
             display: inline-block;
-            background: #f0f0f0;
+            background: rgba(255, 255, 255, 0.04);
             padding: 4px 14px;
             border-radius: 12px;
             font-size: 12px;
             margin: 4px 4px 4px 0;
+            color: #8a7aaa;
         }
         .link-count {
             font-size: 12px;
-            color: #888;
+            color: #6a5a7a;
             margin-left: 10px;
             font-weight: normal;
         }
+
         .fullscreen-exit-btn {
             position: fixed;
             top: 15px;
             right: 15px;
             z-index: 10000;
             padding: 10px 24px;
-            background: #e74c3c;
-            color: white;
-            border: none;
+            background: rgba(200, 50, 50, 0.2);
+            color: #c87070;
+            border: 1px solid rgba(200, 50, 50, 0.15);
             border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
             font-family: Arial, sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             display: none;
+            backdrop-filter: blur(10px);
         }
         .fullscreen-exit-btn:hover {
-            background: #c0392b;
+            background: rgba(200, 50, 50, 0.3);
         }
+
         .fullscreen-mode {
             position: fixed;
             top: 0;
@@ -339,10 +599,11 @@
             width: 100vw;
             height: 100vh;
             z-index: 9999;
-            background: white;
+            background: rgba(10, 10, 26, 0.95);
             padding: 0;
             border-radius: 0;
             overflow: auto;
+            backdrop-filter: blur(10px);
         }
         .fullscreen-mode .container {
             max-width: 100%;
@@ -351,6 +612,7 @@
             padding: 15px;
             margin: 0;
             box-shadow: none;
+            background: rgba(255, 255, 255, 0.03);
         }
         .fullscreen-mode .iframe-wrapper iframe {
             height: calc(100vh - 160px);
@@ -376,6 +638,7 @@
         .fullscreen-mode .fullscreen-exit-btn {
             display: block;
         }
+
         @media (max-width: 700px) {
             .container {
                 padding: 15px;
@@ -410,160 +673,204 @@
 </head>
 <body>
 
-<div class="fullscreen-exit-btn" id="fullscreenExitBtn" onclick="exitFullscreen()">Exit Fullscreen</div>
+<!-- Galaxy Background -->
+<div class="galaxy-bg">
+    <div class="stars"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+</div>
 
-<div class="container" id="mainContainer">
-    <h1>Mirror <span>· protected</span></h1>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
-        <button class="tab-btn" onclick="showTab('info')">Info</button>
-        <button class="tab-btn" onclick="showTab('pass')">Pass</button>
-        <button class="tab-btn" onclick="showTab('exp')">Exp</button>
-        <button class="tab-btn" onclick="showTab('free')">Free</button>
+<div class="main-wrapper">
+    <!-- Arrow Toggle - outside the container -->
+    <div class="toggle-container">
+        <button class="toggle-btn" id="toggleBtn" onclick="toggleContainer()">
+            <span class="arrow" id="arrowIcon">▲</span>
+        </button>
     </div>
 
-    <!-- UPDATES TAB -->
-    <div id="panel-updates" class="panel active">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Updates</h3>
-        <div class="update-item">
-            <span class="date">today</span>
-            <span>Mirror engine v2.2 · exp tab</span>
-        </div>
-        <div class="update-item">
-            <span class="date">2d</span>
-            <span>Password protection added</span>
-        </div>
-        <div class="update-item">
-            <span class="date">6d</span>
-            <span>UI refined + fresh animations</span>
-        </div>
-        <div class="divider"></div>
-        <div class="meta">live · free</div>
-    </div>
+    <!-- Main Container -->
+    <div class="container-wrapper expanded" id="containerWrapper">
+        <div class="container" id="mainContainer">
+            <h1>Mirror <span>· protected</span></h1>
 
-    <!-- INFO TAB -->
-    <div id="panel-info" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Info</h3>
-        <div class="info-text">
-            <h2>Dreading</h2>
-            <p style="font-size:18px;color:#555;margin-bottom:16px;">portal to unblocked links</p>
-            
-            <p>dreading has a whole library of pre-built, unblocked links that are good to go from the moment you sign in. no setup, no pasting URLs, no tech know-how required since thats all on g's end, just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to me and my mirroring.</p>
-            
-            <div class="stats">
-                <div>
-                    <span class="number">155+</span>
-                    <span class="label">TOTAL LINKS</span>
-                </div>
-                <div>
-                    <span class="number">3</span>
-                    <span class="label">CATEGORIES</span>
-                </div>
-                <div>
-                    <span class="number">2</span>
-                    <span class="label">MONTHS</span>
-                </div>
-                <div>
-                    <span class="number">ALWAYS</span>
-                    <span class="label">UPDATED</span>
-                </div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
+                <button class="tab-btn" onclick="showTab('info')">Info</button>
+                <button class="tab-btn" onclick="showTab('pass')">Pass</button>
+                <button class="tab-btn" onclick="showTab('exp')">Exp</button>
+                <button class="tab-btn" onclick="showTab('free')">Free</button>
             </div>
-        </div>
-    </div>
 
-    <!-- PASS TAB -->
-    <div id="panel-pass" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            Pass <span class="badge-pass">protected</span>
-            <span class="link-count">(9 links)</span>
-        </h3>
-
-        <div class="password-box">
-            <span>🔐</span>
-            <input type="password" id="passPasswordInput" placeholder="enter password" autocomplete="off">
-            <button id="passUnlockBtn">unlock</button>
-            <span class="error" id="passErrorMsg">wrong password</span>
-        </div>
-
-        <div id="passContent" class="locked">
-            <div class="link-grid" id="passLinks"></div>
-            <div class="iframe-wrapper" id="passIframeWrapper">
-                <div class="iframe-controls">
-                    <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">Fullscreen</button>
-                    <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">Close</button>
+            <!-- UPDATES TAB -->
+            <div id="panel-updates" class="panel active">
+                <h3 style="color:#8a7aaa;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Updates</h3>
+                <div class="update-item">
+                    <span class="date">today</span>
+                    <span>Mirror engine v2.2 · exp tab</span>
                 </div>
-                <div id="passIframeContainer">
-                    <div class="no-iframe">
-                        <span>🔒</span>
-                        <p>Unlock with password to view links</p>
+                <div class="update-item">
+                    <span class="date">2d</span>
+                    <span>Password protection added</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">6d</span>
+                    <span>UI refined + fresh animations</span>
+                </div>
+                <div class="divider"></div>
+                <div class="meta">live · free</div>
+            </div>
+
+            <!-- INFO TAB -->
+            <div id="panel-info" class="panel">
+                <h3 style="color:#8a7aaa;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Info</h3>
+                <div class="info-text">
+                    <h2>Dreading</h2>
+                    <p style="font-size:18px;color:#8a7aaa;margin-bottom:16px;">portal to unblocked links</p>
+                    
+                    <p>dreading has a whole library of pre-built, unblocked links that are good to go from the moment you sign in. no setup, no pasting URLs, no tech know-how required since thats all on g's end, just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to me and my mirroring.</p>
+                    
+                    <div class="stats">
+                        <div>
+                            <span class="number">155+</span>
+                            <span class="label">TOTAL LINKS</span>
+                        </div>
+                        <div>
+                            <span class="number">3</span>
+                            <span class="label">CATEGORIES</span>
+                        </div>
+                        <div>
+                            <span class="number">2</span>
+                            <span class="label">MONTHS</span>
+                        </div>
+                        <div>
+                            <span class="number">ALWAYS</span>
+                            <span class="label">UPDATED</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="divider"></div>
-            <div class="meta">Pass links · 9 entries (password required)</div>
-        </div>
-    </div>
 
-    <!-- EXP TAB -->
-    <div id="panel-exp" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            Exp <span class="badge">protected</span>
-            <span class="link-count">(35 links)</span>
-        </h3>
+            <!-- PASS TAB -->
+            <div id="panel-pass" class="panel">
+                <h3 style="color:#8a7aaa;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+                    Pass <span class="badge-pass">protected</span>
+                    <span class="link-count">(9 links)</span>
+                </h3>
 
-        <div class="password-box">
-            <span>🔐</span>
-            <input type="password" id="expPasswordInput" placeholder="enter password" autocomplete="off">
-            <button id="expUnlockBtn">unlock</button>
-            <span class="error" id="expErrorMsg">wrong password</span>
-        </div>
-
-        <div id="expContent" class="locked">
-            <div class="link-grid" id="expLinks"></div>
-            <div class="iframe-wrapper" id="expIframeWrapper">
-                <div class="iframe-controls">
-                    <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">Fullscreen</button>
-                    <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">Close</button>
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="passPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="passUnlockBtn">unlock</button>
+                    <span class="error" id="passErrorMsg">wrong password</span>
                 </div>
-                <div id="expIframeContainer">
-                    <div class="no-iframe">
-                        <span>🔒</span>
-                        <p>Unlock with password to view links</p>
+
+                <div id="passContent" class="locked">
+                    <div class="link-grid" id="passLinks"></div>
+                    <div class="iframe-wrapper" id="passIframeWrapper">
+                        <div class="iframe-controls">
+                            <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">Fullscreen</button>
+                            <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">Close</button>
+                        </div>
+                        <div id="passIframeContainer">
+                            <div class="no-iframe">
+                                <span>🔒</span>
+                                <p>Unlock with password to view links</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="meta">Pass links · 9 entries (password required)</div>
+                </div>
+            </div>
+
+            <!-- EXP TAB -->
+            <div id="panel-exp" class="panel">
+                <h3 style="color:#8a7aaa;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+                    Exp <span class="badge">protected</span>
+                    <span class="link-count">(35 links)</span>
+                </h3>
+
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="expPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="expUnlockBtn">unlock</button>
+                    <span class="error" id="expErrorMsg">wrong password</span>
+                </div>
+
+                <div id="expContent" class="locked">
+                    <div class="link-grid" id="expLinks"></div>
+                    <div class="iframe-wrapper" id="expIframeWrapper">
+                        <div class="iframe-controls">
+                            <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">Fullscreen</button>
+                            <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">Close</button>
+                        </div>
+                        <div id="expIframeContainer">
+                            <div class="no-iframe">
+                                <span>🔒</span>
+                                <p>Unlock with password to view links</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="meta">Exp links · 35 entries (password required)</div>
+                </div>
+            </div>
+
+            <!-- FREE TAB -->
+            <div id="panel-free" class="panel">
+                <h3 style="color:#8a7aaa;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+                    Free <span class="badge-free">unlocked</span>
+                    <span class="link-count">(60+ links)</span>
+                </h3>
+                <div class="link-grid" id="freeLinks"></div>
+                <div class="iframe-wrapper" id="freeIframeWrapper">
+                    <div class="iframe-controls">
+                        <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">Fullscreen</button>
+                        <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">Close</button>
+                    </div>
+                    <div id="freeIframeContainer">
+                        <div class="no-iframe">
+                            <span>📚</span>
+                            <p>Click a link above to load it here</p>
+                        </div>
                     </div>
                 </div>
+                <div class="divider"></div>
+                <div class="meta">Free links · 60+ entries</div>
             </div>
-            <div class="divider"></div>
-            <div class="meta">Exp links · 35 entries (password required)</div>
+
         </div>
     </div>
-
-    <!-- FREE TAB -->
-    <div id="panel-free" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            Free <span class="badge-free">unlocked</span>
-            <span class="link-count">(60+ links)</span>
-        </h3>
-        <div class="link-grid" id="freeLinks"></div>
-        <div class="iframe-wrapper" id="freeIframeWrapper">
-            <div class="iframe-controls">
-                <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">Fullscreen</button>
-                <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">Close</button>
-            </div>
-            <div id="freeIframeContainer">
-                <div class="no-iframe">
-                    <span>📚</span>
-                    <p>Click a link above to load it here</p>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="meta">Free links · 60+ entries</div>
-    </div>
-
 </div>
 
 <script>
+    // ============================================================
+    // TOGGLE CONTAINER
+    // ============================================================
+    var isExpanded = true;
+
+    function toggleContainer() {
+        var wrapper = document.getElementById('containerWrapper');
+        var arrow = document.getElementById('arrowIcon');
+        
+        if (isExpanded) {
+            wrapper.classList.remove('expanded');
+            wrapper.classList.add('collapsed');
+            arrow.classList.add('down');
+            isExpanded = false;
+        } else {
+            wrapper.classList.remove('collapsed');
+            wrapper.classList.add('expanded');
+            arrow.classList.remove('down');
+            isExpanded = true;
+        }
+    }
+
     // ============================================================
     // PASS LINKS (9 links - password: new update)
     // ============================================================
@@ -861,4 +1168,59 @@
     }
 
     document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
-    document.getElementById
+    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            unlockPass();
+        }
+    });
+
+    // ============================================================
+    // EXP UNLOCK (password: dreading bro)
+    // ============================================================
+    function unlockExp() {
+        var input = document.getElementById('expPasswordInput');
+        var entered = input.value.trim();
+        if (entered === EXP_PASSWORD) {
+            document.getElementById('expContent').classList.remove('locked');
+            document.getElementById('expErrorMsg').classList.remove('show');
+            input.value = '';
+            document.getElementById('expUnlockBtn').textContent = 'unlocked';
+            document.getElementById('expUnlockBtn').style.opacity = '0.6';
+            
+            if (expLinks.length > 0) {
+                var firstLink = document.querySelector('#expLinks .link-chip');
+                if (firstLink) {
+                    loadGenericLink(firstLink, expLinks[0], 'exp');
+                }
+            }
+        } else {
+            document.getElementById('expErrorMsg').classList.add('show');
+            setTimeout(function() {
+                document.getElementById('expErrorMsg').classList.remove('show');
+            }, 2000);
+        }
+    }
+
+    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
+    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            unlockExp();
+        }
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    renderLinks('passLinks', passLinks, 'pass');
+    renderLinks('expLinks', expLinks, 'exp');
+    renderLinks('freeLinks', freeLinks, 'free');
+
+    console.log('Pass password: "new update"');
+    console.log('Exp password: "dreading bro"');
+    console.log('Exp tab: ' + expLinks.length + ' links');
+    console.log('Free tab: ' + freeLinks.length + ' links');
+    console.log('Pass tab: ' + passLinks.length + ' links');
+</script>
+
+</body>
+</html>
