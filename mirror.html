@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror · Protected</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+        .header h1 span {
+            font-weight: 300;
+            color: #888;
+            font-size: 16px;
+        }
+        .badge {
+            background: #f0f0f0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+        .body {
+            display: flex;
+            min-height: 500px;
+        }
+        .sidebar {
+            width: 160px;
+            background: #f8f9fa;
+            padding: 24px 16px;
+            border-right: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #333;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .sidebar button:hover {
+            background: #e8eaed;
+        }
+        .sidebar button.active {
+            background: #e8eaed;
+            font-weight: 500;
+        }
+        .sidebar .info {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+        .content {
+            flex: 1;
+            padding: 32px;
+            background: #fafbfc;
+        }
+        .panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .panel.active {
+            display: block;
+        }
+        .panel h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .links-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .link-chip {
+            background: #f0f2f5;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #1a1a2e;
+            word-break: break-all;
+        }
+        .update-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            gap: 16px;
+            align-items: baseline;
+        }
+        .update-item .date {
+            font-size: 12px;
+            color: #999;
+            background: #f0f0f0;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+        .update-item .text {
+            color: #333;
+        }
+        .info-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            max-width: 500px;
+        }
+        .info-text .tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-top: 8px;
+        }
+        .password-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f0f2f5;
+            padding: 8px 16px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .password-box input {
+            border: none;
+            background: transparent;
+            padding: 8px 0;
+            font-size: 14px;
+            outline: none;
+            flex: 1;
+            min-width: 120px;
+            font-family: inherit;
+        }
+        .password-box button {
+            background: #e0e0e0;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .password-box button:hover {
+            background: #d0d0d0;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 13px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .error.show {
+            opacity: 1;
+        }
+        .locked .link-chip {
+            opacity: 0.4;
+            filter: blur(1px);
+        }
+        .experimental-badge {
+            background: #fff3e0;
+            color: #e65100;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 16px 0;
+        }
+        .meta {
+            font-size: 12px;
+            color: #999;
+            margin-top: 12px;
+        }
+        @media (max-width: 700px) {
+            .body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: 12px 16px;
+            }
+            .sidebar button {
+                width: auto;
+                padding: 8px 16px;
+                margin-bottom: 0;
+            }
+            .sidebar .info {
+                display: none;
+            }
+            .content {
+                padding: 16px;
+            }
+            .panel {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>⎋ mirror <span>· protected</span></h1>
+        <div class="badge">experimental tab</div>
+    </div>
+
+    <div class="body">
+
+        <div class="sidebar">
+            <button class="active" data-tab="links">⊹ Links</button>
+            <button data-tab="updates">⟳ Updates</button>
+            <button data-tab="info">ⓘ Info</button>
+            <button data-tab="experimental">⎇ Experimental</button>
+            <div class="info">✦ v0.2 · password protected</div>
+        </div>
+
+        <div class="content">
+
+            <!-- LINKS PANEL -->
+            <div class="panel active" id="panel-links">
+                <h2>⊹ public links</h2>
+                <div class="links-grid">
+                    <span class="link-chip">◈ example.com/mirror</span>
+                    <span class="link-chip">◈ docs.page/ref</span>
+                    <span class="link-chip">◈ api.endpoint/v2</span>
+                    <span class="link-chip">◈ static.assets</span>
+                </div>
+                <div class="divider"></div>
+                <div class="meta">⚡ general links (demo)</div>
+            </div>
+
+            <!-- UPDATES PANEL -->
+            <div class="panel" id="panel-updates">
+                <h2>⟳ updates</h2>
+                <div class="update-item">
+                    <span class="date">today</span>
+                    <span class="text">Mirror engine v2.2 · experimental tab</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">2d</span>
+                    <span class="text">Password protection added</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">6d</span>
+                    <span class="text">UI refined + fresh animations</span>
+                </div>
+                <div class="divider"></div>
+                <div class="meta">📡 live · free</div>
+            </div>
+
+            <!-- INFO PANEL -->
+            <div class="panel" id="panel-info">
+                <h2>ⓘ about</h2>
+                <div class="info-text">
+                    <p>Minimal mirror interface with a password‑protected experimental zone. Add your own links, updates, and description.</p>
+                    <div style="margin-top:12px;">
+                        <span class="tag">⚡ free</span>
+                        <span class="tag">⊹ protected</span>
+                        <span class="tag">⎋ experimental</span>
+                    </div>
+                    <div style="margin-top:16px; background:#f8f9fa; padding:16px 20px; border-radius:12px;">
+                        <strong>description</strong>
+                        <p style="margin-top:4px; opacity:0.8;">"Customize the panels. The experimental tab is locked by password."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPERIMENTAL PANEL -->
+            <div class="panel" id="panel-experimental">
+                <h2>⎇ experimental <span class="experimental-badge">🔒 protected</span></h2>
+
+                <div class="password-box">
+                    <span>🔐</span>
+                    <input type="password" id="passwordInput" placeholder="enter password" autocomplete="off">
+                    <button id="unlockBtn">unlock</button>
+                    <span class="error" id="errorMsg">wrong password</span>
+                </div>
+
+                <div id="experimentalContent" class="locked">
+                    <div class="links-grid" id="experimentalLinks">
+                        <!-- injected by JavaScript -->
+                    </div>
+                    <div class="divider"></div>
+                    <div class="meta">⎇ experimental links · 9 entries <span style="opacity:0.5;">(password required)</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+
+        // YOUR LINKS
+        const links = [
+            "https://storage.googleapis.com/gclassroom/index.html",
+            "https://cleverlearning.s3.amazonaws.com/index.html",
+            "https://s3.amazonaws.com/cleverlearning/index.html",
+            "https://opiumbest.github.io",
+            "https://opiumisbest.s3.amazonaws.com/index.html",
+            "https://s3.amazonaws.com/opiumisbest/index.html",
+            "https://storage.googleapis.com/opiumbest/index.html",
+            "https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg",
+            "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg"
+        ];
+
+        // CHANGE THIS PASSWORD
+        const CORRECT_PASSWORD = "demo123";
+
+        // DOM elements
+        const tabs = document.querySelectorAll('[data-tab]');
+        const panels = {
+            links: document.getElementById('panel-links'),
+            updates: document.getElementById('panel-updates'),
+            info: document.getElementById('panel-info'),
+            experimental: document.getElementById('panel-experimental')
+        };
+
+        const experimentalContent = document.getElementById('experimentalContent');
+        const experimentalLinks = document.getElementById('experimentalLinks');
+        const passwordInput = document.getElementById('passwordInput');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Render links in experimental panel
+        function renderLinks() {
+            experimentalLinks.innerHTML = '';
+            links.forEach(url => {
+                const span = document.createElement('span');
+                span.className = 'link-chip';
+                span.textContent = '⎇ ' + url;
+                experimentalLinks.appendChild(span);
+            });
+        }
+        renderLinks();
+
+        // Tab switching
+        tabs.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active button
+                tabs.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show correct panel
+                const tab = this.dataset.tab;
+                Object.keys(panels).forEach(key => {
+                    panels[key].classList.remove('active');
+                });
+                panels[tab].classList.add('active');
+
+                // Hide error when switching to experimental
+                if (tab === 'experimental') {
+                    errorMsg.classList.remove('show');
+                }
+            });
+        });
+
+        // Password unlock
+        function unlock() {
+            const entered = passwordInput.value.trim();
+            if (entered === CORRECT_PASSWORD) {
+                experimentalContent.classList.remove('locked');
+                errorMsg.classList.remove('show');
+                passwordInput.value = '';
+                unlockBtn.textContent = '✓ unlocked';
+                unlockBtn.style.opacity = '0.6';
+            } else {
+                errorMsg.classList.add('show');
+                setTimeout(() => errorMsg.classList.remove('show'), 2000);
+            }
+        }
+
+        unlockBtn.addEventListener('click', unlock);
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') unlock();
+        });
+
+        console.log('🔐 Password is: "demo123"');
+        console.log('ℹ️  Change it by editing CORRECT_PASSWORD in the script');
+
+    })();
+</script>
+
+</body>
+</html>
