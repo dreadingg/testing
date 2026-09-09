@@ -71,22 +71,36 @@
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .link-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .link-grid::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
         }
         .link-chip {
             display: inline-block;
-            background: #f0f2f5;
-            padding: 10px 20px;
+            background: #e8eaed;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.2s;
             border: 1px solid transparent;
             color: #1a1a2e;
             text-decoration: none;
+            white-space: nowrap;
         }
         .link-chip:hover {
-            background: #e0e2e5;
-            border-color: #ccc;
+            background: #d0d2d5;
+            border-color: #aaa;
             transform: scale(1.02);
         }
         .link-chip.active-link {
@@ -224,6 +238,14 @@
             font-size: 12px;
             margin-left: 10px;
         }
+        .badge-free {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
         .divider {
             height: 1px;
             background: #eee;
@@ -247,45 +269,12 @@
             font-size: 12px;
             margin: 4px 4px 4px 0;
         }
-        /* Fullscreen mode */
-        .fullscreen-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            background: white;
-            padding: 0;
-            border-radius: 0;
+        .link-count {
+            font-size: 12px;
+            color: #888;
+            margin-left: 10px;
+            font-weight: normal;
         }
-        .fullscreen-mode .container {
-            max-width: 100%;
-            height: 100vh;
-            border-radius: 0;
-            padding: 15px;
-            margin: 0;
-            box-shadow: none;
-        }
-        .fullscreen-mode .iframe-wrapper iframe {
-            height: calc(100vh - 180px);
-        }
-        .fullscreen-mode .tabs,
-        .fullscreen-mode .link-grid,
-        .fullscreen-mode .password-box,
-        .fullscreen-mode .divider,
-        .fullscreen-mode .meta,
-        .fullscreen-mode .badge,
-        .fullscreen-mode h3 {
-            display: none;
-        }
-        .fullscreen-mode .iframe-controls {
-            border-radius: 0;
-        }
-        .fullscreen-mode .container > h1 {
-            display: none;
-        }
-        /* Fullscreen exit button in corner */
         .fullscreen-exit-btn {
             position: fixed;
             top: 15px;
@@ -305,8 +294,70 @@
         .fullscreen-exit-btn:hover {
             background: #c0392b;
         }
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: white;
+            padding: 0;
+            border-radius: 0;
+            overflow: auto;
+        }
+        .fullscreen-mode .container {
+            max-width: 100%;
+            height: 100vh;
+            border-radius: 0;
+            padding: 15px;
+            margin: 0;
+            box-shadow: none;
+        }
+        .fullscreen-mode .iframe-wrapper iframe {
+            height: calc(100vh - 160px);
+        }
+        .fullscreen-mode .tabs,
+        .fullscreen-mode .link-grid,
+        .fullscreen-mode .password-box,
+        .fullscreen-mode .divider,
+        .fullscreen-mode .meta,
+        .fullscreen-mode .badge,
+        .fullscreen-mode .badge-free,
+        .fullscreen-mode h3,
+        .fullscreen-mode .link-count {
+            display: none;
+        }
+        .fullscreen-mode .iframe-controls {
+            border-radius: 0;
+        }
+        .fullscreen-mode .container > h1 {
+            display: none;
+        }
         .fullscreen-mode .fullscreen-exit-btn {
             display: block;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 15px;
+            }
+            .tabs {
+                gap: 5px;
+            }
+            .tab-btn {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+            .link-grid {
+                max-height: 150px;
+            }
+            .link-chip {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            .iframe-wrapper iframe {
+                height: 400px;
+            }
         }
     </style>
 </head>
@@ -322,6 +373,8 @@
         <button class="tab-btn" onclick="showTab('updates')">⟳ Updates</button>
         <button class="tab-btn" onclick="showTab('info')">ⓘ Info</button>
         <button class="tab-btn" onclick="showTab('exp')">⎇ Exp</button>
+        <button class="tab-btn" onclick="showTab('rl')">⎇ RL</button>
+        <button class="tab-btn" onclick="showTab('free')">⊹ Free</button>
     </div>
 
     <!-- LINKS TAB -->
@@ -372,11 +425,12 @@
     <div id="panel-info" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">ⓘ about</h3>
         <div class="info-text">
-            <p>Minimal mirror interface with a password‑protected experimental zone. Add your own links, updates, and description.</p>
+            <p>Minimal mirror interface with password‑protected and free zones.</p>
             <div style="margin-top:12px;">
                 <span class="tag">⚡ free</span>
                 <span class="tag">⊹ protected</span>
                 <span class="tag">⎇ exp</span>
+                <span class="tag">⎇ RL</span>
             </div>
             <div style="margin-top:16px; background:#f8f9fa; padding:16px 20px; border-radius:12px;">
                 <strong>description</strong>
@@ -389,6 +443,7 @@
     <div id="panel-exp" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
             ⎇ exp <span class="badge">🔒 protected</span>
+            <span class="link-count">(9 links)</span>
         </h3>
 
         <div class="password-box">
@@ -399,9 +454,7 @@
         </div>
 
         <div id="expContent" class="locked">
-            <div class="link-grid" id="expLinks">
-                <!-- JavaScript will put links here -->
-            </div>
+            <div class="link-grid" id="expLinks"></div>
             <div class="iframe-wrapper" id="expIframeWrapper">
                 <div class="iframe-controls">
                     <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">⛶ Fullscreen</button>
@@ -419,11 +472,57 @@
         </div>
     </div>
 
+    <!-- RL TAB -->
+    <div id="panel-rl" class="panel">
+        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+            ⎇ RL <span class="badge">🔓 free</span>
+            <span class="link-count">(35 links)</span>
+        </h3>
+        <div class="link-grid" id="rlLinks"></div>
+        <div class="iframe-wrapper" id="rlIframeWrapper">
+            <div class="iframe-controls">
+                <button class="fullscreen-btn" onclick="enterFullscreen('rlIframeWrapper')">⛶ Fullscreen</button>
+                <button class="exit-btn" onclick="closeIframe('rlIframeWrapper')">✕ Close</button>
+            </div>
+            <div id="rlIframeContainer">
+                <div class="no-iframe">
+                    <span>📚</span>
+                    <p>Click a link above to load it here</p>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="meta">⎇ RL links · 35 entries</div>
+    </div>
+
+    <!-- FREE TAB -->
+    <div id="panel-free" class="panel">
+        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+            ⊹ Free <span class="badge-free">🔓 unlocked</span>
+            <span class="link-count">(60+ links)</span>
+        </h3>
+        <div class="link-grid" id="freeLinks"></div>
+        <div class="iframe-wrapper" id="freeIframeWrapper">
+            <div class="iframe-controls">
+                <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">⛶ Fullscreen</button>
+                <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">✕ Close</button>
+            </div>
+            <div id="freeIframeContainer">
+                <div class="no-iframe">
+                    <span>🌟</span>
+                    <p>Click a link above to load it here</p>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="meta">⊹ Free links · 60+ entries</div>
+    </div>
+
 </div>
 
 <script>
     // ============================================================
-    // YOUR 9 LINKS with SIMPLE NAMES
+    // EXP LINKS (9 links - password protected)
     // ============================================================
     var expLinks = [
         { name: "GClassroom", url: "https://storage.googleapis.com/gclassroom/index.html" },
@@ -438,38 +537,165 @@
     ];
 
     // ============================================================
-    // PASSWORD (change this!)
+    // RL LINKS (35 links)
+    // ============================================================
+    var rlLinks = [
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2@main/main.svg",
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework/main.svg",
+        "https://zxgzmbkfogafegoaenus.supabase.co/storage/v1/object/public/test/PETEZAH/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/timmy-tuffnuckles.svg",
+        "https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/english.svg",
+        "https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/boii.svg",
+        "https://quantil.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://gcore.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://fastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://originfastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
+        "https://s3.amazonaws.com/bullproxy/index.html",
+        "https://bullproxy.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/bulldebut/index.html",
+        "https://bulldebut.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/finallybull/index.html",
+        "https://finallybull.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/rahisbullsgoat/index.html",
+        "https://rahisbullsgoat.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/m0ths/index.html",
+        "https://m0ths.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/6q85/index.html",
+        "https://6q85.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/sk7v/index.html",
+        "https://sk7v.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/oiop/index.html",
+        "https://oiop.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/iuyt/index.html",
+        "https://iuyt.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/jlkl/index.html",
+        "https://jlkl.s3.amazonaws.com/index.html"
+    ];
+
+    // ============================================================
+    // FREE LINKS (60+ links)
+    // ============================================================
+    var freeLinks = [
+        "https://storage.googleapis.com/fernisbest/index.html",
+        "https://s3.amazonaws.com/fernisbest/index.html",
+        "https://s3.amazonaws.com/fernlinks/index.html",
+        "https://s3.amazonaws.com/classworks/index.html",
+        "https://s3.amazonaws.com/bull33/index.html",
+        "https://s3.amazonaws.com/bullbestyoutuber/index.html",
+        "https://s3.amazonaws.com/bulledu/index.html",
+        "https://s3.amazonaws.com/bullguardian/index.html",
+        "https://s3.amazonaws.com/bullisgoated/index.html",
+        "https://s3.amazonaws.com/bulllightspeed/index.html",
+        "https://s3.amazonaws.com/bullmath/index.html",
+        "https://s3.amazonaws.com/bullubg/index.html",
+        "https://s3.amazonaws.com/iloveliteratures/index.html",
+        "https://s3.amazonaws.com/ilovemaths/index.html",
+        "https://s3.amazonaws.com/lsrelay-extension-production/index.html",
+        "https://s3.amazonaws.com/macrolo/index.html",
+        "https://s3.amazonaws.com/macrologoat/index.html",
+        "https://s3.amazonaws.com/macrolomath/index.html",
+        "https://s3.amazonaws.com/angelfern/index.html",
+        "https://s3.amazonaws.com/deaganfern/index.html",
+        "https://bullbestyoutuber.s3.amazonaws.com/index.html",
+        "https://bulledu.s3.amazonaws.com/index.html",
+        "https://bullguardian.s3.amazonaws.com/index.html",
+        "https://bullisgoated.s3.amazonaws.com/index.html",
+        "https://bulllightspeed.s3.amazonaws.com/index.html",
+        "https://bullmath.s3.amazonaws.com/index.html",
+        "https://bullubg.s3.amazonaws.com/index.html",
+        "https://iloveliteratures.s3.amazonaws.com/index.html",
+        "https://ilovemaths.s3.amazonaws.com/index.html",
+        "https://lsrelay-extension-production.s3.amazonaws.com/index.html",
+        "https://macrolo.s3.amazonaws.com/index.html",
+        "https://macrologoat.s3.amazonaws.com/index.html",
+        "https://macrolomath.s3.amazonaws.com/index.html",
+        "https://angelfern.s3.amazonaws.com/index.html",
+        "https://deaganfern.s3.amazonaws.com/index.html",
+        "https://bullreading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/bullreading/index.html",
+        "https://fern-s3t.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fern-s3t/index.html",
+        "https://fernvcsa.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fernvcsa/index.html",
+        "https://fsmath.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fsmath/index.html",
+        "https://fsreading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fsreading/index.html",
+        "https://fstudentsareinventors.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fstudentsareinventors/index.html",
+        "https://glwithfinals.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/glwithfinals/index.html",
+        "https://mathvc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/mathvc/index.html",
+        "https://onelastlink.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/onelastlink/index.html",
+        "https://readvc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/readvc/index.html",
+        "https://vcsafern.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsafern/index.html",
+        "https://vcsamath.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsamath/index.html",
+        "https://vcsareading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsareading/index.html",
+        "https://writevc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/writevc/index.html"
+    ];
+
+    // ============================================================
+    // PASSWORD
     // ============================================================
     var CORRECT_PASSWORD = "demo123";
     var isUnlocked = false;
 
     // ============================================================
-    // SHOW LINKS IN EXP TAB
+    // RENDER LINKS
     // ============================================================
-    var container = document.getElementById('expLinks');
-    for (var i = 0; i < expLinks.length; i++) {
-        var span = document.createElement('span');
-        span.className = 'link-chip';
-        span.textContent = '⎇ ' + expLinks[i].name;
-        span.dataset.url = expLinks[i].url;
-        span.dataset.index = i;
-        span.onclick = function() {
-            if (isUnlocked) {
-                loadExpLink(this, this.dataset.url);
+    function renderLinks(containerId, linksArray, type) {
+        var container = document.getElementById(containerId);
+        container.innerHTML = '';
+        for (var i = 0; i < linksArray.length; i++) {
+            var span = document.createElement('span');
+            span.className = 'link-chip';
+            var name;
+            if (typeof linksArray[i] === 'object') {
+                name = linksArray[i].name;
+                var url = linksArray[i].url;
+            } else {
+                var url = linksArray[i];
+                var parts = url.replace('https://', '').replace('http://', '').split('/');
+                name = parts[0].split('.')[0];
+                if (name.length > 20) name = name.substring(0, 18) + '…';
             }
-        };
-        container.appendChild(span);
+            span.textContent = '◈ ' + name;
+            span.dataset.url = url;
+            span.onclick = function() {
+                loadGenericLink(this, this.dataset.url, type);
+            };
+            container.appendChild(span);
+        }
     }
 
     // ============================================================
-    // LOAD LINK IN IFRAME (Links tab)
+    // LOAD GENERIC LINK
     // ============================================================
-    function loadLink(element, url) {
-        var container = document.getElementById('linksIframeContainer');
+    function loadGenericLink(element, url, type) {
+        var containerId;
+        if (type === 'exp') containerId = 'expIframeContainer';
+        else if (type === 'rl') containerId = 'rlIframeContainer';
+        else if (type === 'free') containerId = 'freeIframeContainer';
+        else containerId = 'linksIframeContainer';
+        
+        var container = document.getElementById(containerId);
         container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
         
         // Highlight active link
-        var allLinks = document.querySelectorAll('#panel-links .link-chip');
+        var panel = container.closest('.panel');
+        var allLinks = panel.querySelectorAll('.link-chip');
         for (var i = 0; i < allLinks.length; i++) {
             allLinks[i].classList.remove('active-link');
         }
@@ -477,14 +703,13 @@
     }
 
     // ============================================================
-    // LOAD LINK IN EXP IFRAME
+    // LOAD LINK (for Links tab)
     // ============================================================
-    function loadExpLink(element, url) {
-        var container = document.getElementById('expIframeContainer');
+    function loadLink(element, url) {
+        var container = document.getElementById('linksIframeContainer');
         container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
         
-        // Highlight active link
-        var allLinks = document.querySelectorAll('#expLinks .link-chip');
+        var allLinks = document.querySelectorAll('#panel-links .link-chip');
         for (var i = 0; i < allLinks.length; i++) {
             allLinks[i].classList.remove('active-link');
         }
@@ -495,16 +720,16 @@
     // CLOSE IFRAME
     // ============================================================
     function closeIframe(wrapperId) {
-        var container;
-        if (wrapperId === 'linksIframeWrapper') {
-            container = document.getElementById('linksIframeContainer');
-        } else {
-            container = document.getElementById('expIframeContainer');
-        }
-        container.innerHTML = '<div class="no-iframe"><span>🌐</span><p>Click a link above to load it here</p></div>';
-        
-        // Remove active link highlighting
+        var containerId = wrapperId.replace('Wrapper', 'Container');
+        var container = document.getElementById(containerId);
         var panel = container.closest('.panel');
+        var noIframeMsg = panel.querySelector('.no-iframe');
+        if (noIframeMsg) {
+            container.innerHTML = noIframeMsg.outerHTML;
+        } else {
+            container.innerHTML = '<div class="no-iframe"><span>🌐</span><p>Click a link above to load it here</p></div>';
+        }
+        
         var links = panel.querySelectorAll('.link-chip');
         for (var i = 0; i < links.length; i++) {
             links[i].classList.remove('active-link');
@@ -515,18 +740,13 @@
     // FULLSCREEN
     // ============================================================
     function enterFullscreen(wrapperId) {
-        var wrapper = document.getElementById(wrapperId);
         var container = document.getElementById('mainContainer');
         var exitBtn = document.getElementById('fullscreenExitBtn');
-        
-        // Store which iframe is fullscreen
         container.dataset.fullscreenWrapper = wrapperId;
-        
-        // Add fullscreen class to container
         container.classList.add('fullscreen-mode');
         exitBtn.style.display = 'block';
         
-        // Make the iframe fill the space
+        var wrapper = document.getElementById(wrapperId);
         var iframe = wrapper.querySelector('iframe');
         if (iframe) {
             iframe.style.height = 'calc(100vh - 130px)';
@@ -537,12 +757,9 @@
         var container = document.getElementById('mainContainer');
         var exitBtn = document.getElementById('fullscreenExitBtn');
         var wrapperId = container.dataset.fullscreenWrapper;
-        
-        // Remove fullscreen class
         container.classList.remove('fullscreen-mode');
         exitBtn.style.display = 'none';
         
-        // Reset iframe height
         if (wrapperId) {
             var wrapper = document.getElementById(wrapperId);
             var iframe = wrapper.querySelector('iframe');
@@ -550,11 +767,9 @@
                 iframe.style.height = '600px';
             }
         }
-        
         container.dataset.fullscreenWrapper = '';
     }
 
-    // ESC key to exit fullscreen
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             var container = document.getElementById('mainContainer');
@@ -603,11 +818,10 @@
             document.getElementById('unlockBtn').textContent = '✓ unlocked';
             document.getElementById('unlockBtn').style.opacity = '0.6';
             
-            // Load first link automatically
             if (expLinks.length > 0) {
                 var firstLink = document.querySelector('#expLinks .link-chip');
                 if (firstLink) {
-                    loadExpLink(firstLink, expLinks[0].url);
+                    loadGenericLink(firstLink, expLinks[0].url, 'exp');
                 }
             }
         } else {
@@ -626,8 +840,12 @@
     });
 
     // ============================================================
-    // LOAD FIRST LINK AUTOMATICALLY IN LINKS TAB
+    // INIT
     // ============================================================
+    renderLinks('expLinks', expLinks, 'exp');
+    renderLinks('rlLinks', rlLinks, 'rl');
+    renderLinks('freeLinks', freeLinks, 'free');
+
     window.onload = function() {
         var firstLink = document.querySelector('#panel-links .link-chip');
         if (firstLink) {
@@ -636,8 +854,9 @@
     };
 
     console.log('🔐 Password is: "demo123"');
-    console.log('ℹ️  Change it by editing CORRECT_PASSWORD in the script');
-    console.log('🔄 Click Fullscreen to expand, ESC or Exit button to close');
+    console.log('📚 RL tab: ' + rlLinks.length + ' links');
+    console.log('🌟 Free tab: ' + freeLinks.length + ' links');
+    console.log('🔒 Exp tab: ' + expLinks.length + ' links (password protected)');
 </script>
 
 </body>
