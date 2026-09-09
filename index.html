@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet" />
     <style>
-        /* ── reset ── */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +25,6 @@
             color: #14141f;
         }
 
-        /* ── mirror card ── */
         .mirror {
             max-width: 1280px;
             width: 100%;
@@ -34,13 +32,12 @@
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             border-radius: 40px;
-            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.6);
             overflow: hidden;
-            animation: fadeSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeSlide 0.5s ease forwards;
         }
 
-        /* ── header ── */
         .mirror-header {
             padding: 22px 32px 14px 32px;
             display: flex;
@@ -53,11 +50,9 @@
         .mirror-header h1 {
             font-weight: 500;
             font-size: 1.3rem;
-            letter-spacing: -0.02em;
             background: linear-gradient(145deg, #14141f, #2d2d44);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -69,7 +64,6 @@
             color: #6b6b80;
             font-size: 0.8rem;
             margin-left: 6px;
-            background: none;
         }
 
         .badge-demo {
@@ -82,14 +76,12 @@
             border: 1px solid rgba(0, 0, 0, 0.02);
         }
 
-        /* ── body layout ── */
         .mirror-body {
             display: flex;
             flex-direction: row;
             min-height: 500px;
         }
 
-        /* ── sidebar ── */
         .sidebar {
             width: 150px;
             background: rgba(248, 250, 252, 0.4);
@@ -121,7 +113,7 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
             width: 100%;
             border: 1px solid transparent;
             background: rgba(255, 255, 255, 0.2);
@@ -154,7 +146,6 @@
             background: #8a8aa0;
             border-radius: 20px;
             opacity: 0.2;
-            transition: 0.2s;
             margin-left: auto;
         }
 
@@ -173,7 +164,6 @@
             opacity: 0.7;
         }
 
-        /* ── content ── */
         .content {
             flex: 1;
             padding: 28px 32px 32px 32px;
@@ -193,14 +183,13 @@
             padding: 24px 28px;
             border: 1px solid rgba(255, 255, 255, 0.7);
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.01);
-            transition: transform 0.2s ease, box-shadow 0.25s ease;
+            transition: transform 0.2s ease;
             animation: fadeSlide 0.4s ease forwards;
             opacity: 0;
         }
 
         .preview-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.05);
         }
 
         .preview-card h3 {
@@ -221,7 +210,6 @@
             opacity: 0.4;
         }
 
-        /* ── links grid ── */
         .link-grid {
             display: flex;
             flex-wrap: wrap;
@@ -253,7 +241,6 @@
             transform: scale(1.02);
         }
 
-        /* ── updates ── */
         .updates-list {
             display: flex;
             flex-direction: column;
@@ -282,7 +269,6 @@
             color: #1e1e36;
         }
 
-        /* ── info ── */
         .info-block p {
             font-size: 0.95rem;
             line-height: 1.6;
@@ -307,7 +293,6 @@
             margin: 8px 0 12px 0;
         }
 
-        /* ── password box ── */
         .password-box {
             display: flex;
             align-items: center;
@@ -383,7 +368,6 @@
             margin-left: 8px;
         }
 
-        /* ── locked overlay ── */
         .locked-overlay .link-item {
             opacity: 0.5;
             filter: blur(0.3px);
@@ -395,7 +379,6 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* ── animations ── */
         @keyframes fadeSlide {
             0% {
                 opacity: 0;
@@ -420,7 +403,6 @@
             animation-delay: 0.28s;
         }
 
-        /* ── responsive ── */
         @media (max-width: 700px) {
             .mirror-body {
                 flex-direction: column;
@@ -462,16 +444,13 @@
 
     <div class="mirror">
 
-        <!-- HEADER -->
         <div class="mirror-header">
             <h1>⎋ mirror <span>· protected</span></h1>
             <div class="badge-demo">experimental tab</div>
         </div>
 
-        <!-- BODY -->
         <div class="mirror-body">
 
-            <!-- SIDEBAR -->
             <div class="sidebar">
                 <div class="nav-group">
                     <button class="nav-btn active" id="btnLinks"><i>⊹</i> Links<span class="dot"></span></button>
@@ -482,12 +461,10 @@
                 <div class="sidebar-info">✦ v0.2 · password protected</div>
             </div>
 
-            <!-- CONTENT -->
             <div class="content">
 
                 <div class="mirror-preview">
 
-                    <!-- LINKS -->
                     <div class="preview-card" id="sectionLinks">
                         <h3><i>⊹</i> public links</h3>
                         <div class="link-grid">
@@ -500,7 +477,6 @@
                         <div style="font-size:0.7rem; color:#7a7a92; margin-top:10px;">⚡ general links (demo)</div>
                     </div>
 
-                    <!-- UPDATES -->
                     <div class="preview-card" id="sectionUpdates" style="display:none;">
                         <h3><i>⟳</i> updates</h3>
                         <div class="updates-list">
@@ -512,7 +488,6 @@
                         <div style="font-size:0.7rem; color:#7a7a92;">📡 live · free</div>
                     </div>
 
-                    <!-- INFO -->
                     <div class="preview-card" id="sectionInfo" style="display:none;">
                         <h3><i>ⓘ</i> about</h3>
                         <div class="info-block">
@@ -529,7 +504,6 @@
                         </div>
                     </div>
 
-                    <!-- EXPERIMENTAL (password protected) -->
                     <div class="preview-card" id="sectionExperimental" style="display:none;">
                         <h3><i>⎇</i> experimental <span class="experimental-badge">🔒 protected</span></h3>
 
@@ -542,7 +516,6 @@
 
                         <div id="experimentalContent" class="locked-overlay">
                             <div class="link-grid" id="experimentalLinks">
-                                <!-- injected by JavaScript -->
                             </div>
                             <div class="divider" style="margin-top:16px;"></div>
                             <div style="font-size:0.7rem; color:#7a7a92; margin-top:10px; display:flex; gap:12px; flex-wrap:wrap;">
@@ -552,15 +525,14 @@
                         </div>
                     </div>
 
-                </div><!-- /mirror-preview -->
-            </div><!-- /content -->
-        </div><!-- /mirror-body -->
-    </div><!-- /mirror -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         (function() {
 
-            // ─── YOUR LINKS ──────────────────────────────────────────
             const links = [
                 "https://storage.googleapis.com/gclassroom/index.html",
                 "https://cleverlearning.s3.amazonaws.com/index.html",
@@ -573,10 +545,8 @@
                 "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg"
             ];
 
-            // ─── PASSWORD (change this!) ──────────────────────────
             const CORRECT_PASSWORD = "demo123";
 
-            // ─── DOM REFS ──────────────────────────────────────────
             const btnLinks = document.getElementById('btnLinks');
             const btnUpdates = document.getElementById('btnUpdates');
             const btnInfo = document.getElementById('btnInfo');
@@ -593,9 +563,6 @@
             const unlockBtn = document.getElementById('unlockBtn');
             const errorMsg = document.getElementById('errorMsg');
 
-            let isUnlocked = false;
-
-            // ─── RENDER LINKS ──────────────────────────────────────
             function renderExperimentalLinks() {
                 experimentalLinksContainer.innerHTML = '';
                 links.forEach(url => {
@@ -607,7 +574,6 @@
             }
             renderExperimentalLinks();
 
-            // ─── TAB SWITCHING ─────────────────────────────────────
             function setActiveSection(sectionId) {
                 sectionLinks.style.display = 'none';
                 sectionUpdates.style.display = 'none';
@@ -639,11 +605,9 @@
             btnExperimental.addEventListener('click', (e) => { e.preventDefault();
                 setActiveSection('experimental'); });
 
-            // ─── PASSWORD LOGIC ────────────────────────────────────
             function unlockContent() {
                 const entered = passwordInput.value.trim();
                 if (entered === CORRECT_PASSWORD) {
-                    isUnlocked = true;
                     experimentalContent.classList.remove('locked-overlay');
                     errorMsg.classList.remove('show');
                     passwordInput.value = '';
@@ -667,7 +631,6 @@
                 }
             });
 
-            // ─── DEFAULT: LINKS ACTIVE ────────────────────────────
             setActiveSection('links');
 
             console.log('🔐 Experimental links loaded. Default password: "demo123"');
