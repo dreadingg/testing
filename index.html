@@ -334,7 +334,6 @@
             color: #d8c8f0;
         }
 
-        /* Locked state - links not clickable */
         .locked .link-chip {
             opacity: 0.3;
             filter: blur(1px);
@@ -346,7 +345,6 @@
             background: rgba(255, 255, 255, 0.06);
             border-color: rgba(255, 255, 255, 0.04);
         }
-        /* When unlocked - links clickable */
         .unlocked .link-chip {
             opacity: 1;
             filter: none;
@@ -568,72 +566,59 @@
             font-weight: normal;
         }
 
-        .fullscreen-exit-btn {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 10000;
-            padding: 10px 24px;
-            background: rgba(200, 50, 50, 0.2);
-            color: #c87070;
-            border: 1px solid rgba(200, 50, 50, 0.15);
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        /* FULLSCREEN OVERLAY - completely separate from main UI */
+        .fullscreen-overlay {
             display: none;
-            backdrop-filter: blur(10px);
-        }
-        .fullscreen-exit-btn:hover {
-            background: rgba(200, 50, 50, 0.3);
-        }
-
-        .fullscreen-mode {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9999;
-            background: rgba(10, 10, 26, 0.95);
+            z-index: 99999;
+            background: #0a0a1a;
             padding: 0;
-            border-radius: 0;
-            overflow: auto;
+        }
+        .fullscreen-overlay.active {
+            display: block;
+        }
+        .fullscreen-overlay .fullscreen-iframe-wrapper {
+            width: 100%;
+            height: 100vh;
+            padding: 0;
+        }
+        .fullscreen-overlay .fullscreen-iframe-wrapper iframe {
+            width: 100%;
+            height: calc(100vh - 60px);
+            border: none;
+            display: block;
+        }
+        .fullscreen-overlay .fullscreen-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            height: 60px;
+        }
+        .fullscreen-overlay .fullscreen-controls .fullscreen-title {
+            color: #8a7aaa;
+            font-size: 14px;
+        }
+        .fullscreen-overlay .fullscreen-controls .fullscreen-exit-btn {
+            padding: 8px 24px;
+            background: rgba(200, 50, 50, 0.2);
+            color: #c87070;
+            border: 1px solid rgba(200, 50, 50, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            transition: 0.3s;
             backdrop-filter: blur(10px);
         }
-        .fullscreen-mode .container {
-            max-width: 100%;
-            height: 100vh;
-            border-radius: 0;
-            padding: 15px;
-            margin: 0;
-            box-shadow: none;
-            background: rgba(255, 255, 255, 0.03);
-        }
-        .fullscreen-mode .iframe-wrapper iframe {
-            height: calc(100vh - 160px);
-        }
-        .fullscreen-mode .tabs,
-        .fullscreen-mode .link-grid,
-        .fullscreen-mode .password-box,
-        .fullscreen-mode .divider,
-        .fullscreen-mode .meta,
-        .fullscreen-mode .badge,
-        .fullscreen-mode .badge-free,
-        .fullscreen-mode .badge-pass,
-        .fullscreen-mode h3,
-        .fullscreen-mode .link-count {
-            display: none;
-        }
-        .fullscreen-mode .iframe-controls {
-            border-radius: 0;
-        }
-        .fullscreen-mode .container > h1 {
-            display: none;
-        }
-        .fullscreen-mode .fullscreen-exit-btn {
-            display: block;
+        .fullscreen-overlay .fullscreen-controls .fullscreen-exit-btn:hover {
+            background: rgba(200, 50, 50, 0.3);
         }
 
         @media (max-width: 700px) {
@@ -665,6 +650,13 @@
                 flex: 1;
                 min-width: 80px;
             }
+            .fullscreen-overlay .fullscreen-iframe-wrapper iframe {
+                height: calc(100vh - 50px);
+            }
+            .fullscreen-overlay .fullscreen-controls {
+                height: 50px;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
@@ -679,6 +671,17 @@
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
+</div>
+
+<!-- FULLSCREEN OVERLAY - completely separate -->
+<div class="fullscreen-overlay" id="fullscreenOverlay">
+    <div class="fullscreen-controls">
+        <span class="fullscreen-title">Fullscreen View</span>
+        <button class="fullscreen-exit-btn" onclick="exitFullscreen()">✕ Exit Fullscreen</button>
+    </div>
+    <div class="fullscreen-iframe-wrapper" id="fullscreenIframeWrapper">
+        <iframe id="fullscreenIframe" src="about:blank"></iframe>
+    </div>
 </div>
 
 <div class="main-wrapper">
@@ -1034,51 +1037,40 @@
     }
 
     // ============================================================
-    // FULLSCREEN - FIXED
+    // FULLSCREEN - FIXED with overlay
     // ============================================================
     function enterFullscreen(wrapperId) {
-        var container = document.getElementById('mainContainer');
-        var exitBtn = document.getElementById('fullscreenExitBtn');
         var wrapper = document.getElementById(wrapperId);
-        
-        // Store which wrapper is fullscreen
-        container.dataset.fullscreenWrapper = wrapperId;
-        
-        // Add fullscreen class to container
-        container.classList.add('fullscreen-mode');
-        exitBtn.style.display = 'block';
-        
-        // Make the iframe fill the space
         var iframe = wrapper.querySelector('iframe');
+        var overlay = document.getElementById('fullscreenOverlay');
+        var fullscreenIframe = document.getElementById('fullscreenIframe');
+        
         if (iframe) {
-            iframe.style.height = 'calc(100vh - 130px)';
+            // Copy the iframe src to the fullscreen iframe
+            var src = iframe.src;
+            if (src && src !== 'about:blank') {
+                fullscreenIframe.src = src;
+            } else {
+                // If no link loaded, show a message
+                fullscreenIframe.src = 'about:blank';
+                // We'll show a message via the overlay
+            }
+            overlay.classList.add('active');
         }
     }
 
     function exitFullscreen() {
-        var container = document.getElementById('mainContainer');
-        var exitBtn = document.getElementById('fullscreenExitBtn');
-        var wrapperId = container.dataset.fullscreenWrapper;
-        
-        // Remove fullscreen class
-        container.classList.remove('fullscreen-mode');
-        exitBtn.style.display = 'none';
-        
-        // Reset iframe height
-        if (wrapperId) {
-            var wrapper = document.getElementById(wrapperId);
-            var iframe = wrapper.querySelector('iframe');
-            if (iframe) {
-                iframe.style.height = '600px';
-            }
-        }
-        container.dataset.fullscreenWrapper = '';
+        var overlay = document.getElementById('fullscreenOverlay');
+        overlay.classList.remove('active');
+        var fullscreenIframe = document.getElementById('fullscreenIframe');
+        fullscreenIframe.src = 'about:blank';
     }
 
+    // ESC key to exit fullscreen
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            var container = document.getElementById('mainContainer');
-            if (container.classList.contains('fullscreen-mode')) {
+            var overlay = document.getElementById('fullscreenOverlay');
+            if (overlay.classList.contains('active')) {
                 exitFullscreen();
             }
         }
