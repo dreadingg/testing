@@ -70,7 +70,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .link-chip {
             display: inline-block;
@@ -94,19 +94,65 @@
             border-color: #4a90d9;
             color: #1a5276;
         }
-        .iframe-container {
+        .iframe-wrapper {
+            position: relative;
             width: 100%;
-            height: 600px;
             border: 1px solid #eee;
             border-radius: 12px;
             overflow: hidden;
             background: #fafafa;
-            margin-top: 15px;
+            margin-top: 10px;
         }
-        .iframe-container iframe {
+        .iframe-wrapper iframe {
             width: 100%;
-            height: 100%;
+            height: 600px;
             border: none;
+            display: block;
+        }
+        .iframe-controls {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        .iframe-controls button {
+            padding: 6px 16px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            transition: 0.2s;
+        }
+        .iframe-controls button:hover {
+            background: #d0d0d0;
+        }
+        .iframe-controls button.fullscreen-btn {
+            background: #4a90d9;
+            color: white;
+        }
+        .iframe-controls button.fullscreen-btn:hover {
+            background: #357abd;
+        }
+        .iframe-controls button.exit-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .iframe-controls button.exit-btn:hover {
+            background: #c0392b;
+        }
+        .no-iframe {
+            padding: 60px 40px;
+            text-align: center;
+            color: #999;
+        }
+        .no-iframe span {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
         }
         .update-item {
             padding: 12px 0;
@@ -201,34 +247,74 @@
             font-size: 12px;
             margin: 4px 4px 4px 0;
         }
-        .no-iframe {
-            padding: 40px;
-            text-align: center;
-            color: #999;
+        /* Fullscreen mode */
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: white;
+            padding: 0;
+            border-radius: 0;
         }
-        .no-iframe span {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
+        .fullscreen-mode .container {
+            max-width: 100%;
+            height: 100vh;
+            border-radius: 0;
+            padding: 15px;
+            margin: 0;
+            box-shadow: none;
         }
-        .back-btn {
-            padding: 6px 16px;
-            background: #f0f0f0;
+        .fullscreen-mode .iframe-wrapper iframe {
+            height: calc(100vh - 180px);
+        }
+        .fullscreen-mode .tabs,
+        .fullscreen-mode .link-grid,
+        .fullscreen-mode .password-box,
+        .fullscreen-mode .divider,
+        .fullscreen-mode .meta,
+        .fullscreen-mode .badge,
+        .fullscreen-mode h3 {
+            display: none;
+        }
+        .fullscreen-mode .iframe-controls {
+            border-radius: 0;
+        }
+        .fullscreen-mode .container > h1 {
+            display: none;
+        }
+        /* Fullscreen exit button in corner */
+        .fullscreen-exit-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 10000;
+            padding: 10px 24px;
+            background: #e74c3c;
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 13px;
-            margin-bottom: 10px;
             font-family: Arial, sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
         }
-        .back-btn:hover {
-            background: #e0e0e0;
+        .fullscreen-exit-btn:hover {
+            background: #c0392b;
+        }
+        .fullscreen-mode .fullscreen-exit-btn {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="fullscreen-exit-btn" id="fullscreenExitBtn" onclick="exitFullscreen()">✕ Exit Fullscreen</div>
+
+<div class="container" id="mainContainer">
     <h1>⎋ Mirror <span>· protected</span></h1>
 
     <div class="tabs">
@@ -242,15 +328,21 @@
     <div id="panel-links" class="panel active">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">⊹ public links</h3>
         <div class="link-grid">
-            <span class="link-chip" onclick="loadLink('https://example.com')">◈ Example</span>
-            <span class="link-chip" onclick="loadLink('https://docs.page')">◈ Docs</span>
-            <span class="link-chip" onclick="loadLink('https://api.endpoint')">◈ API</span>
-            <span class="link-chip" onclick="loadLink('https://static.assets')">◈ Assets</span>
+            <span class="link-chip" onclick="loadLink(this, 'https://example.com')">◈ Example</span>
+            <span class="link-chip" onclick="loadLink(this, 'https://docs.page')">◈ Docs</span>
+            <span class="link-chip" onclick="loadLink(this, 'https://api.endpoint')">◈ API</span>
+            <span class="link-chip" onclick="loadLink(this, 'https://static.assets')">◈ Assets</span>
         </div>
-        <div class="iframe-container" id="iframeContainer">
-            <div class="no-iframe">
-                <span>🌐</span>
-                <p>Click a link above to load it here</p>
+        <div class="iframe-wrapper" id="linksIframeWrapper">
+            <div class="iframe-controls">
+                <button class="fullscreen-btn" onclick="enterFullscreen('linksIframeWrapper')">⛶ Fullscreen</button>
+                <button class="exit-btn" onclick="closeIframe('linksIframeWrapper')">✕ Close</button>
+            </div>
+            <div id="linksIframeContainer">
+                <div class="no-iframe">
+                    <span>🌐</span>
+                    <p>Click a link above to load it here</p>
+                </div>
             </div>
         </div>
         <div class="divider"></div>
@@ -293,7 +385,7 @@
         </div>
     </div>
 
-    <!-- EXP TAB (formerly Experimental) -->
+    <!-- EXP TAB -->
     <div id="panel-exp" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
             ⎇ exp <span class="badge">🔒 protected</span>
@@ -310,10 +402,16 @@
             <div class="link-grid" id="expLinks">
                 <!-- JavaScript will put links here -->
             </div>
-            <div class="iframe-container" id="expIframeContainer">
-                <div class="no-iframe">
-                    <span>🔒</span>
-                    <p>Unlock with password to view links</p>
+            <div class="iframe-wrapper" id="expIframeWrapper">
+                <div class="iframe-controls">
+                    <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">⛶ Fullscreen</button>
+                    <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">✕ Close</button>
+                </div>
+                <div id="expIframeContainer">
+                    <div class="no-iframe">
+                        <span>🔒</span>
+                        <p>Unlock with password to view links</p>
+                    </div>
                 </div>
             </div>
             <div class="divider"></div>
@@ -357,13 +455,7 @@
         span.dataset.index = i;
         span.onclick = function() {
             if (isUnlocked) {
-                loadExpLink(this.dataset.url);
-                // Highlight active link
-                var allLinks = document.querySelectorAll('#expLinks .link-chip');
-                for (var j = 0; j < allLinks.length; j++) {
-                    allLinks[j].classList.remove('active-link');
-                }
-                this.classList.add('active-link');
+                loadExpLink(this, this.dataset.url);
             }
         };
         container.appendChild(span);
@@ -372,8 +464,8 @@
     // ============================================================
     // LOAD LINK IN IFRAME (Links tab)
     // ============================================================
-    function loadLink(url) {
-        var container = document.getElementById('iframeContainer');
+    function loadLink(element, url) {
+        var container = document.getElementById('linksIframeContainer');
         container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
         
         // Highlight active link
@@ -381,16 +473,96 @@
         for (var i = 0; i < allLinks.length; i++) {
             allLinks[i].classList.remove('active-link');
         }
-        event.target.classList.add('active-link');
+        element.classList.add('active-link');
     }
 
     // ============================================================
     // LOAD LINK IN EXP IFRAME
     // ============================================================
-    function loadExpLink(url) {
+    function loadExpLink(element, url) {
         var container = document.getElementById('expIframeContainer');
         container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
+        
+        // Highlight active link
+        var allLinks = document.querySelectorAll('#expLinks .link-chip');
+        for (var i = 0; i < allLinks.length; i++) {
+            allLinks[i].classList.remove('active-link');
+        }
+        element.classList.add('active-link');
     }
+
+    // ============================================================
+    // CLOSE IFRAME
+    // ============================================================
+    function closeIframe(wrapperId) {
+        var container;
+        if (wrapperId === 'linksIframeWrapper') {
+            container = document.getElementById('linksIframeContainer');
+        } else {
+            container = document.getElementById('expIframeContainer');
+        }
+        container.innerHTML = '<div class="no-iframe"><span>🌐</span><p>Click a link above to load it here</p></div>';
+        
+        // Remove active link highlighting
+        var panel = container.closest('.panel');
+        var links = panel.querySelectorAll('.link-chip');
+        for (var i = 0; i < links.length; i++) {
+            links[i].classList.remove('active-link');
+        }
+    }
+
+    // ============================================================
+    // FULLSCREEN
+    // ============================================================
+    function enterFullscreen(wrapperId) {
+        var wrapper = document.getElementById(wrapperId);
+        var container = document.getElementById('mainContainer');
+        var exitBtn = document.getElementById('fullscreenExitBtn');
+        
+        // Store which iframe is fullscreen
+        container.dataset.fullscreenWrapper = wrapperId;
+        
+        // Add fullscreen class to container
+        container.classList.add('fullscreen-mode');
+        exitBtn.style.display = 'block';
+        
+        // Make the iframe fill the space
+        var iframe = wrapper.querySelector('iframe');
+        if (iframe) {
+            iframe.style.height = 'calc(100vh - 130px)';
+        }
+    }
+
+    function exitFullscreen() {
+        var container = document.getElementById('mainContainer');
+        var exitBtn = document.getElementById('fullscreenExitBtn');
+        var wrapperId = container.dataset.fullscreenWrapper;
+        
+        // Remove fullscreen class
+        container.classList.remove('fullscreen-mode');
+        exitBtn.style.display = 'none';
+        
+        // Reset iframe height
+        if (wrapperId) {
+            var wrapper = document.getElementById(wrapperId);
+            var iframe = wrapper.querySelector('iframe');
+            if (iframe) {
+                iframe.style.height = '600px';
+            }
+        }
+        
+        container.dataset.fullscreenWrapper = '';
+    }
+
+    // ESC key to exit fullscreen
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            var container = document.getElementById('mainContainer');
+            if (container.classList.contains('fullscreen-mode')) {
+                exitFullscreen();
+            }
+        }
+    });
 
     // ============================================================
     // TAB SWITCHING
@@ -406,7 +578,6 @@
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].classList.remove('active');
         }
-        // Find the button that matches
         var allButtons = document.querySelectorAll('.tab-btn');
         for (var i = 0; i < allButtons.length; i++) {
             if (allButtons[i].textContent.trim().toLowerCase().includes(tabName.toLowerCase())) {
@@ -434,9 +605,10 @@
             
             // Load first link automatically
             if (expLinks.length > 0) {
-                loadExpLink(expLinks[0].url);
                 var firstLink = document.querySelector('#expLinks .link-chip');
-                if (firstLink) firstLink.classList.add('active-link');
+                if (firstLink) {
+                    loadExpLink(firstLink, expLinks[0].url);
+                }
             }
         } else {
             document.getElementById('errorMsg').classList.add('show');
@@ -465,6 +637,7 @@
 
     console.log('🔐 Password is: "demo123"');
     console.log('ℹ️  Change it by editing CORRECT_PASSWORD in the script');
+    console.log('🔄 Click Fullscreen to expand, ESC or Exit button to close');
 </script>
 
 </body>
