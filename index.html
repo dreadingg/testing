@@ -246,6 +246,14 @@
             font-size: 12px;
             margin-left: 10px;
         }
+        .badge-pass {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
         .divider {
             height: 1px;
             background: #eee;
@@ -324,6 +332,7 @@
         .fullscreen-mode .meta,
         .fullscreen-mode .badge,
         .fullscreen-mode .badge-free,
+        .fullscreen-mode .badge-pass,
         .fullscreen-mode h3,
         .fullscreen-mode .link-count {
             display: none;
@@ -372,8 +381,8 @@
         <button class="tab-btn active" onclick="showTab('links')">⊹ Links</button>
         <button class="tab-btn" onclick="showTab('updates')">⟳ Updates</button>
         <button class="tab-btn" onclick="showTab('info')">ⓘ Info</button>
+        <button class="tab-btn" onclick="showTab('pass')">⎇ Pass</button>
         <button class="tab-btn" onclick="showTab('exp')">⎇ Exp</button>
-        <button class="tab-btn" onclick="showTab('rl')">⎇ RL</button>
         <button class="tab-btn" onclick="showTab('free')">⊹ Free</button>
     </div>
 
@@ -429,28 +438,61 @@
             <div style="margin-top:12px;">
                 <span class="tag">⚡ free</span>
                 <span class="tag">⊹ protected</span>
+                <span class="tag">⎇ pass</span>
                 <span class="tag">⎇ exp</span>
-                <span class="tag">⎇ RL</span>
             </div>
             <div style="margin-top:16px; background:#f8f9fa; padding:16px 20px; border-radius:12px;">
                 <strong>description</strong>
-                <p style="margin-top:4px; opacity:0.8;">"Customize the panels. The exp tab is locked by password."</p>
+                <p style="margin-top:4px; opacity:0.8;">"Customize the panels. Pass and Exp tabs are locked by password."</p>
             </div>
         </div>
     </div>
 
-    <!-- EXP TAB -->
-    <div id="panel-exp" class="panel">
+    <!-- PASS TAB (formerly Exp - 9 links, password: new update) -->
+    <div id="panel-pass" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            ⎇ exp <span class="badge">🔒 protected</span>
+            ⎇ Pass <span class="badge-pass">🔒 protected</span>
             <span class="link-count">(9 links)</span>
         </h3>
 
         <div class="password-box">
             <span>🔐</span>
-            <input type="password" id="passwordInput" placeholder="enter password" autocomplete="off">
-            <button id="unlockBtn">unlock</button>
-            <span class="error" id="errorMsg">wrong password</span>
+            <input type="password" id="passPasswordInput" placeholder="enter password" autocomplete="off">
+            <button id="passUnlockBtn">unlock</button>
+            <span class="error" id="passErrorMsg">wrong password</span>
+        </div>
+
+        <div id="passContent" class="locked">
+            <div class="link-grid" id="passLinks"></div>
+            <div class="iframe-wrapper" id="passIframeWrapper">
+                <div class="iframe-controls">
+                    <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">⛶ Fullscreen</button>
+                    <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">✕ Close</button>
+                </div>
+                <div id="passIframeContainer">
+                    <div class="no-iframe">
+                        <span>🔒</span>
+                        <p>Unlock with password to view links</p>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="meta">⎇ Pass links · 9 entries <span style="opacity:0.5;">(password required)</span></div>
+        </div>
+    </div>
+
+    <!-- EXP TAB (formerly RL - 35 links, password: dreading bro) -->
+    <div id="panel-exp" class="panel">
+        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
+            ⎇ Exp <span class="badge">🔒 protected</span>
+            <span class="link-count">(35 links)</span>
+        </h3>
+
+        <div class="password-box">
+            <span>🔐</span>
+            <input type="password" id="expPasswordInput" placeholder="enter password" autocomplete="off">
+            <button id="expUnlockBtn">unlock</button>
+            <span class="error" id="expErrorMsg">wrong password</span>
         </div>
 
         <div id="expContent" class="locked">
@@ -468,31 +510,8 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <div class="meta">⎇ exp links · 9 entries <span style="opacity:0.5;">(password required)</span></div>
+            <div class="meta">⎇ Exp links · 35 entries <span style="opacity:0.5;">(password required)</span></div>
         </div>
-    </div>
-
-    <!-- RL TAB -->
-    <div id="panel-rl" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            ⎇ RL <span class="badge">🔓 free</span>
-            <span class="link-count">(35 links)</span>
-        </h3>
-        <div class="link-grid" id="rlLinks"></div>
-        <div class="iframe-wrapper" id="rlIframeWrapper">
-            <div class="iframe-controls">
-                <button class="fullscreen-btn" onclick="enterFullscreen('rlIframeWrapper')">⛶ Fullscreen</button>
-                <button class="exit-btn" onclick="closeIframe('rlIframeWrapper')">✕ Close</button>
-            </div>
-            <div id="rlIframeContainer">
-                <div class="no-iframe">
-                    <span>📚</span>
-                    <p>Click a link above to load it here</p>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="meta">⎇ RL links · 35 entries</div>
     </div>
 
     <!-- FREE TAB -->
@@ -522,9 +541,9 @@
 
 <script>
     // ============================================================
-    // EXP LINKS (9 links - password protected)
+    // PASS LINKS (9 links - password: new update)
     // ============================================================
-    var expLinks = [
+    var passLinks = [
         { name: "GClassroom", url: "https://storage.googleapis.com/gclassroom/index.html" },
         { name: "Clever 1", url: "https://cleverlearning.s3.amazonaws.com/index.html" },
         { name: "Clever 2", url: "https://s3.amazonaws.com/cleverlearning/index.html" },
@@ -537,9 +556,9 @@
     ];
 
     // ============================================================
-    // RL LINKS (35 links)
+    // EXP LINKS (35 links - password: dreading bro)
     // ============================================================
-    var rlLinks = [
+    var expLinks = [
         "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
         "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2/main.svg",
         "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2@main/main.svg",
@@ -647,10 +666,10 @@
     ];
 
     // ============================================================
-    // PASSWORD
+    // PASSWORDS
     // ============================================================
-    var CORRECT_PASSWORD = "demo123";
-    var isUnlocked = false;
+    var PASS_PASSWORD = "new update";
+    var EXP_PASSWORD = "dreading bro";
 
     // ============================================================
     // RENDER LINKS
@@ -685,15 +704,14 @@
     // ============================================================
     function loadGenericLink(element, url, type) {
         var containerId;
-        if (type === 'exp') containerId = 'expIframeContainer';
-        else if (type === 'rl') containerId = 'rlIframeContainer';
+        if (type === 'pass') containerId = 'passIframeContainer';
+        else if (type === 'exp') containerId = 'expIframeContainer';
         else if (type === 'free') containerId = 'freeIframeContainer';
         else containerId = 'linksIframeContainer';
         
         var container = document.getElementById(containerId);
         container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
         
-        // Highlight active link
         var panel = container.closest('.panel');
         var allLinks = panel.querySelectorAll('.link-chip');
         for (var i = 0; i < allLinks.length; i++) {
@@ -801,49 +819,83 @@
             }
         }
 
-        document.getElementById('errorMsg').classList.remove('show');
+        document.getElementById('passErrorMsg').classList.remove('show');
+        document.getElementById('expErrorMsg').classList.remove('show');
     }
 
     // ============================================================
-    // PASSWORD UNLOCK
+    // PASS UNLOCK (password: new update)
     // ============================================================
-    function unlockContent() {
-        var input = document.getElementById('passwordInput');
+    function unlockPass() {
+        var input = document.getElementById('passPasswordInput');
         var entered = input.value.trim();
-        if (entered === CORRECT_PASSWORD) {
-            isUnlocked = true;
-            document.getElementById('expContent').classList.remove('locked');
-            document.getElementById('errorMsg').classList.remove('show');
+        if (entered === PASS_PASSWORD) {
+            document.getElementById('passContent').classList.remove('locked');
+            document.getElementById('passErrorMsg').classList.remove('show');
             input.value = '';
-            document.getElementById('unlockBtn').textContent = '✓ unlocked';
-            document.getElementById('unlockBtn').style.opacity = '0.6';
+            document.getElementById('passUnlockBtn').textContent = '✓ unlocked';
+            document.getElementById('passUnlockBtn').style.opacity = '0.6';
             
-            if (expLinks.length > 0) {
-                var firstLink = document.querySelector('#expLinks .link-chip');
+            if (passLinks.length > 0) {
+                var firstLink = document.querySelector('#passLinks .link-chip');
                 if (firstLink) {
-                    loadGenericLink(firstLink, expLinks[0].url, 'exp');
+                    loadGenericLink(firstLink, passLinks[0].url, 'pass');
                 }
             }
         } else {
-            document.getElementById('errorMsg').classList.add('show');
+            document.getElementById('passErrorMsg').classList.add('show');
             setTimeout(function() {
-                document.getElementById('errorMsg').classList.remove('show');
+                document.getElementById('passErrorMsg').classList.remove('show');
             }, 2000);
         }
     }
 
-    document.getElementById('unlockBtn').addEventListener('click', unlockContent);
-    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+    document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
+    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            unlockContent();
+            unlockPass();
+        }
+    });
+
+    // ============================================================
+    // EXP UNLOCK (password: dreading bro)
+    // ============================================================
+    function unlockExp() {
+        var input = document.getElementById('expPasswordInput');
+        var entered = input.value.trim();
+        if (entered === EXP_PASSWORD) {
+            document.getElementById('expContent').classList.remove('locked');
+            document.getElementById('expErrorMsg').classList.remove('show');
+            input.value = '';
+            document.getElementById('expUnlockBtn').textContent = '✓ unlocked';
+            document.getElementById('expUnlockBtn').style.opacity = '0.6';
+            
+            if (expLinks.length > 0) {
+                var firstLink = document.querySelector('#expLinks .link-chip');
+                if (firstLink) {
+                    loadGenericLink(firstLink, expLinks[0], 'exp');
+                }
+            }
+        } else {
+            document.getElementById('expErrorMsg').classList.add('show');
+            setTimeout(function() {
+                document.getElementById('expErrorMsg').classList.remove('show');
+            }, 2000);
+        }
+    }
+
+    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
+    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            unlockExp();
         }
     });
 
     // ============================================================
     // INIT
     // ============================================================
+    renderLinks('passLinks', passLinks, 'pass');
     renderLinks('expLinks', expLinks, 'exp');
-    renderLinks('rlLinks', rlLinks, 'rl');
     renderLinks('freeLinks', freeLinks, 'free');
 
     window.onload = function() {
@@ -853,10 +905,11 @@
         }
     };
 
-    console.log('🔐 Password is: "demo123"');
-    console.log('📚 RL tab: ' + rlLinks.length + ' links');
+    console.log('🔐 Pass password is: "new update"');
+    console.log('🔐 Exp password is: "dreading bro"');
+    console.log('📚 Exp tab: ' + expLinks.length + ' links');
     console.log('🌟 Free tab: ' + freeLinks.length + ' links');
-    console.log('🔒 Exp tab: ' + expLinks.length + ' links (password protected)');
+    console.log('🔒 Pass tab: ' + passLinks.length + ' links');
 </script>
 
 </body>
