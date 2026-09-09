@@ -1,119 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirror · Protected</title>
+    <title>Mirror</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body { font-family: Arial; padding: 40px; background: #f5f5f5; }
+        .box { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: 1px solid #ddd; background: white; border-radius: 8px; }
+        button.active { background: #e0e0e0; font-weight: bold; }
+        .panel { display: none; margin-top: 20px; }
+        .panel.active { display: block; }
+        .link { display: inline-block; background: #f0f0f0; padding: 8px 16px; margin: 4px; border-radius: 20px; font-size: 14px; }
+        .locked { opacity: 0.5; filter: blur(1px); }
+        .password-box { background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .password-box input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px; }
+        .error { color: red; display: none; }
+        .error.show { display: inline; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>⎋ Mirror <span style="color:#999;font-size:16px;">· protected</span></h1>
+    
+    <div style="margin:20px 0;">
+        <button class="active" onclick="showTab('links')">⊹ Links</button>
+        <button onclick="showTab('updates')">⟳ Updates</button>
+        <button onclick="showTab('info')">ⓘ Info</button>
+        <button onclick="showTab('experimental')">⎇ Experimental</button>
+    </div>
+
+    <div id="links" class="panel active">
+        <h3>Public Links</h3>
+        <div>
+            <span class="link">◈ example.com</span>
+            <span class="link">◈ docs.page</span>
+            <span class="link">◈ api.endpoint</span>
+        </div>
+    </div>
+
+    <div id="updates" class="panel">
+        <h3>Updates</h3>
+        <p><strong>today:</strong> Mirror v2.2 released</p>
+        <p><strong>2d:</strong> Password protection added</p>
+    </div>
+
+    <div id="info" class="panel">
+        <h3>About</h3>
+        <p>Minimal mirror with password-protected experimental zone.</p>
+    </div>
+
+    <div id="experimental" class="panel">
+        <h3>Experimental <span style="background:#fff3e0;padding:2px 10px;border-radius:12px;font-size:12px;">🔒 protected</span></h3>
+        
+        <div class="password-box">
+            <input type="password" id="pw" placeholder="enter password">
+            <button onclick="unlock()">unlock</button>
+            <span class="error" id="err">wrong password</span>
+        </div>
+
+        <div id="expContent" class="locked">
+            <div id="expLinks"></div>
+            <p style="color:#999;font-size:12px;margin-top:10px;">9 links · password required</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // YOUR LINKS
+    const links = [
+        "https://storage.googleapis.com/gclassroom/index.html",
+        "https://cleverlearning.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/cleverlearning/index.html",
+        "https://opiumbest.github.io",
+        "https://opiumisbest.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/opiumisbest/index.html",
+        "https://storage.googleapis.com/opiumbest/index.html",
+        "https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg",
+        "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg"
+    ];
+
+    const PASSWORD = "demo123";
+
+    // Show links
+    const container = document.getElementById('expLinks');
+    links.forEach(url => {
+        const span = document.createElement('span');
+        span.className = 'link';
+        span.textContent = '⎇ ' + url;
+        container.appendChild(span);
+    });
+
+    // Tab switching
+    function showTab(name) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        document.querySelector(`button[onclick="showTab('${name}')"]`).classList.add('active');
+        document.getElementById('err').classList.remove('show');
+    }
+
+    // Unlock
+    function unlock() {
+        const input = document.getElementById('pw');
+        if (input.value === PASSWORD) {
+            document.getElementById('expContent').classList.remove('locked');
+            document.getElementById('err').classList.remove('show');
+            input.value = '';
+        } else {
+            document.getElementById('err').classList.add('show');
+            setTimeout(() => document.getElementById('err').classList.remove('show'), 2000);
         }
-        body {
-            background: #f0f2f5;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        .header {
-            padding: 24px 32px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 {
-            font-size: 22px;
-            font-weight: 500;
-            color: #1a1a2e;
-        }
-        .header h1 span {
-            font-weight: 300;
-            color: #888;
-            font-size: 16px;
-        }
-        .badge {
-            background: #f0f0f0;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #555;
-        }
-        .body {
-            display: flex;
-            min-height: 500px;
-        }
-        .sidebar {
-            width: 160px;
-            background: #f8f9fa;
-            padding: 24px 16px;
-            border-right: 1px solid #eee;
-            flex-shrink: 0;
-        }
-        .sidebar button {
-            display: block;
-            width: 100%;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border: none;
-            background: transparent;
-            border-radius: 12px;
-            font-size: 15px;
-            color: #333;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .sidebar button:hover {
-            background: #e8eaed;
-        }
-        .sidebar button.active {
-            background: #e8eaed;
-            font-weight: 500;
-        }
-        .sidebar .info {
-            margin-top: 40px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-            font-size: 12px;
-            color: #999;
-        }
-        .content {
-            flex: 1;
-            padding: 32px;
-            background: #fafbfc;
-        }
-        .panel {
-            display: none;
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-        .panel.active {
-            display: block;
-        }
-        .panel h2 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #888;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
+    }
+
+    document.getElementById('pw').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') unlock();
+    });
+
+    console.log('🔑 Password: demo123');
+</script>
+
+</body>
+</html>        }
         .links-grid {
             display: flex;
             flex-wrap: wrap;
