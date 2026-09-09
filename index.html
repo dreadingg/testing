@@ -268,6 +268,43 @@
             font-size: 15px;
             line-height: 1.7;
             color: #444;
+            max-width: 800px;
+        }
+        .info-text h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+        }
+        .info-text .stats {
+            display: flex;
+            gap: 40px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .info-text .stats div {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .info-text .stats div .number {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a2e;
+            display: block;
+        }
+        .info-text .stats div .label {
+            font-size: 13px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .info-text .highlight {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border-left: 4px solid #4a90d9;
         }
         .tag {
             display: inline-block;
@@ -367,53 +404,35 @@
             .iframe-wrapper iframe {
                 height: 400px;
             }
+            .info-text .stats {
+                gap: 15px;
+            }
+            .info-text .stats div {
+                padding: 12px 18px;
+                flex: 1;
+                min-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="fullscreen-exit-btn" id="fullscreenExitBtn" onclick="exitFullscreen()">✕ Exit Fullscreen</div>
+<div class="fullscreen-exit-btn" id="fullscreenExitBtn" onclick="exitFullscreen()">Exit Fullscreen</div>
 
 <div class="container" id="mainContainer">
-    <h1>⎋ Mirror <span>· protected</span></h1>
+    <h1>Mirror <span>· protected</span></h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('links')">⊹ Links</button>
-        <button class="tab-btn" onclick="showTab('updates')">⟳ Updates</button>
-        <button class="tab-btn" onclick="showTab('info')">ⓘ Info</button>
-        <button class="tab-btn" onclick="showTab('pass')">⎇ Pass</button>
-        <button class="tab-btn" onclick="showTab('exp')">⎇ Exp</button>
-        <button class="tab-btn" onclick="showTab('free')">⊹ Free</button>
-    </div>
-
-    <!-- LINKS TAB -->
-    <div id="panel-links" class="panel active">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">⊹ public links</h3>
-        <div class="link-grid">
-            <span class="link-chip" onclick="loadLink(this, 'https://example.com')">◈ Example</span>
-            <span class="link-chip" onclick="loadLink(this, 'https://docs.page')">◈ Docs</span>
-            <span class="link-chip" onclick="loadLink(this, 'https://api.endpoint')">◈ API</span>
-            <span class="link-chip" onclick="loadLink(this, 'https://static.assets')">◈ Assets</span>
-        </div>
-        <div class="iframe-wrapper" id="linksIframeWrapper">
-            <div class="iframe-controls">
-                <button class="fullscreen-btn" onclick="enterFullscreen('linksIframeWrapper')">⛶ Fullscreen</button>
-                <button class="exit-btn" onclick="closeIframe('linksIframeWrapper')">✕ Close</button>
-            </div>
-            <div id="linksIframeContainer">
-                <div class="no-iframe">
-                    <span>🌐</span>
-                    <p>Click a link above to load it here</p>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="meta">⚡ general links (demo)</div>
+        <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
+        <button class="tab-btn" onclick="showTab('info')">Info</button>
+        <button class="tab-btn" onclick="showTab('pass')">Pass</button>
+        <button class="tab-btn" onclick="showTab('exp')">Exp</button>
+        <button class="tab-btn" onclick="showTab('free')">Free</button>
     </div>
 
     <!-- UPDATES TAB -->
-    <div id="panel-updates" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">⟳ updates</h3>
+    <div id="panel-updates" class="panel active">
+        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Updates</h3>
         <div class="update-item">
             <span class="date">today</span>
             <span>Mirror engine v2.2 · exp tab</span>
@@ -427,31 +446,49 @@
             <span>UI refined + fresh animations</span>
         </div>
         <div class="divider"></div>
-        <div class="meta">📡 live · free</div>
+        <div class="meta">live · free</div>
     </div>
 
     <!-- INFO TAB -->
     <div id="panel-info" class="panel">
-        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">ⓘ about</h3>
+        <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">Info</h3>
         <div class="info-text">
-            <p>Minimal mirror interface with password‑protected and free zones.</p>
-            <div style="margin-top:12px;">
-                <span class="tag">⚡ free</span>
-                <span class="tag">⊹ protected</span>
-                <span class="tag">⎇ pass</span>
-                <span class="tag">⎇ exp</span>
+            <h2>Dreading</h2>
+            <p style="font-size:18px;color:#555;margin-bottom:16px;">portal to unblocked links</p>
+            
+            <p>dreading has a whole library of pre-built, unblocked links that are good to go from the moment you sign in. no setup, no pasting URLs, no tech know-how required since thats all on g's end, just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to me and my mirroring.</p>
+            
+            <div class="stats">
+                <div>
+                    <span class="number">155+</span>
+                    <span class="label">TOTAL LINKS</span>
+                </div>
+                <div>
+                    <span class="number">3</span>
+                    <span class="label">CATEGORIES</span>
+                </div>
+                <div>
+                    <span class="number">2</span>
+                    <span class="label">MONTHS</span>
+                </div>
+                <div>
+                    <span class="number">ALWAYS</span>
+                    <span class="label">UPDATED</span>
+                </div>
             </div>
-            <div style="margin-top:16px; background:#f8f9fa; padding:16px 20px; border-radius:12px;">
-                <strong>description</strong>
-                <p style="margin-top:4px; opacity:0.8;">"Customize the panels. Pass and Exp tabs are locked by password."</p>
+            
+            <div class="highlight">
+                <strong>Passwords:</strong><br>
+                Pass tab: <code>new update</code><br>
+                Exp tab: <code>dreading bro</code>
             </div>
         </div>
     </div>
 
-    <!-- PASS TAB (formerly Exp - 9 links, password: new update) -->
+    <!-- PASS TAB -->
     <div id="panel-pass" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            ⎇ Pass <span class="badge-pass">🔒 protected</span>
+            Pass <span class="badge-pass">protected</span>
             <span class="link-count">(9 links)</span>
         </h3>
 
@@ -466,8 +503,8 @@
             <div class="link-grid" id="passLinks"></div>
             <div class="iframe-wrapper" id="passIframeWrapper">
                 <div class="iframe-controls">
-                    <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">⛶ Fullscreen</button>
-                    <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">✕ Close</button>
+                    <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">Fullscreen</button>
+                    <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">Close</button>
                 </div>
                 <div id="passIframeContainer">
                     <div class="no-iframe">
@@ -477,14 +514,14 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <div class="meta">⎇ Pass links · 9 entries <span style="opacity:0.5;">(password required)</span></div>
+            <div class="meta">Pass links · 9 entries (password required)</div>
         </div>
     </div>
 
-    <!-- EXP TAB (formerly RL - 35 links, password: dreading bro) -->
+    <!-- EXP TAB -->
     <div id="panel-exp" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            ⎇ Exp <span class="badge">🔒 protected</span>
+            Exp <span class="badge">protected</span>
             <span class="link-count">(35 links)</span>
         </h3>
 
@@ -499,8 +536,8 @@
             <div class="link-grid" id="expLinks"></div>
             <div class="iframe-wrapper" id="expIframeWrapper">
                 <div class="iframe-controls">
-                    <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">⛶ Fullscreen</button>
-                    <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">✕ Close</button>
+                    <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">Fullscreen</button>
+                    <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">Close</button>
                 </div>
                 <div id="expIframeContainer">
                     <div class="no-iframe">
@@ -510,31 +547,31 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <div class="meta">⎇ Exp links · 35 entries <span style="opacity:0.5;">(password required)</span></div>
+            <div class="meta">Exp links · 35 entries (password required)</div>
         </div>
     </div>
 
     <!-- FREE TAB -->
     <div id="panel-free" class="panel">
         <h3 style="color:#888;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:15px;">
-            ⊹ Free <span class="badge-free">🔓 unlocked</span>
+            Free <span class="badge-free">unlocked</span>
             <span class="link-count">(60+ links)</span>
         </h3>
         <div class="link-grid" id="freeLinks"></div>
         <div class="iframe-wrapper" id="freeIframeWrapper">
             <div class="iframe-controls">
-                <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">⛶ Fullscreen</button>
-                <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">✕ Close</button>
+                <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">Fullscreen</button>
+                <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">Close</button>
             </div>
             <div id="freeIframeContainer">
                 <div class="no-iframe">
-                    <span>🌟</span>
+                    <span>📚</span>
                     <p>Click a link above to load it here</p>
                 </div>
             </div>
         </div>
         <div class="divider"></div>
-        <div class="meta">⊹ Free links · 60+ entries</div>
+        <div class="meta">Free links · 60+ entries</div>
     </div>
 
 </div>
@@ -690,7 +727,7 @@
                 name = parts[0].split('.')[0];
                 if (name.length > 20) name = name.substring(0, 18) + '…';
             }
-            span.textContent = '◈ ' + name;
+            span.textContent = name;
             span.dataset.url = url;
             span.onclick = function() {
                 loadGenericLink(this, this.dataset.url, type);
@@ -721,20 +758,6 @@
     }
 
     // ============================================================
-    // LOAD LINK (for Links tab)
-    // ============================================================
-    function loadLink(element, url) {
-        var container = document.getElementById('linksIframeContainer');
-        container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
-        
-        var allLinks = document.querySelectorAll('#panel-links .link-chip');
-        for (var i = 0; i < allLinks.length; i++) {
-            allLinks[i].classList.remove('active-link');
-        }
-        element.classList.add('active-link');
-    }
-
-    // ============================================================
     // CLOSE IFRAME
     // ============================================================
     function closeIframe(wrapperId) {
@@ -745,7 +768,7 @@
         if (noIframeMsg) {
             container.innerHTML = noIframeMsg.outerHTML;
         } else {
-            container.innerHTML = '<div class="no-iframe"><span>🌐</span><p>Click a link above to load it here</p></div>';
+            container.innerHTML = '<div class="no-iframe"><span>📚</span><p>Click a link above to load it here</p></div>';
         }
         
         var links = panel.querySelectorAll('.link-chip');
@@ -833,7 +856,7 @@
             document.getElementById('passContent').classList.remove('locked');
             document.getElementById('passErrorMsg').classList.remove('show');
             input.value = '';
-            document.getElementById('passUnlockBtn').textContent = '✓ unlocked';
+            document.getElementById('passUnlockBtn').textContent = 'unlocked';
             document.getElementById('passUnlockBtn').style.opacity = '0.6';
             
             if (passLinks.length > 0) {
@@ -867,7 +890,7 @@
             document.getElementById('expContent').classList.remove('locked');
             document.getElementById('expErrorMsg').classList.remove('show');
             input.value = '';
-            document.getElementById('expUnlockBtn').textContent = '✓ unlocked';
+            document.getElementById('expUnlockBtn').textContent = 'unlocked';
             document.getElementById('expUnlockBtn').style.opacity = '0.6';
             
             if (expLinks.length > 0) {
@@ -899,17 +922,14 @@
     renderLinks('freeLinks', freeLinks, 'free');
 
     window.onload = function() {
-        var firstLink = document.querySelector('#panel-links .link-chip');
-        if (firstLink) {
-            firstLink.click();
-        }
+        // Updates tab is now default
     };
 
-    console.log('🔐 Pass password is: "new update"');
-    console.log('🔐 Exp password is: "dreading bro"');
-    console.log('📚 Exp tab: ' + expLinks.length + ' links');
-    console.log('🌟 Free tab: ' + freeLinks.length + ' links');
-    console.log('🔒 Pass tab: ' + passLinks.length + ' links');
+    console.log('Pass password: "new update"');
+    console.log('Exp password: "dreading bro"');
+    console.log('Exp tab: ' + expLinks.length + ' links');
+    console.log('Free tab: ' + freeLinks.length + ' links');
+    console.log('Pass tab: ' + passLinks.length + ' links');
 </script>
 
 </body>
