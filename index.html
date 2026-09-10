@@ -656,6 +656,26 @@
             font-weight: normal;
         }
 
+        /* DISCORD BOTTOM TEXT */
+        .discord-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            font-size: 15px;
+            color: #9b4dff;
+            letter-spacing: 1px;
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(155, 77, 255, 0.3);
+            transition: 0.3s;
+            user-select: text;
+            cursor: text;
+        }
+        .discord-footer:hover {
+            color: #b06dff;
+            text-shadow: 0 0 30px rgba(155, 77, 255, 0.5);
+        }
+
         /* NOTIFICATIONS */
         .notification-container {
             position: fixed;
@@ -721,6 +741,7 @@
             .splash-title { font-size: 40px; letter-spacing: 4px; }
             .splash-quote { font-size: 15px; max-width: 90%; }
             .iframe-overlay .iframe-header { height: 45px; padding: 8px 15px; }
+            .discord-footer { font-size: 13px; }
         }
     </style>
 </head>
@@ -808,7 +829,7 @@
                 <div class="info-text">
                     <h2>Dreading</h2>
                     <p style="font-size:16px;color:#8a7aaa;margin-bottom:12px;">portal to unblocked links</p>
-                    <p>dreading has a whole library of pre-built, unblocked links that are good to go from the moment you sign in. no setup, no pasting URLs, no tech know-how required since thats all on g's end, just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to me and my mirroring.</p>
+                    <p>fan project about links and stuff, unblocking library, updates every 1-2 weeks, depends on my mood, all thanks to malone lam for funding this, love to all. this whole thing started as a small side project just for me and a couple friends, but it hasn't grew into something way bigger than expected tbh, BUT the goal has always been simple — give people access to people access to stuff they should already have access to, so keep browsing, stay safe, and remember, privacy is a right, not a privilege.</p>
                     <div class="stats">
                         <div><span class="number">155+</span><span class="label">TOTAL LINKS</span></div>
                         <div><span class="number">3</span><span class="label">CATEGORIES</span></div>
@@ -864,6 +885,9 @@
                 <div class="meta">Free links · 60+ entries</div>
             </div>
 
+            <!-- DISCORD FOOTER -->
+            <div class="discord-footer">https://discord.gg/gUcqgrcHAh</div>
+
         </div>
     </div>
 </div>
@@ -878,7 +902,6 @@
     var ALLOWED_DOMAINS = [];
     var blockedCount = 0;
 
-    // ---- 1. BLOCK window.open ----
     var _originalOpen = window.open;
     window.open = function(url, name, features) {
         if (isAllowed(url)) return _originalOpen.call(window, url, name, features);
@@ -888,7 +911,6 @@
         return null;
     };
 
-    // ---- 2. BLOCK all external link clicks (capture phase) ----
     document.addEventListener('click', function(e) {
         if (e.ctrlKey || e.metaKey || e.shiftKey) {
             var el = e.target;
@@ -896,7 +918,6 @@
             if (el && el.href) {
                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
                 blockedCount++;
-                console.warn('[LOCKDOWN] Blocked modifier+click:', el.href);
                 dispatchBlocked(el.href, 'modifier click');
                 return false;
             }
@@ -912,7 +933,6 @@
         if (target === '_blank' || target === '_new' || target === '_top' || target === '_parent') {
             e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
             blockedCount++;
-            console.warn('[LOCKDOWN] Blocked target link:', href);
             dispatchBlocked(href, 'target=' + target);
             return false;
         }
@@ -921,14 +941,12 @@
             if (!isAllowed(href)) {
                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
                 blockedCount++;
-                console.warn('[LOCKDOWN] Blocked external link:', href);
                 dispatchBlocked(href, 'external link');
                 return false;
             }
         }
     }, true);
 
-    // ---- 3. Block middle-click ----
     document.addEventListener('auxclick', function(e) {
         if (e.button === 1) {
             var el = e.target;
@@ -936,13 +954,11 @@
             if (el) {
                 e.preventDefault(); e.stopPropagation();
                 blockedCount++;
-                console.warn('[LOCKDOWN] Blocked middle-click');
                 dispatchBlocked(el.href || '', 'middle-click');
             }
         }
     }, true);
 
-    // ---- 4. Block form target="_blank" ----
     document.addEventListener('submit', function(e) {
         var form = e.target;
         if (form.tagName === 'FORM') {
@@ -950,18 +966,15 @@
             if (target === '_blank' || target === '_new') {
                 e.preventDefault(); e.stopPropagation();
                 blockedCount++;
-                console.warn('[LOCKDOWN] Blocked form target');
                 dispatchBlocked(form.action, 'form target');
                 return false;
             }
         }
     }, true);
 
-    // ---- 5. Disable alert/confirm spam ----
     window.alert = function(msg) { console.warn('[LOCKDOWN] Blocked alert:', msg); };
     window.confirm = function(msg) { console.warn('[LOCKDOWN] Blocked confirm'); return false; };
 
-    // ---- 6. Force iframes to be sandboxed without popups ----
     function lockdownIframes() {
         var iframes = document.querySelectorAll('iframe');
         for (var i = 0; i < iframes.length; i++) {
@@ -991,7 +1004,6 @@
         iframeObserver.observe(document.body, { childList: true, subtree: true });
     });
 
-    // ---- Helpers ----
     function isAllowed(url) {
         if (!url || ALLOWED_DOMAINS.length === 0) return false;
         try {
@@ -1017,7 +1029,6 @@
         } catch (e) {}
     }
 
-    // ---- Public API ----
     window.Lockdown = {
         count: function() { return blockedCount; },
         reset: function() { blockedCount = 0; },
@@ -1044,9 +1055,6 @@
 // MAIN MIRROR CODE
 // ============================================================
 (function() {
-    // ============================================================
-    // 50+ QUOTES
-    // ============================================================
     var quotes = [
         { text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.", author: "Albert Camus" },
         { text: "Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.", author: "Gary Kovacs" },
@@ -1102,51 +1110,33 @@
         { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" }
     ];
 
-    // ============================================================
-    // NOTIFICATION SYSTEM
-    // ============================================================
     window.showNotification = function(message, keyHint) {
         var container = document.getElementById('notificationContainer');
         var notif = document.createElement('div');
         notif.className = 'notification';
-        
         var text = message;
-        if (keyHint) {
-            text += ' <span class="key-hint">' + keyHint + '</span>';
-        }
+        if (keyHint) text += ' <span class="key-hint">' + keyHint + '</span>';
         notif.innerHTML = text;
         container.appendChild(notif);
-        
         setTimeout(function() {
             notif.classList.add('fading');
             setTimeout(function() {
                 if (notif.parentNode) notif.parentNode.removeChild(notif);
             }, 500);
         }, 2500);
-        
         var notifs = container.querySelectorAll('.notification');
-        while (notifs.length > 5) {
-            notifs[0].remove();
-            notifs = container.querySelectorAll('.notification');
-        }
+        while (notifs.length > 5) { notifs[0].remove(); notifs = container.querySelectorAll('.notification'); }
     };
 
-    // ============================================================
-    // SPLASH SCREEN
-    // ============================================================
     function showSplash() {
         var splash = document.getElementById('splashScreen');
         var quoteEl = document.getElementById('splashQuote');
-        
         var randomIndex = Math.floor(Math.random() * quotes.length);
         var quote = quotes[randomIndex];
-        
         quoteEl.innerHTML = '"' + quote.text + '"<span class="author">— ' + quote.author + '</span>';
-        
         setTimeout(function() {
             splash.classList.add('hidden');
             document.getElementById('mainWrapper').classList.add('visible');
-            
             setTimeout(function() {
                 var wrapper = document.getElementById('containerWrapper');
                 var arrow = document.getElementById('arrowIcon');
@@ -1158,14 +1148,10 @@
         }, 3500);
     }
 
-    // ============================================================
-    // TOGGLE
-    // ============================================================
     var isExpanded = false;
     window.toggleContainer = function() {
         var wrapper = document.getElementById('containerWrapper');
         var arrow = document.getElementById('arrowIcon');
-        
         if (isExpanded) {
             wrapper.classList.remove('expanded');
             wrapper.classList.add('collapsed');
@@ -1179,9 +1165,6 @@
         }
     };
 
-    // ============================================================
-    // PASS LINKS
-    // ============================================================
     var passLinks = [
         { name: "GClassroom", url: "https://storage.googleapis.com/gclassroom/index.html" },
         { name: "Clever 2", url: "https://s3.amazonaws.com/cleverlearning/index.html" },
@@ -1190,9 +1173,6 @@
         { name: "SVG 2", url: "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg" }
     ];
 
-    // ============================================================
-    // EXP LINKS
-    // ============================================================
     var expLinks = [
         "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
         "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2/main.svg",
@@ -1231,9 +1211,6 @@
         "https://jlkl.s3.amazonaws.com/index.html"
     ];
 
-    // ============================================================
-    // FREE LINKS
-    // ============================================================
     var freeLinks = [
         "https://storage.googleapis.com/fernisbest/index.html",
         "https://s3.amazonaws.com/fernisbest/index.html",
@@ -1303,9 +1280,6 @@
     var PASS_PASSWORD = "new update";
     var EXP_PASSWORD = "dreading bro";
 
-    // ============================================================
-    // RENDER LINKS
-    // ============================================================
     function renderLinks(containerId, linksArray, type) {
         var container = document.getElementById(containerId);
         container.innerHTML = '';
@@ -1331,61 +1305,42 @@
         }
     }
 
-    // ============================================================
-    // OPEN IFRAME FULLSCREEN (with fade)
-    // ============================================================
     window.openIframeFullscreen = function(url, name) {
         var overlay = document.getElementById('iframeOverlay');
         var iframe = document.getElementById('overlayIframe');
         var title = document.getElementById('iframeTitle');
-        
         title.textContent = 'Viewing: ' + name;
         iframe.src = url;
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-        
         overlay.style.opacity = '0';
-        setTimeout(function() {
-            overlay.style.opacity = '1';
-        }, 50);
-        
+        setTimeout(function() { overlay.style.opacity = '1'; }, 50);
         showNotification('Opening ' + name + '...', '');
     };
 
-    // ============================================================
-    // CLOSE IFRAME
-    // ============================================================
     window.closeIframeOverlay = function() {
         var overlay = document.getElementById('iframeOverlay');
         var iframe = document.getElementById('overlayIframe');
-        
         overlay.style.opacity = '0';
         setTimeout(function() {
             overlay.classList.remove('active');
             iframe.src = 'about:blank';
             document.body.style.overflow = '';
         }, 800);
-        
         showNotification('Closed - click a link to open again', '');
     };
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             var overlay = document.getElementById('iframeOverlay');
-            if (overlay.classList.contains('active')) {
-                closeIframeOverlay();
-            }
+            if (overlay.classList.contains('active')) closeIframeOverlay();
         }
     });
 
-    // ============================================================
-    // TAB SWITCHING
-    // ============================================================
     window.showTab = function(tabName) {
         var panels = document.querySelectorAll('.panel');
         for (var i = 0; i < panels.length; i++) panels[i].classList.remove('active');
         document.getElementById('panel-' + tabName).classList.add('active');
-
         var allButtons = document.querySelectorAll('.tab-btn');
         for (var i = 0; i < allButtons.length; i++) allButtons[i].classList.remove('active');
         for (var i = 0; i < allButtons.length; i++) {
@@ -1394,14 +1349,10 @@
                 break;
             }
         }
-
         document.getElementById('passErrorMsg').classList.remove('show');
         document.getElementById('expErrorMsg').classList.remove('show');
     };
 
-    // ============================================================
-    // PASS UNLOCK
-    // ============================================================
     function unlockPass() {
         var input = document.getElementById('passPasswordInput');
         var entered = input.value.trim();
@@ -1417,15 +1368,10 @@
         } else {
             document.getElementById('passErrorMsg').classList.add('show');
             showNotification('Wrong password!', '');
-            setTimeout(function() {
-                document.getElementById('passErrorMsg').classList.remove('show');
-            }, 2000);
+            setTimeout(function() { document.getElementById('passErrorMsg').classList.remove('show'); }, 2000);
         }
     }
 
-    // ============================================================
-    // EXP UNLOCK
-    // ============================================================
     function unlockExp() {
         var input = document.getElementById('expPasswordInput');
         var entered = input.value.trim();
@@ -1441,15 +1387,10 @@
         } else {
             document.getElementById('expErrorMsg').classList.add('show');
             showNotification('Wrong password!', '');
-            setTimeout(function() {
-                document.getElementById('expErrorMsg').classList.remove('show');
-            }, 2000);
+            setTimeout(function() { document.getElementById('expErrorMsg').classList.remove('show'); }, 2000);
         }
     }
 
-    // ============================================================
-    // INIT
-    // ============================================================
     renderLinks('passLinks', passLinks, 'pass');
     renderLinks('expLinks', expLinks, 'exp');
     renderLinks('freeLinks', freeLinks, 'free');
