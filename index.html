@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Dreading · Privacy is a right.</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
@@ -150,9 +152,7 @@
             100% { opacity: 0; }
         }
 
-        /* ============================================================
-           SPLASH SCREEN
-           ============================================================ */
+        /* SPLASH SCREEN */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -231,9 +231,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============================================================
-           IFRAME FULLSCREEN OVERLAY (with fade in)
-           ============================================================ */
+        /* IFRAME FULLSCREEN OVERLAY */
         .iframe-overlay {
             position: fixed;
             top: 0;
@@ -297,9 +295,7 @@
             display: block;
         }
 
-        /* ============================================================
-           MAIN UI - Glass morphism
-           ============================================================ */
+        /* MAIN UI */
         .main-wrapper {
             position: relative;
             z-index: 5;
@@ -512,73 +508,6 @@
             pointer-events: auto;
         }
 
-        .iframe-wrapper {
-            position: relative;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            margin-top: 8px;
-        }
-        .iframe-wrapper iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
-            display: block;
-        }
-
-        .iframe-controls {
-            display: flex;
-            gap: 8px;
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            flex-wrap: wrap;
-        }
-        .iframe-controls button {
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-family: Arial, sans-serif;
-            transition: 0.3s;
-            color: #b0a0c0;
-        }
-        .iframe-controls button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #d8c8f0;
-        }
-        .iframe-controls button.fullscreen-btn {
-            background: rgba(80, 40, 160, 0.3);
-            border-color: rgba(120, 60, 200, 0.2);
-            color: #b8a8d0;
-        }
-        .iframe-controls button.fullscreen-btn:hover {
-            background: rgba(80, 40, 160, 0.4);
-        }
-        .iframe-controls button.exit-btn {
-            background: rgba(200, 50, 50, 0.15);
-            border-color: rgba(200, 50, 50, 0.15);
-            color: #c88080;
-        }
-        .iframe-controls button.exit-btn:hover {
-            background: rgba(200, 50, 50, 0.25);
-        }
-
-        .no-iframe {
-            padding: 40px 20px;
-            text-align: center;
-            color: #6a5a7a;
-        }
-        .no-iframe span {
-            font-size: 36px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
         .update-item {
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -727,9 +656,7 @@
             font-weight: normal;
         }
 
-        /* ============================================================
-           NOTIFICATION SYSTEM
-           ============================================================ */
+        /* NOTIFICATIONS */
         .notification-container {
             position: fixed;
             bottom: 20px;
@@ -788,7 +715,6 @@
             .tab-btn { padding: 5px 10px; font-size: 12px; }
             .link-grid { max-height: 120px; }
             .link-chip { font-size: 11px; padding: 4px 10px; }
-            .iframe-wrapper iframe { height: 300px; }
             .info-text .stats { gap: 10px; }
             .info-text .stats div { padding: 10px 14px; flex: 1; min-width: 60px; }
             .info-text .stats div .number { font-size: 18px; }
@@ -828,14 +754,14 @@
     <div class="splash-sub">privacy is a right.</div>
 </div>
 
-<!-- IFRAME FULLSCREEN OVERLAY (opens when link is clicked) -->
+<!-- IFRAME FULLSCREEN OVERLAY -->
 <div class="iframe-overlay" id="iframeOverlay">
     <div class="iframe-header">
         <span class="title" id="iframeTitle">Viewing...</span>
         <button class="close-btn" onclick="closeIframeOverlay()">✕ Close (ESC)</button>
     </div>
     <div class="iframe-body">
-        <iframe id="overlayIframe" src="about:blank"></iframe>
+        <iframe id="overlayIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
     </div>
 </div>
 
@@ -863,7 +789,7 @@
                 <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Updates</h3>
                 <div class="update-item">
                     <span class="date">today</span>
-                    <span>Mirror engine v2.2 · exp tab</span>
+                    <span>Mirror engine v2.3 · adblock integrated</span>
                 </div>
                 <div class="update-item">
                     <span class="date">2d</span>
@@ -874,7 +800,7 @@
                     <span>UI refined + fresh animations</span>
                 </div>
                 <div class="divider"></div>
-                <div class="meta">live · free</div>
+                <div class="meta">live · free · protected</div>
             </div>
 
             <div id="panel-info" class="panel">
@@ -882,7 +808,7 @@
                 <div class="info-text">
                     <h2>Dreading</h2>
                     <p style="font-size:16px;color:#8a7aaa;margin-bottom:12px;">portal to unblocked links</p>
-                    <p>dreading is a fun project i made that created a library of pre-built, unblocked links that are working with no waits, no setup, no pasting URLs, no tech know-how required (unless your STUPID.), just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly (ON EXPERIMENTAL) so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to my code and my mirroring.</p>
+                    <p>dreading has a whole library of pre-built, unblocked links that are good to go from the moment you sign in. no setup, no pasting URLs, no tech know-how required since thats all on g's end, just flip through the collection, pick what you need, use the password(s) needed, and boom, you're in. we keep links for social platforms, news sites, research pages, and streaming services that tend to get blocked on school or office networks. everything's updated regularly so you're not clicking on dead pages, sometimes.... but it's fast, it works, and there's zero hassle except for random ads, that are being experimented and are trying to be blocked on my end; just click and browse, thanks to me and my mirroring.</p>
                     <div class="stats">
                         <div><span class="number">155+</span><span class="label">TOTAL LINKS</span></div>
                         <div><span class="number">3</span><span class="label">CATEGORIES</span></div>
@@ -943,13 +869,187 @@
 </div>
 
 <script>
+// ============================================================
+// DREADING LOCKDOWN - Ad Blocker (runs first)
+// ============================================================
+(function() {
+    'use strict';
+
+    var ALLOWED_DOMAINS = [];
+    var blockedCount = 0;
+
+    // ---- 1. BLOCK window.open ----
+    var _originalOpen = window.open;
+    window.open = function(url, name, features) {
+        if (isAllowed(url)) return _originalOpen.call(window, url, name, features);
+        blockedCount++;
+        console.warn('[LOCKDOWN] Blocked window.open:', url);
+        dispatchBlocked(url, 'window.open');
+        return null;
+    };
+
+    // ---- 2. BLOCK all external link clicks (capture phase) ----
+    document.addEventListener('click', function(e) {
+        if (e.ctrlKey || e.metaKey || e.shiftKey) {
+            var el = e.target;
+            while (el && el.tagName !== 'A') el = el.parentElement;
+            if (el && el.href) {
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+                blockedCount++;
+                console.warn('[LOCKDOWN] Blocked modifier+click:', el.href);
+                dispatchBlocked(el.href, 'modifier click');
+                return false;
+            }
+        }
+        
+        var el = e.target;
+        while (el && el.tagName !== 'A') el = el.parentElement;
+        if (!el) return;
+        
+        var href = el.getAttribute('href') || '';
+        var target = el.getAttribute('target') || '';
+        
+        if (target === '_blank' || target === '_new' || target === '_top' || target === '_parent') {
+            e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+            blockedCount++;
+            console.warn('[LOCKDOWN] Blocked target link:', href);
+            dispatchBlocked(href, 'target=' + target);
+            return false;
+        }
+        
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('/')) {
+            if (!isAllowed(href)) {
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+                blockedCount++;
+                console.warn('[LOCKDOWN] Blocked external link:', href);
+                dispatchBlocked(href, 'external link');
+                return false;
+            }
+        }
+    }, true);
+
+    // ---- 3. Block middle-click ----
+    document.addEventListener('auxclick', function(e) {
+        if (e.button === 1) {
+            var el = e.target;
+            while (el && el.tagName !== 'A') el = el.parentElement;
+            if (el) {
+                e.preventDefault(); e.stopPropagation();
+                blockedCount++;
+                console.warn('[LOCKDOWN] Blocked middle-click');
+                dispatchBlocked(el.href || '', 'middle-click');
+            }
+        }
+    }, true);
+
+    // ---- 4. Block form target="_blank" ----
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (form.tagName === 'FORM') {
+            var target = form.getAttribute('target') || '';
+            if (target === '_blank' || target === '_new') {
+                e.preventDefault(); e.stopPropagation();
+                blockedCount++;
+                console.warn('[LOCKDOWN] Blocked form target');
+                dispatchBlocked(form.action, 'form target');
+                return false;
+            }
+        }
+    }, true);
+
+    // ---- 5. Disable alert/confirm spam ----
+    window.alert = function(msg) { console.warn('[LOCKDOWN] Blocked alert:', msg); };
+    window.confirm = function(msg) { console.warn('[LOCKDOWN] Blocked confirm'); return false; };
+
+    // ---- 6. Force iframes to be sandboxed without popups ----
+    function lockdownIframes() {
+        var iframes = document.querySelectorAll('iframe');
+        for (var i = 0; i < iframes.length; i++) {
+            var iframe = iframes[i];
+            var currentSandbox = iframe.getAttribute('sandbox') || '';
+            var cleanSandbox = currentSandbox
+                .replace('allow-popups', '')
+                .replace('allow-popups-to-escape-sandbox', '')
+                .replace('allow-top-navigation', '')
+                .replace('allow-top-navigation-by-user-activation', '')
+                .trim();
+            if (cleanSandbox !== currentSandbox) {
+                iframe.setAttribute('sandbox', cleanSandbox);
+            }
+            if (!iframe.hasAttribute('sandbox')) {
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            }
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', lockdownIframes);
+    } else {
+        lockdownIframes();
+    }
+    var iframeObserver = new MutationObserver(function() { lockdownIframes(); });
+    document.addEventListener('DOMContentLoaded', function() {
+        iframeObserver.observe(document.body, { childList: true, subtree: true });
+    });
+
+    // ---- Helpers ----
+    function isAllowed(url) {
+        if (!url || ALLOWED_DOMAINS.length === 0) return false;
+        try {
+            var urlObj = new URL(url, window.location.origin);
+            var hostname = urlObj.hostname.toLowerCase();
+            for (var i = 0; i < ALLOWED_DOMAINS.length; i++) {
+                if (hostname === ALLOWED_DOMAINS[i] || hostname.endsWith('.' + ALLOWED_DOMAINS[i])) {
+                    return true;
+                }
+            }
+        } catch (e) { return false; }
+        return false;
+    }
+
+    function dispatchBlocked(url, reason) {
+        try {
+            window.dispatchEvent(new CustomEvent('dreading:blocked', {
+                detail: { url: url, reason: reason, count: blockedCount }
+            }));
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('Blocked: ' + reason, '🛡️');
+            }
+        } catch (e) {}
+    }
+
+    // ---- Public API ----
+    window.Lockdown = {
+        count: function() { return blockedCount; },
+        reset: function() { blockedCount = 0; },
+        allow: function(domain) {
+            if (ALLOWED_DOMAINS.indexOf(domain) === -1) {
+                ALLOWED_DOMAINS.push(domain);
+                console.log('[LOCKDOWN] Allowed:', domain);
+            }
+        },
+        list: function() { return ALLOWED_DOMAINS.slice(); }
+    };
+
+    console.log(
+        '%c🔒 DREADING LOCKDOWN ACTIVE%c\n' +
+        'External tabs are blocked. Type %cLockdown.count()%c to see stats.',
+        'background: #e74c3c; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 14px;',
+        'color: #c8bcd8; font-size: 12px;',
+        'background: rgba(255,255,255,0.1); color: #e74c3c; padding: 2px 6px; border-radius: 4px; font-family: monospace;',
+        'color: #6a5a7a;'
+    );
+})();
+
+// ============================================================
+// MAIN MIRROR CODE
+// ============================================================
+(function() {
     // ============================================================
     // 50+ QUOTES
     // ============================================================
     var quotes = [
         { text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.", author: "Albert Camus" },
         { text: "Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.", author: "Gary Kovacs" },
-        { text: "If you have nothing to hide, you have nothing to fear. If you have nothing to hide, you have nothing to lose.", author: "Anonymous" },
         { text: "The right to privacy is the right to be let alone.", author: "Samuel D. Warren" },
         { text: "Privacy is power. What people don't know, they can't ruin.", author: "Anonymous" },
         { text: "The internet is a surveillance state. Privacy is the new civil right.", author: "Edward Snowden" },
@@ -996,7 +1096,6 @@
         { text: "The only way to be truly free is to let go of everything you fear to lose.", author: "Anonymous" },
         { text: "Privacy is the right to be left alone from the prying eyes of the world.", author: "Anonymous" },
         { text: "The more we share, the more we have. But some things are meant to be private.", author: "Anonymous" },
-        { text: "The only thing worth stealing is a kiss from a sleeping child.", author: "Joe Haldeman" },
         { text: "The greatest risk is not taking one.", author: "Anonymous" },
         { text: "The only way to escape the corruptible effect of praise is to go on working.", author: "Albert Einstein" },
         { text: "The most important thing is to enjoy your life—to be happy—it's all that matters.", author: "Audrey Hepburn" },
@@ -1004,7 +1103,36 @@
     ];
 
     // ============================================================
-    // SPLASH SCREEN - Random quote
+    // NOTIFICATION SYSTEM
+    // ============================================================
+    window.showNotification = function(message, keyHint) {
+        var container = document.getElementById('notificationContainer');
+        var notif = document.createElement('div');
+        notif.className = 'notification';
+        
+        var text = message;
+        if (keyHint) {
+            text += ' <span class="key-hint">' + keyHint + '</span>';
+        }
+        notif.innerHTML = text;
+        container.appendChild(notif);
+        
+        setTimeout(function() {
+            notif.classList.add('fading');
+            setTimeout(function() {
+                if (notif.parentNode) notif.parentNode.removeChild(notif);
+            }, 500);
+        }, 2500);
+        
+        var notifs = container.querySelectorAll('.notification');
+        while (notifs.length > 5) {
+            notifs[0].remove();
+            notifs = container.querySelectorAll('.notification');
+        }
+    };
+
+    // ============================================================
+    // SPLASH SCREEN
     // ============================================================
     function showSplash() {
         var splash = document.getElementById('splashScreen');
@@ -1031,42 +1159,10 @@
     }
 
     // ============================================================
-    // NOTIFICATION SYSTEM
-    // ============================================================
-    function showNotification(message, keyHint) {
-        var container = document.getElementById('notificationContainer');
-        var notif = document.createElement('div');
-        notif.className = 'notification';
-        
-        var text = message;
-        if (keyHint) {
-            text += ' <span class="key-hint">' + keyHint + '</span>';
-        }
-        notif.innerHTML = text;
-        container.appendChild(notif);
-        
-        setTimeout(function() {
-            notif.classList.add('fading');
-            setTimeout(function() {
-                if (notif.parentNode) {
-                    notif.parentNode.removeChild(notif);
-                }
-            }, 500);
-        }, 2500);
-        
-        var notifs = container.querySelectorAll('.notification');
-        while (notifs.length > 5) {
-            notifs[0].remove();
-            notifs = container.querySelectorAll('.notification');
-        }
-    }
-
-    // ============================================================
-    // TOGGLE CONTAINER
+    // TOGGLE
     // ============================================================
     var isExpanded = false;
-
-    function toggleContainer() {
+    window.toggleContainer = function() {
         var wrapper = document.getElementById('containerWrapper');
         var arrow = document.getElementById('arrowIcon');
         
@@ -1081,7 +1177,7 @@
             arrow.classList.remove('down');
             isExpanded = true;
         }
-    }
+    };
 
     // ============================================================
     // PASS LINKS
@@ -1204,9 +1300,6 @@
         "https://s3.amazonaws.com/writevc/index.html"
     ];
 
-    // ============================================================
-    // PASSWORDS
-    // ============================================================
     var PASS_PASSWORD = "new update";
     var EXP_PASSWORD = "dreading bro";
 
@@ -1219,12 +1312,12 @@
         for (var i = 0; i < linksArray.length; i++) {
             var span = document.createElement('span');
             span.className = 'link-chip';
-            var name;
+            var name, url;
             if (typeof linksArray[i] === 'object') {
                 name = linksArray[i].name;
-                var url = linksArray[i].url;
+                url = linksArray[i].url;
             } else {
-                var url = linksArray[i];
+                url = linksArray[i];
                 var parts = url.replace('https://', '').replace('http://', '').split('/');
                 name = parts[0].split('.')[0];
                 if (name.length > 20) name = name.substring(0, 18) + '…';
@@ -1239,9 +1332,9 @@
     }
 
     // ============================================================
-    // OPEN IFRAME IN FULLSCREEN (with fade in)
+    // OPEN IFRAME FULLSCREEN (with fade)
     // ============================================================
-    function openIframeFullscreen(url, name) {
+    window.openIframeFullscreen = function(url, name) {
         var overlay = document.getElementById('iframeOverlay');
         var iframe = document.getElementById('overlayIframe');
         var title = document.getElementById('iframeTitle');
@@ -1251,19 +1344,18 @@
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Fade in animation
         overlay.style.opacity = '0';
         setTimeout(function() {
             overlay.style.opacity = '1';
         }, 50);
         
         showNotification('Opening ' + name + '...', '');
-    }
+    };
 
     // ============================================================
-    // CLOSE IFRAME OVERLAY
+    // CLOSE IFRAME
     // ============================================================
-    function closeIframeOverlay() {
+    window.closeIframeOverlay = function() {
         var overlay = document.getElementById('iframeOverlay');
         var iframe = document.getElementById('overlayIframe');
         
@@ -1275,9 +1367,8 @@
         }, 800);
         
         showNotification('Closed - click a link to open again', '');
-    }
+    };
 
-    // ESC key to close iframe overlay
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             var overlay = document.getElementById('iframeOverlay');
@@ -1290,18 +1381,13 @@
     // ============================================================
     // TAB SWITCHING
     // ============================================================
-    function showTab(tabName) {
+    window.showTab = function(tabName) {
         var panels = document.querySelectorAll('.panel');
-        for (var i = 0; i < panels.length; i++) {
-            panels[i].classList.remove('active');
-        }
+        for (var i = 0; i < panels.length; i++) panels[i].classList.remove('active');
         document.getElementById('panel-' + tabName).classList.add('active');
 
-        var buttons = document.querySelectorAll('.tab-btn');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove('active');
-        }
         var allButtons = document.querySelectorAll('.tab-btn');
+        for (var i = 0; i < allButtons.length; i++) allButtons[i].classList.remove('active');
         for (var i = 0; i < allButtons.length; i++) {
             if (allButtons[i].textContent.trim().toLowerCase().includes(tabName.toLowerCase())) {
                 allButtons[i].classList.add('active');
@@ -1311,7 +1397,7 @@
 
         document.getElementById('passErrorMsg').classList.remove('show');
         document.getElementById('expErrorMsg').classList.remove('show');
-    }
+    };
 
     // ============================================================
     // PASS UNLOCK
@@ -1337,13 +1423,6 @@
         }
     }
 
-    document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
-    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            unlockPass();
-        }
-    });
-
     // ============================================================
     // EXP UNLOCK
     // ============================================================
@@ -1368,13 +1447,6 @@
         }
     }
 
-    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
-    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            unlockExp();
-        }
-    });
-
     // ============================================================
     // INIT
     // ============================================================
@@ -1382,11 +1454,23 @@
     renderLinks('expLinks', expLinks, 'exp');
     renderLinks('freeLinks', freeLinks, 'free');
 
+    document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
+    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') unlockPass();
+    });
+
+    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
+    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') unlockExp();
+    });
+
     showSplash();
 
     console.log('Pass password: "new update"');
     console.log('Exp password: "dreading bro"');
     console.log(quotes.length + ' quotes loaded');
+    console.log('Ad blocker active - external tabs blocked');
+})();
 </script>
 
 </body>
