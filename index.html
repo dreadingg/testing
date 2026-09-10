@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mirror</title>
+    <title>Dreading · Privacy is a right.</title>
     <style>
         * {
             margin: 0;
@@ -12,11 +12,7 @@
             font-family: Arial, sans-serif;
             background: #0a0a1a;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* ANIMATED GALAXY BACKGROUND */
@@ -140,59 +136,116 @@
             box-shadow: 0 0 6px 2px rgba(255,255,255,0.3);
             animation: shoot 8s linear infinite;
         }
-        .shooting-star:nth-child(1) {
-            top: 10%;
-            left: 20%;
-            animation-delay: 0s;
-        }
-        .shooting-star:nth-child(2) {
-            top: 30%;
-            left: 60%;
-            animation-delay: 4s;
-        }
-        .shooting-star:nth-child(3) {
-            top: 60%;
-            left: 30%;
-            animation-delay: 2s;
-        }
-        .shooting-star:nth-child(4) {
-            top: 80%;
-            left: 70%;
-            animation-delay: 6s;
-        }
-        .shooting-star:nth-child(5) {
-            top: 15%;
-            left: 80%;
-            animation-delay: 3s;
-        }
-        .shooting-star:nth-child(6) {
-            top: 70%;
-            left: 10%;
-            animation-delay: 5s;
-        }
+        .shooting-star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .shooting-star:nth-child(2) { top: 30%; left: 60%; animation-delay: 4s; }
+        .shooting-star:nth-child(3) { top: 60%; left: 30%; animation-delay: 2s; }
+        .shooting-star:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; }
+        .shooting-star:nth-child(5) { top: 15%; left: 80%; animation-delay: 3s; }
+        .shooting-star:nth-child(6) { top: 70%; left: 10%; animation-delay: 5s; }
 
         @keyframes shoot {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0;
-            }
-            5% {
-                opacity: 1;
-            }
-            15% {
-                transform: translate(-200px, 100px) scale(0);
-                opacity: 0;
-            }
-            100% {
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            5% { opacity: 1; }
+            15% { transform: translate(-200px, 100px) scale(0); opacity: 0; }
+            100% { opacity: 0; }
         }
 
+        /* ============================================================
+           SPLASH SCREEN
+           ============================================================ */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(10, 10, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .splash-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .splash-title {
+            font-size: 80px;
+            font-weight: 300;
+            color: #e8e0f0;
+            text-shadow: 0 0 60px rgba(120, 60, 200, 0.3);
+            letter-spacing: 8px;
+            animation: splashFade 1.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .splash-title span {
+            color: #9b4dff;
+            font-weight: 600;
+        }
+
+        .splash-quote {
+            font-size: 18px;
+            color: #8a7aaa;
+            margin-top: 20px;
+            font-style: italic;
+            letter-spacing: 1px;
+            animation: splashFade 1.5s ease 0.3s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            text-align: center;
+            max-width: 600px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        .splash-quote .author {
+            display: block;
+            font-size: 14px;
+            color: #6a5a7a;
+            margin-top: 8px;
+            font-style: normal;
+            letter-spacing: 2px;
+        }
+
+        .splash-sub {
+            font-size: 14px;
+            color: #4a3a5a;
+            margin-top: 40px;
+            letter-spacing: 4px;
+            animation: splashFade 1.5s ease 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes splashFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           MAIN UI - Glass morphism
+           ============================================================ */
         .main-wrapper {
             position: relative;
             z-index: 5;
             max-width: 1000px;
             width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+        .main-wrapper.visible {
+            opacity: 1;
         }
 
         .toggle-container {
@@ -263,15 +316,21 @@
 
         h1 {
             font-size: 22px;
-            font-weight: normal;
+            font-weight: 300;
             color: #e8e0f0;
             margin-bottom: 20px;
             text-shadow: 0 2px 20px rgba(100, 50, 200, 0.3);
+            letter-spacing: 1px;
         }
         h1 span {
-            color: #8a7aaa;
+            color: #9b4dff;
+            font-weight: 400;
+        }
+        h1 .subtitle {
+            color: #6a5a7a;
             font-size: 14px;
             font-weight: 300;
+            letter-spacing: 0.5px;
         }
 
         .tabs {
@@ -653,45 +712,75 @@
             background: rgba(200, 50, 50, 0.3);
         }
 
+        /* ============================================================
+           NOTIFICATION SYSTEM
+           ============================================================ */
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #c8bcd8;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: notifSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            pointer-events: auto;
+            min-width: 180px;
+            text-align: center;
+        }
+        .notification.fading {
+            animation: notifFadeOut 0.5s ease forwards;
+        }
+
+        .notification .key-hint {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #9b4dff;
+            margin-left: 6px;
+        }
+
+        @keyframes notifSlideIn {
+            0% { opacity: 0; transform: translateX(40px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes notifFadeOut {
+            0% { opacity: 1; transform: translateX(0) scale(1); }
+            100% { opacity: 0; transform: translateX(30px) scale(0.9); }
+        }
+
         @media (max-width: 700px) {
-            .container {
-                padding: 12px;
-            }
-            .tabs {
-                gap: 4px;
-            }
-            .tab-btn {
-                padding: 5px 10px;
-                font-size: 12px;
-            }
-            .link-grid {
-                max-height: 120px;
-            }
-            .link-chip {
-                font-size: 11px;
-                padding: 4px 10px;
-            }
-            .iframe-wrapper iframe {
-                height: 300px;
-            }
-            .info-text .stats {
-                gap: 10px;
-            }
-            .info-text .stats div {
-                padding: 10px 14px;
-                flex: 1;
-                min-width: 60px;
-            }
-            .info-text .stats div .number {
-                font-size: 18px;
-            }
-            .fullscreen-overlay .fullscreen-iframe-wrapper iframe {
-                height: calc(100vh - 45px);
-            }
-            .fullscreen-overlay .fullscreen-controls {
-                height: 45px;
-                padding: 6px 12px;
-            }
+            .container { padding: 12px; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 5px 10px; font-size: 12px; }
+            .link-grid { max-height: 120px; }
+            .link-chip { font-size: 11px; padding: 4px 10px; }
+            .iframe-wrapper iframe { height: 300px; }
+            .info-text .stats { gap: 10px; }
+            .info-text .stats div { padding: 10px 14px; flex: 1; min-width: 60px; }
+            .info-text .stats div .number { font-size: 18px; }
+            .fullscreen-overlay .fullscreen-iframe-wrapper iframe { height: calc(100vh - 45px); }
+            .fullscreen-overlay .fullscreen-controls { height: 45px; padding: 6px 12px; }
+            .splash-title { font-size: 40px; letter-spacing: 4px; }
+            .splash-quote { font-size: 15px; max-width: 90%; }
         }
     </style>
 </head>
@@ -712,6 +801,19 @@
     <div class="shooting-star"></div>
 </div>
 
+<!-- NOTIFICATION CONTAINER -->
+<div class="notification-container" id="notificationContainer"></div>
+
+<!-- SPLASH SCREEN -->
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-title">dreading<span>.</span></div>
+    <div class="splash-quote" id="splashQuote">
+        Loading...
+        <span class="author"></span>
+    </div>
+    <div class="splash-sub">privacy is a right.</div>
+</div>
+
 <!-- FULLSCREEN OVERLAY -->
 <div class="fullscreen-overlay" id="fullscreenOverlay">
     <div class="fullscreen-controls">
@@ -723,7 +825,8 @@
     </div>
 </div>
 
-<div class="main-wrapper">
+<!-- MAIN UI -->
+<div class="main-wrapper" id="mainWrapper">
     <div class="toggle-container">
         <button class="toggle-btn" id="toggleBtn" onclick="toggleContainer()">
             <span class="arrow down" id="arrowIcon">▲</span>
@@ -732,7 +835,7 @@
 
     <div class="container-wrapper collapsed" id="containerWrapper">
         <div class="container" id="mainContainer">
-            <h1>Mirror <span>· protected</span></h1>
+            <h1>dreading <span>·</span> <span class="subtitle">privacy is a right.</span></h1>
 
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
@@ -854,7 +957,131 @@
 
 <script>
     // ============================================================
-    // TOGGLE CONTAINER - starts closed
+    // 50+ QUOTES
+    // ============================================================
+    var quotes = [
+        { text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.", author: "Albert Camus" },
+        { text: "Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.", author: "Gary Kovacs" },
+        { text: "If you have nothing to hide, you have nothing to fear. If you have nothing to hide, you have nothing to lose.", author: "Anonymous" },
+        { text: "The right to privacy is the right to be let alone.", author: "Samuel D. Warren" },
+        { text: "Privacy is power. What people don't know, they can't ruin.", author: "Anonymous" },
+        { text: "The internet is a surveillance state. Privacy is the new civil right.", author: "Edward Snowden" },
+        { text: "Privacy is the foundation of all other rights. Without privacy, there is no freedom.", author: "Anonymous" },
+        { text: "The more you know, the more you realize you know nothing.", author: "Socrates" },
+        { text: "Freedom is not worth having if it does not include the freedom to make mistakes.", author: "Mahatma Gandhi" },
+        { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+        { text: "Knowledge is power. Information is liberating.", author: "Kofi Annan" },
+        { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+        { text: "The only thing we have to fear is fear itself.", author: "Franklin D. Roosevelt" },
+        { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+        { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+        { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+        { text: "The unexamined life is not worth living.", author: "Socrates" },
+        { text: "I think, therefore I am.", author: "René Descartes" },
+        { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+        { text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson" },
+        { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+        { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+        { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+        { text: "The only thing standing between you and your goal is the story you keep telling yourself.", author: "Jordan Belfort" },
+        { text: "Privacy is not about hiding something. It's about having control over your own information.", author: "Anonymous" },
+        { text: "The right to privacy is the most important right in the modern world.", author: "Anonymous" },
+        { text: "In a world of surveillance, privacy is the ultimate act of rebellion.", author: "Anonymous" },
+        { text: "The future is already here — it's just not evenly distributed.", author: "William Gibson" },
+        { text: "The only way to discover the limits of the possible is to go beyond them into the impossible.", author: "Arthur C. Clarke" },
+        { text: "The universe is under no obligation to make sense to you.", author: "Neil deGrasse Tyson" },
+        { text: "We are all in the gutter, but some of us are looking at the stars.", author: "Oscar Wilde" },
+        { text: "The world is a book and those who do not travel read only one page.", author: "Augustine of Hippo" },
+        { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+        { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+        { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+        { text: "The mind is everything. What you think you become.", author: "Buddha" },
+        { text: "The only thing that interferes with my learning is my education.", author: "Albert Einstein" },
+        { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+        { text: "The greatest wealth is to live content with little.", author: "Plato" },
+        { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+        { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+        { text: "The only source of knowledge is experience.", author: "Albert Einstein" },
+        { text: "The most beautiful things in the world cannot be seen or touched, they are felt with the heart.", author: "Antoine de Saint-Exupéry" },
+        { text: "The only truth is that there is no truth.", author: "Anonymous" },
+        { text: "The best revenge is massive success.", author: "Frank Sinatra" },
+        { text: "The only way to be truly free is to let go of everything you fear to lose.", author: "Anonymous" },
+        { text: "Privacy is the right to be left alone from the prying eyes of the world.", author: "Anonymous" },
+        { text: "The more we share, the more we have. But some things are meant to be private.", author: "Anonymous" },
+        { text: "The only thing worth stealing is a kiss from a sleeping child.", author: "Joe Haldeman" },
+        { text: "The greatest risk is not taking one.", author: "Anonymous" },
+        { text: "The only way to escape the corruptible effect of praise is to go on working.", author: "Albert Einstein" },
+        { text: "The most important thing is to enjoy your life—to be happy—it's all that matters.", author: "Audrey Hepburn" },
+        { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" }
+    ];
+
+    // ============================================================
+    // SPLASH SCREEN - Random quote
+    // ============================================================
+    function showSplash() {
+        var splash = document.getElementById('splashScreen');
+        var quoteEl = document.getElementById('splashQuote');
+        
+        var randomIndex = Math.floor(Math.random() * quotes.length);
+        var quote = quotes[randomIndex];
+        
+        quoteEl.innerHTML = '"' + quote.text + '"<span class="author">— ' + quote.author + '</span>';
+        
+        // Fade out splash after 3.5 seconds
+        setTimeout(function() {
+            splash.classList.add('hidden');
+            document.getElementById('mainWrapper').classList.add('visible');
+            
+            // Auto-expand after splash
+            setTimeout(function() {
+                var wrapper = document.getElementById('containerWrapper');
+                var arrow = document.getElementById('arrowIcon');
+                wrapper.classList.remove('collapsed');
+                wrapper.classList.add('expanded');
+                arrow.classList.remove('down');
+                isExpanded = true;
+            }, 400);
+        }, 3500);
+    }
+
+    // ============================================================
+    // NOTIFICATION SYSTEM
+    // ============================================================
+    var notificationTimeout = null;
+
+    function showNotification(message, keyHint) {
+        var container = document.getElementById('notificationContainer');
+        var notif = document.createElement('div');
+        notif.className = 'notification';
+        
+        var text = message;
+        if (keyHint) {
+            text += ' <span class="key-hint">' + keyHint + '</span>';
+        }
+        notif.innerHTML = text;
+        container.appendChild(notif);
+        
+        // Auto fade after 2.5 seconds
+        setTimeout(function() {
+            notif.classList.add('fading');
+            setTimeout(function() {
+                if (notif.parentNode) {
+                    notif.parentNode.removeChild(notif);
+                }
+            }, 500);
+        }, 2500);
+        
+        // Limit to 5 notifications max
+        var notifs = container.querySelectorAll('.notification');
+        while (notifs.length > 5) {
+            notifs[0].remove();
+            notifs = container.querySelectorAll('.notification');
+        }
+    }
+
+    // ============================================================
+    // TOGGLE CONTAINER
     // ============================================================
     var isExpanded = false;
 
@@ -887,7 +1114,7 @@
     ];
 
     // ============================================================
-    // EXP LINKS (35 links - password: dreading bro)
+    // EXP LINKS
     // ============================================================
     var expLinks = [
         "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
@@ -928,7 +1155,7 @@
     ];
 
     // ============================================================
-    // FREE LINKS (60+ links)
+    // FREE LINKS
     // ============================================================
     var freeLinks = [
         "https://storage.googleapis.com/fernisbest/index.html",
@@ -1025,6 +1252,7 @@
             span.dataset.url = url;
             span.onclick = function() {
                 loadGenericLink(this, this.dataset.url, type);
+                showNotification('Opening link...', '');
             };
             container.appendChild(span);
         }
@@ -1049,6 +1277,9 @@
             allLinks[i].classList.remove('active-link');
         }
         element.classList.add('active-link');
+        
+        // Show notification with ESC hint
+        showNotification('Click ESC to exit fullscreen', 'esc');
     }
 
     // ============================================================
@@ -1069,10 +1300,11 @@
         for (var i = 0; i < links.length; i++) {
             links[i].classList.remove('active-link');
         }
+        showNotification('Iframe closed', '');
     }
 
     // ============================================================
-    // FULLSCREEN - FIXED with working exit button
+    // FULLSCREEN
     // ============================================================
     function enterFullscreen(wrapperId) {
         var wrapper = document.getElementById(wrapperId);
@@ -1089,6 +1321,7 @@
             }
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
+            showNotification('Fullscreen mode - Press ESC to exit', 'esc');
         }
     }
 
@@ -1098,6 +1331,7 @@
         var fullscreenIframe = document.getElementById('fullscreenIframe');
         fullscreenIframe.src = 'about:blank';
         document.body.style.overflow = '';
+        showNotification('Exited fullscreen', '');
     }
 
     // ESC key to exit fullscreen
@@ -1107,6 +1341,7 @@
             if (overlay.classList.contains('active')) {
                 exitFullscreen();
             }
+            showNotification('ESC pressed', 'esc');
         }
     });
 
@@ -1157,8 +1392,10 @@
                     loadGenericLink(firstLink, passLinks[0].url, 'pass');
                 }
             }
+            showNotification('Pass unlocked!', '');
         } else {
             document.getElementById('passErrorMsg').classList.add('show');
+            showNotification('Wrong password!', '');
             setTimeout(function() {
                 document.getElementById('passErrorMsg').classList.remove('show');
             }, 2000);
@@ -1193,8 +1430,10 @@
                     loadGenericLink(firstLink, expLinks[0], 'exp');
                 }
             }
+            showNotification('Exp unlocked!', '');
         } else {
             document.getElementById('expErrorMsg').classList.add('show');
+            showNotification('Wrong password!', '');
             setTimeout(function() {
                 document.getElementById('expErrorMsg').classList.remove('show');
             }, 2000);
@@ -1215,12 +1454,13 @@
     renderLinks('expLinks', expLinks, 'exp');
     renderLinks('freeLinks', freeLinks, 'free');
 
-    console.log('Pass password: "new update"');
-    console.log('Exp password: "dreading bro"');
-    console.log('Pass tab: ' + passLinks.length + ' links (Clever 1, Opium Best, Opium 3, SVG removed)');
-    console.log('Exp tab: ' + expLinks.length + ' links');
-    console.log('Free tab: ' + freeLinks.length + ' links');
-    console.log('Container starts closed - click the arrow to open');
+    // Show splash screen
+    showSplash();
+
+    console.log('🔐 Pass password: "new update"');
+    console.log('🔐 Exp password: "dreading bro"');
+    console.log('📚 ' + quotes.length + ' quotes loaded');
+    console.log('💬 Random quote shown on splash');
 </script>
 
 </body>
