@@ -232,6 +232,72 @@
         }
 
         /* ============================================================
+           IFRAME FULLSCREEN OVERLAY (with fade in)
+           ============================================================ */
+        .iframe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            background: rgba(10, 10, 26, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            flex-direction: column;
+        }
+        .iframe-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .iframe-overlay .iframe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            height: 50px;
+            flex-shrink: 0;
+        }
+        .iframe-overlay .iframe-header .title {
+            color: #8a7aaa;
+            font-size: 13px;
+        }
+        .iframe-overlay .iframe-header .close-btn {
+            padding: 6px 20px;
+            background: rgba(200, 50, 50, 0.2);
+            color: #c87070;
+            border: 1px solid rgba(200, 50, 50, 0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .iframe-overlay .iframe-header .close-btn:hover {
+            background: rgba(200, 50, 50, 0.3);
+        }
+
+        .iframe-overlay .iframe-body {
+            flex: 1;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+        }
+        .iframe-overlay .iframe-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* ============================================================
            MAIN UI - Glass morphism
            ============================================================ */
         .main-wrapper {
@@ -243,6 +309,10 @@
             padding: 10px;
             opacity: 0;
             transition: opacity 1s ease 0.5s;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .main-wrapper.visible {
             opacity: 1;
@@ -657,61 +727,6 @@
             font-weight: normal;
         }
 
-        /* FULLSCREEN OVERLAY */
-        .fullscreen-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 99999;
-            background: #0a0a1a;
-            padding: 0;
-        }
-        .fullscreen-overlay.active {
-            display: block;
-        }
-        .fullscreen-overlay .fullscreen-iframe-wrapper {
-            width: 100%;
-            height: 100vh;
-            padding: 0;
-        }
-        .fullscreen-overlay .fullscreen-iframe-wrapper iframe {
-            width: 100%;
-            height: calc(100vh - 50px);
-            border: none;
-            display: block;
-        }
-        .fullscreen-overlay .fullscreen-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            height: 50px;
-        }
-        .fullscreen-overlay .fullscreen-controls .fullscreen-title {
-            color: #8a7aaa;
-            font-size: 13px;
-        }
-        .fullscreen-overlay .fullscreen-controls .fullscreen-exit-btn {
-            padding: 6px 20px;
-            background: rgba(200, 50, 50, 0.2);
-            color: #c87070;
-            border: 1px solid rgba(200, 50, 50, 0.15);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-family: Arial, sans-serif;
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
-        }
-        .fullscreen-overlay .fullscreen-controls .fullscreen-exit-btn:hover {
-            background: rgba(200, 50, 50, 0.3);
-        }
-
         /* ============================================================
            NOTIFICATION SYSTEM
            ============================================================ */
@@ -777,10 +792,9 @@
             .info-text .stats { gap: 10px; }
             .info-text .stats div { padding: 10px 14px; flex: 1; min-width: 60px; }
             .info-text .stats div .number { font-size: 18px; }
-            .fullscreen-overlay .fullscreen-iframe-wrapper iframe { height: calc(100vh - 45px); }
-            .fullscreen-overlay .fullscreen-controls { height: 45px; padding: 6px 12px; }
             .splash-title { font-size: 40px; letter-spacing: 4px; }
             .splash-quote { font-size: 15px; max-width: 90%; }
+            .iframe-overlay .iframe-header { height: 45px; padding: 8px 15px; }
         }
     </style>
 </head>
@@ -814,14 +828,14 @@
     <div class="splash-sub">privacy is a right.</div>
 </div>
 
-<!-- FULLSCREEN OVERLAY -->
-<div class="fullscreen-overlay" id="fullscreenOverlay">
-    <div class="fullscreen-controls">
-        <span class="fullscreen-title">Fullscreen View</span>
-        <button class="fullscreen-exit-btn" id="fullscreenExitBtn" onclick="exitFullscreen()">✕ Exit Fullscreen</button>
+<!-- IFRAME FULLSCREEN OVERLAY (opens when link is clicked) -->
+<div class="iframe-overlay" id="iframeOverlay">
+    <div class="iframe-header">
+        <span class="title" id="iframeTitle">Viewing...</span>
+        <button class="close-btn" onclick="closeIframeOverlay()">✕ Close (ESC)</button>
     </div>
-    <div class="fullscreen-iframe-wrapper" id="fullscreenIframeWrapper">
-        <iframe id="fullscreenIframe" src="about:blank"></iframe>
+    <div class="iframe-body">
+        <iframe id="overlayIframe" src="about:blank"></iframe>
     </div>
 </div>
 
@@ -891,15 +905,6 @@
                 </div>
                 <div id="passContent" class="locked">
                     <div class="link-grid" id="passLinks"></div>
-                    <div class="iframe-wrapper" id="passIframeWrapper">
-                        <div class="iframe-controls">
-                            <button class="fullscreen-btn" onclick="enterFullscreen('passIframeWrapper')">Fullscreen</button>
-                            <button class="exit-btn" onclick="closeIframe('passIframeWrapper')">Close</button>
-                        </div>
-                        <div id="passIframeContainer">
-                            <div class="no-iframe"><span>🔒</span><p>Unlock with password to view links</p></div>
-                        </div>
-                    </div>
                     <div class="divider"></div>
                     <div class="meta">Pass links · 5 entries (password required)</div>
                 </div>
@@ -918,15 +923,6 @@
                 </div>
                 <div id="expContent" class="locked">
                     <div class="link-grid" id="expLinks"></div>
-                    <div class="iframe-wrapper" id="expIframeWrapper">
-                        <div class="iframe-controls">
-                            <button class="fullscreen-btn" onclick="enterFullscreen('expIframeWrapper')">Fullscreen</button>
-                            <button class="exit-btn" onclick="closeIframe('expIframeWrapper')">Close</button>
-                        </div>
-                        <div id="expIframeContainer">
-                            <div class="no-iframe"><span>🔒</span><p>Unlock with password to view links</p></div>
-                        </div>
-                    </div>
                     <div class="divider"></div>
                     <div class="meta">Exp links · 35 entries (password required)</div>
                 </div>
@@ -938,15 +934,6 @@
                     <span class="link-count">(60+ links)</span>
                 </h3>
                 <div class="link-grid" id="freeLinks"></div>
-                <div class="iframe-wrapper" id="freeIframeWrapper">
-                    <div class="iframe-controls">
-                        <button class="fullscreen-btn" onclick="enterFullscreen('freeIframeWrapper')">Fullscreen</button>
-                        <button class="exit-btn" onclick="closeIframe('freeIframeWrapper')">Close</button>
-                    </div>
-                    <div id="freeIframeContainer">
-                        <div class="no-iframe"><span>📚</span><p>Click a link above to load it here</p></div>
-                    </div>
-                </div>
                 <div class="divider"></div>
                 <div class="meta">Free links · 60+ entries</div>
             </div>
@@ -1028,12 +1015,10 @@
         
         quoteEl.innerHTML = '"' + quote.text + '"<span class="author">— ' + quote.author + '</span>';
         
-        // Fade out splash after 3.5 seconds
         setTimeout(function() {
             splash.classList.add('hidden');
             document.getElementById('mainWrapper').classList.add('visible');
             
-            // Auto-expand after splash
             setTimeout(function() {
                 var wrapper = document.getElementById('containerWrapper');
                 var arrow = document.getElementById('arrowIcon');
@@ -1048,8 +1033,6 @@
     // ============================================================
     // NOTIFICATION SYSTEM
     // ============================================================
-    var notificationTimeout = null;
-
     function showNotification(message, keyHint) {
         var container = document.getElementById('notificationContainer');
         var notif = document.createElement('div');
@@ -1062,7 +1045,6 @@
         notif.innerHTML = text;
         container.appendChild(notif);
         
-        // Auto fade after 2.5 seconds
         setTimeout(function() {
             notif.classList.add('fading');
             setTimeout(function() {
@@ -1072,7 +1054,6 @@
             }, 500);
         }, 2500);
         
-        // Limit to 5 notifications max
         var notifs = container.querySelectorAll('.notification');
         while (notifs.length > 5) {
             notifs[0].remove();
@@ -1103,7 +1084,7 @@
     }
 
     // ============================================================
-    // PASS LINKS (removed: Clever 1, Opium Best, Opium 3, SVG)
+    // PASS LINKS
     // ============================================================
     var passLinks = [
         { name: "GClassroom", url: "https://storage.googleapis.com/gclassroom/index.html" },
@@ -1251,97 +1232,58 @@
             span.textContent = name;
             span.dataset.url = url;
             span.onclick = function() {
-                loadGenericLink(this, this.dataset.url, type);
-                showNotification('Opening link...', '');
+                openIframeFullscreen(this.dataset.url, this.textContent);
             };
             container.appendChild(span);
         }
     }
 
     // ============================================================
-    // LOAD GENERIC LINK
+    // OPEN IFRAME IN FULLSCREEN (with fade in)
     // ============================================================
-    function loadGenericLink(element, url, type) {
-        var containerId;
-        if (type === 'pass') containerId = 'passIframeContainer';
-        else if (type === 'exp') containerId = 'expIframeContainer';
-        else if (type === 'free') containerId = 'freeIframeContainer';
-        else containerId = 'linksIframeContainer';
+    function openIframeFullscreen(url, name) {
+        var overlay = document.getElementById('iframeOverlay');
+        var iframe = document.getElementById('overlayIframe');
+        var title = document.getElementById('iframeTitle');
         
-        var container = document.getElementById(containerId);
-        container.innerHTML = '<iframe src="' + url + '" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
+        title.textContent = 'Viewing: ' + name;
+        iframe.src = url;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
         
-        var panel = container.closest('.panel');
-        var allLinks = panel.querySelectorAll('.link-chip');
-        for (var i = 0; i < allLinks.length; i++) {
-            allLinks[i].classList.remove('active-link');
-        }
-        element.classList.add('active-link');
+        // Fade in animation
+        overlay.style.opacity = '0';
+        setTimeout(function() {
+            overlay.style.opacity = '1';
+        }, 50);
         
-        // Show notification with ESC hint
-        showNotification('Click ESC to exit fullscreen', 'esc');
+        showNotification('Opening ' + name + '...', '');
     }
 
     // ============================================================
-    // CLOSE IFRAME
+    // CLOSE IFRAME OVERLAY
     // ============================================================
-    function closeIframe(wrapperId) {
-        var containerId = wrapperId.replace('Wrapper', 'Container');
-        var container = document.getElementById(containerId);
-        var panel = container.closest('.panel');
-        var noIframeMsg = panel.querySelector('.no-iframe');
-        if (noIframeMsg) {
-            container.innerHTML = noIframeMsg.outerHTML;
-        } else {
-            container.innerHTML = '<div class="no-iframe"><span>📚</span><p>Click a link above to load it here</p></div>';
-        }
+    function closeIframeOverlay() {
+        var overlay = document.getElementById('iframeOverlay');
+        var iframe = document.getElementById('overlayIframe');
         
-        var links = panel.querySelectorAll('.link-chip');
-        for (var i = 0; i < links.length; i++) {
-            links[i].classList.remove('active-link');
-        }
-        showNotification('Iframe closed', '');
-    }
-
-    // ============================================================
-    // FULLSCREEN
-    // ============================================================
-    function enterFullscreen(wrapperId) {
-        var wrapper = document.getElementById(wrapperId);
-        var iframe = wrapper.querySelector('iframe');
-        var overlay = document.getElementById('fullscreenOverlay');
-        var fullscreenIframe = document.getElementById('fullscreenIframe');
+        overlay.style.opacity = '0';
+        setTimeout(function() {
+            overlay.classList.remove('active');
+            iframe.src = 'about:blank';
+            document.body.style.overflow = '';
+        }, 800);
         
-        if (iframe) {
-            var src = iframe.src;
-            if (src && src !== 'about:blank') {
-                fullscreenIframe.src = src;
-            } else {
-                fullscreenIframe.src = 'about:blank';
-            }
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            showNotification('Fullscreen mode - Press ESC to exit', 'esc');
-        }
+        showNotification('Closed - click a link to open again', '');
     }
 
-    function exitFullscreen() {
-        var overlay = document.getElementById('fullscreenOverlay');
-        overlay.classList.remove('active');
-        var fullscreenIframe = document.getElementById('fullscreenIframe');
-        fullscreenIframe.src = 'about:blank';
-        document.body.style.overflow = '';
-        showNotification('Exited fullscreen', '');
-    }
-
-    // ESC key to exit fullscreen
+    // ESC key to close iframe overlay
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            var overlay = document.getElementById('fullscreenOverlay');
+            var overlay = document.getElementById('iframeOverlay');
             if (overlay.classList.contains('active')) {
-                exitFullscreen();
+                closeIframeOverlay();
             }
-            showNotification('ESC pressed', 'esc');
         }
     });
 
@@ -1385,14 +1327,7 @@
             input.value = '';
             document.getElementById('passUnlockBtn').textContent = 'unlocked';
             document.getElementById('passUnlockBtn').style.opacity = '0.6';
-            
-            if (passLinks.length > 0) {
-                var firstLink = document.querySelector('#passLinks .link-chip');
-                if (firstLink) {
-                    loadGenericLink(firstLink, passLinks[0].url, 'pass');
-                }
-            }
-            showNotification('Pass unlocked!', '');
+            showNotification('Pass unlocked! Click a link.', '');
         } else {
             document.getElementById('passErrorMsg').classList.add('show');
             showNotification('Wrong password!', '');
@@ -1423,14 +1358,7 @@
             input.value = '';
             document.getElementById('expUnlockBtn').textContent = 'unlocked';
             document.getElementById('expUnlockBtn').style.opacity = '0.6';
-            
-            if (expLinks.length > 0) {
-                var firstLink = document.querySelector('#expLinks .link-chip');
-                if (firstLink) {
-                    loadGenericLink(firstLink, expLinks[0], 'exp');
-                }
-            }
-            showNotification('Exp unlocked!', '');
+            showNotification('Exp unlocked! Click a link.', '');
         } else {
             document.getElementById('expErrorMsg').classList.add('show');
             showNotification('Wrong password!', '');
@@ -1454,13 +1382,11 @@
     renderLinks('expLinks', expLinks, 'exp');
     renderLinks('freeLinks', freeLinks, 'free');
 
-    // Show splash screen
     showSplash();
 
-    console.log('🔐 Pass password: "new update"');
-    console.log('🔐 Exp password: "dreading bro"');
-    console.log('📚 ' + quotes.length + ' quotes loaded');
-    console.log('💬 Random quote shown on splash');
+    console.log('Pass password: "new update"');
+    console.log('Exp password: "dreading bro"');
+    console.log(quotes.length + ' quotes loaded');
 </script>
 
 </body>
