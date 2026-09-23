@@ -657,6 +657,778 @@
             font-weight: normal;
         }
 
+        .discord-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            font-size: 15px;
+            color: #9b4dff;
+            letter-spacing: 1px;
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(155, 77, 255, 0.3);
+            transition: 0.3s;
+            user-select: text;
+            cursor: text;
+        }
+        .discord-footer:hover {
+            color: #b06dff;
+            text-shadow: 0 0 30px rgba(155, 77, 255, 0.5);
+        }
+
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #c8bcd8;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: notifSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            pointer-events: auto;
+            min-width: 180px;
+            text-align: center;
+        }
+        .notification.fading {
+            animation: notifFadeOut 0.5s ease forwards;
+        }
+
+        .notification .key-hint {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #9b4dff;
+            margin-left: 6px;
+        }
+
+        @keyframes notifSlideIn {
+            0% { opacity: 0; transform: translateX(40px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes notifFadeOut {
+            0% { opacity: 1; transform: translateX(0) scale(1); }
+            100% { opacity: 0; transform: translateX(30px) scale(0.9); }
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 12px; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 5px 10px; font-size: 12px; }
+            .link-grid { max-height: 120px; }
+            .link-chip { font-size: 11px; padding: 4px 10px; }
+            .info-text .stats { gap: 10px; }
+            .info-text .stats div { padding: 10px 14px; flex: 1; min-width: 60px; }
+            .info-text .stats div .number { font-size: 18px; }
+            .splash-title { font-size: 40px; letter-spacing: 4px; }
+            .splash-quote { font-size: 15px; max-width: 90%; }
+            .iframe-overlay .iframe-header { height: 45px; padding: 8px 15px; }
+            .discord-footer { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="galaxy-bg">
+    <div class="stars"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+</div>
+
+<div class="notification-container" id="notificationContainer"></div>
+
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-title">dreading<span>.</span></div>
+    <div class="splash-quote" id="splashQuote">
+        Loading...
+        <span class="author"></span>
+    </div>
+    <div class="splash-sub">privacy is a right.</div>
+</div>
+
+<div class="iframe-overlay" id="iframeOverlay">
+    <div class="iframe-header">
+        <span class="title" id="iframeTitle">Viewing...</span>
+        <button class="close-btn" onclick="closeIframeOverlay()">✕ Close (ESC)</button>
+    </div>
+    <div class="iframe-body">
+        <iframe id="overlayIframe" src="about:blank" referrerpolicy="no-referrer" allow="pointer-lock; fullscreen; gamepad; autoplay" sandbox="allow-scripts allow-forms allow-presentation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-downloads"></iframe>
+    </div>
+</div>
+
+<div class="main-wrapper" id="mainWrapper">
+    <div class="toggle-container">
+        <button class="toggle-btn" id="toggleBtn" onclick="toggleContainer()">
+            <span class="arrow down" id="arrowIcon">▲</span>
+        </button>
+    </div>
+
+    <div class="container-wrapper collapsed" id="containerWrapper">
+        <div class="container" id="mainContainer">
+            <h1>dreading <span>·</span> <span class="subtitle">privacy is a right.</span></h1>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
+                <button class="tab-btn" onclick="showTab('info')">Info</button>
+                <button class="tab-btn" onclick="showTab('pass')">Pass</button>
+                <button class="tab-btn" onclick="showTab('exp')">Exp</button>
+                <button class="tab-btn" onclick="showTab('free')">Free</button>
+            </div>
+
+            <div id="panel-updates" class="panel active">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Updates</h3>
+                <div class="update-item">
+                    <span class="date">today</span>
+                    <span>Mirror engine v2.3 · adblock integrated</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">2d</span>
+                    <span>Password protection added</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">6d</span>
+                    <span>UI refined + fresh animations</span>
+                </div>
+                <div class="divider"></div>
+                <div class="meta">live · free · protected</div>
+            </div>
+
+            <div id="panel-info" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Info</h3>
+                <div class="info-text">
+                    <h2>Dreading</h2>
+                    <p style="font-size:16px;color:#8a7aaa;margin-bottom:12px;">portal to unblocked links</p>
+                    <p>fan project about links and stuff, unblocking library, updates every 1-2 weeks, depends on my mood, all thanks to malone lam for funding this, love to all. this whole thing started as a small side project just for me and a couple friends, but it hasn't grew into something way bigger than expected tbh, BUT the goal has always been simple — give people access to people access to stuff they should already have access to, so keep browsing, stay safe, and remember, privacy is a right, not a privilege.</p>
+                    <div class="stats">
+                        <div><span class="number">155+</span><span class="label">TOTAL LINKS</span></div>
+                        <div><span class="number">3</span><span class="label">CATEGORIES</span></div>
+                        <div><span class="number">2</span><span class="label">MONTHS</span></div>
+                        <div><span class="number">ALWAYS</span><span class="label">UPDATED</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-pass" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Pass <span class="badge-pass">protected</span>
+                    <span class="link-count">(21 links)</span>
+                </h3>
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="passPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="passUnlockBtn">unlock</button>
+                    <span class="error" id="passErrorMsg">wrong password</span>
+                </div>
+                <div id="passContent" class="locked">
+                    <div class="link-grid" id="passLinks"></div>
+                    <div class="divider"></div>
+                    <div class="meta">Pass links · 21 entries (password required)</div>
+                </div>
+            </div>
+
+            <div id="panel-exp" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Exp <span class="badge">protected</span>
+                    <span class="link-count">(35 links)</span>
+                </h3>
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="expPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="expUnlockBtn">unlock</button>
+                    <span class="error" id="expErrorMsg">wrong password</span>
+                </div>
+                <div id="expContent" class="locked">
+                    <div class="link-grid" id="expLinks"></div>
+                    <div class="divider"></div>
+                    <div class="meta">Exp links · 35 entries (password required)</div>
+                </div>
+            </div>
+
+            <div id="panel-free" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Free <span class="badge-free">unlocked</span>
+                    <span class="link-count">(62 links)</span>
+                </h3>
+                <div class="link-grid" id="freeLinks"></div>
+                <div class="divider"></div>
+                <div class="meta">Free links · 62 entries</div>
+            </div>
+
+            <div class="discord-footer">https://discord.gg/gUcqgrcHAh</div>
+
+        </div>
+    </div>
+</div>
+
+<script>        .nebula-4 {
+            width: 300px;
+            height: 300px;
+            top: 20%;
+            right: 10%;
+            background: radial-gradient(circle, #ff6b9d, transparent 70%);
+            animation-duration: 20s;
+            animation-delay: 1s;
+            opacity: 0.1;
+        }
+
+        @keyframes floatNebula {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.3); }
+            100% { transform: translate(-20px, 40px) scale(0.9); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.3);
+            animation: shoot 8s linear infinite;
+        }
+        .shooting-star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .shooting-star:nth-child(2) { top: 30%; left: 60%; animation-delay: 4s; }
+        .shooting-star:nth-child(3) { top: 60%; left: 30%; animation-delay: 2s; }
+        .shooting-star:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; }
+        .shooting-star:nth-child(5) { top: 15%; left: 80%; animation-delay: 3s; }
+        .shooting-star:nth-child(6) { top: 70%; left: 10%; animation-delay: 5s; }
+
+        @keyframes shoot {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            5% { opacity: 1; }
+            15% { transform: translate(-200px, 100px) scale(0); opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* SPLASH SCREEN */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(10, 10, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .splash-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .splash-title {
+            font-size: 80px;
+            font-weight: 300;
+            color: #e8e0f0;
+            text-shadow: 0 0 60px rgba(120, 60, 200, 0.3);
+            letter-spacing: 8px;
+            animation: splashFade 1.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .splash-title span {
+            color: #9b4dff;
+            font-weight: 600;
+        }
+
+        .splash-quote {
+            font-size: 18px;
+            color: #8a7aaa;
+            margin-top: 20px;
+            font-style: italic;
+            letter-spacing: 1px;
+            animation: splashFade 1.5s ease 0.3s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            text-align: center;
+            max-width: 600px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        .splash-quote .author {
+            display: block;
+            font-size: 14px;
+            color: #6a5a7a;
+            margin-top: 8px;
+            font-style: normal;
+            letter-spacing: 2px;
+        }
+
+        .splash-sub {
+            font-size: 14px;
+            color: #4a3a5a;
+            margin-top: 40px;
+            letter-spacing: 4px;
+            animation: splashFade 1.5s ease 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes splashFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* IFRAME FULLSCREEN OVERLAY */
+        .iframe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            background: rgba(10, 10, 26, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            flex-direction: column;
+        }
+        .iframe-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .iframe-overlay .iframe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            height: 50px;
+            flex-shrink: 0;
+        }
+        .iframe-overlay .iframe-header .title {
+            color: #8a7aaa;
+            font-size: 13px;
+        }
+        .iframe-overlay .iframe-header .close-btn {
+            padding: 6px 20px;
+            background: rgba(200, 50, 50, 0.2);
+            color: #c87070;
+            border: 1px solid rgba(200, 50, 50, 0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .iframe-overlay .iframe-header .close-btn:hover {
+            background: rgba(200, 50, 50, 0.3);
+        }
+
+        .iframe-overlay .iframe-body {
+            flex: 1;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+        }
+        .iframe-overlay .iframe-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* MAIN UI */
+        .main-wrapper {
+            position: relative;
+            z-index: 5;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .main-wrapper.visible {
+            opacity: 1;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 20;
+        }
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .toggle-btn .arrow {
+            display: inline-block;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            line-height: 1;
+        }
+        .toggle-btn .arrow.down {
+            transform: rotate(180deg);
+        }
+
+        .container-wrapper {
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: top center;
+            overflow: hidden;
+        }
+        .container-wrapper.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleY(0);
+            margin-top: -10px;
+        }
+        .container-wrapper.expanded {
+            max-height: 3000px;
+            opacity: 1;
+            pointer-events: all;
+            transform: scaleY(1);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 300;
+            color: #e8e0f0;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 20px rgba(100, 50, 200, 0.3);
+            letter-spacing: 1px;
+        }
+        h1 span {
+            color: #9b4dff;
+            font-weight: 400;
+        }
+        h1 .subtitle {
+            color: #6a5a7a;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 6px 14px;
+            border: none;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: Arial, sans-serif;
+            color: #a898b8;
+            border: 1px solid transparent;
+            position: relative;
+            z-index: 10;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #d0c8e0;
+        }
+        .tab-btn.active {
+            background: rgba(120, 60, 200, 0.25);
+            font-weight: 600;
+            color: #d8c8f0;
+            border-color: rgba(120, 60, 200, 0.3);
+        }
+
+        .panel {
+            display: none;
+            padding: 12px 0;
+            position: relative;
+            z-index: 5;
+        }
+        .panel.active {
+            display: block;
+        }
+
+        .link-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .link-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .link-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        .link-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .link-chip {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #c8bcd8;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .link-chip:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(120, 60, 200, 0.3);
+            transform: scale(1.02);
+            color: #e8e0f0;
+        }
+        .link-chip.active-link {
+            background: rgba(120, 60, 200, 0.2);
+            border-color: rgba(120, 60, 200, 0.4);
+            color: #d8c8f0;
+        }
+
+        .locked .link-chip {
+            opacity: 0.3;
+            filter: blur(1px);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .locked .link-chip:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.04);
+        }
+        .unlocked .link-chip {
+            opacity: 1;
+            filter: none;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .update-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            gap: 12px;
+            color: #c8bcd8;
+            font-size: 13px;
+        }
+        .update-item .date {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #8a7aaa;
+        }
+
+        .password-box {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .password-box input {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            font-size: 13px;
+            flex: 1;
+            min-width: 120px;
+            font-family: Arial, sans-serif;
+            color: #e8e0f0;
+            outline: none;
+        }
+        .password-box input::placeholder {
+            color: #6a5a7a;
+        }
+        .password-box input:focus {
+            border-color: rgba(120, 60, 200, 0.3);
+        }
+        .password-box button {
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            color: #b0a0c0;
+            transition: 0.3s;
+        }
+        .password-box button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .error {
+            color: #c87070;
+            display: none;
+            font-size: 12px;
+        }
+        .error.show {
+            display: inline;
+        }
+
+        .badge {
+            background: rgba(200, 100, 50, 0.15);
+            color: #c89070;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .badge-free {
+            background: rgba(50, 200, 100, 0.1);
+            color: #80c890;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .badge-pass {
+            background: rgba(80, 80, 220, 0.12);
+            color: #8090c8;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.04);
+            margin: 12px 0;
+        }
+        .meta {
+            color: #6a5a7a;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #c8bcd8;
+            max-width: 800px;
+        }
+        .info-text h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e8e0f0;
+            margin-bottom: 10px;
+        }
+        .info-text .stats {
+            display: flex;
+            gap: 20px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        .info-text .stats div {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .info-text .stats div .number {
+            font-size: 22px;
+            font-weight: 600;
+            color: #e8e0f0;
+            display: block;
+        }
+        .info-text .stats div .label {
+            font-size: 11px;
+            color: #7a6a8a;
+            margin-top: 4px;
+        }
+
+        .link-count {
+            font-size: 11px;
+            color: #6a5a7a;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
         /* DISCORD BOTTOM TEXT */
         .discord-footer {
             margin-top: 20px;
@@ -1459,3 +2231,149 @@
     console.log(quotes.length + ' quotes loaded');
     console.log('Ad blocker active - external tabs blocked');
 })();
+/*! coi-serviceworker v0.1.7 - Guido Zuidhof and contributors, licensed under MIT */
+let coepCredentialless = false;
+if (typeof window === 'undefined') {
+    self.addEventListener("install", () => self.skipWaiting());
+    self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+
+    self.addEventListener("message", (ev) => {
+        if (!ev.data) {
+            return;
+        } else if (ev.data.type === "deregister") {
+            self.registration
+                .unregister()
+                .then(() => {
+                    return self.clients.matchAll();
+                })
+                .then(clients => {
+                    clients.forEach((client) => client.navigate(client.url));
+                });
+        } else if (ev.data.type === "coepCredentialless") {
+            coepCredentialless = ev.data.value;
+        }
+    });
+
+    self.addEventListener("fetch", function (event) {
+        const r = event.request;
+        if (r.cache === "only-if-cached" && r.mode !== "same-origin") {
+            return;
+        }
+
+        const request = (coepCredentialless && r.mode === "no-cors")
+            ? new Request(r, {
+                credentials: "omit",
+            })
+            : r;
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    if (response.status === 0) {
+                        return response;
+                    }
+
+                    const newHeaders = new Headers(response.headers);
+                    newHeaders.set("Cross-Origin-Embedder-Policy",
+                        coepCredentialless ? "credentialless" : "require-corp"
+                    );
+                    if (!coepCredentialless) {
+                        newHeaders.set("Cross-Origin-Resource-Policy", "cross-origin");
+                    }
+                    newHeaders.set("Cross-Origin-Opener-Policy", "same-origin");
+
+                    return new Response(response.body, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        headers: newHeaders,
+                    });
+                })
+                .catch((e) => console.error(e))
+        );
+    });
+
+} else {
+    (() => {
+        const reloadedBySelf = window.sessionStorage.getItem("coiReloadedBySelf");
+        window.sessionStorage.removeItem("coiReloadedBySelf");
+        const coepDegrading = (reloadedBySelf == "coepdegrade");
+
+        // You can customize the behavior of this script through a global `coi` variable.
+        const coi = {
+            shouldRegister: () => !reloadedBySelf,
+            shouldDeregister: () => false,
+            coepCredentialless: () => true,
+            coepDegrade: () => true,
+            doReload: () => window.location.reload(),
+            quiet: false,
+            ...window.coi
+        };
+
+        const n = navigator;
+        const controlling = n.serviceWorker && n.serviceWorker.controller;
+
+        // Record the failure if the page is served by serviceWorker.
+        if (controlling && !window.crossOriginIsolated) {
+            window.sessionStorage.setItem("coiCoepHasFailed", "true");
+        }
+        const coepHasFailed = window.sessionStorage.getItem("coiCoepHasFailed");
+
+        if (controlling) {
+            // Reload only on the first failure.
+            const reloadToDegrade = coi.coepDegrade() && !(
+                coepDegrading || window.crossOriginIsolated
+            );
+            n.serviceWorker.controller.postMessage({
+                type: "coepCredentialless",
+                value: (reloadToDegrade || coepHasFailed && coi.coepDegrade())
+                    ? false
+                    : coi.coepCredentialless(),
+            });
+            if (reloadToDegrade) {
+                !coi.quiet && console.log("Reloading page to degrade COEP.");
+                window.sessionStorage.setItem("coiReloadedBySelf", "coepdegrade");
+                coi.doReload("coepdegrade");
+            }
+
+            if (coi.shouldDeregister()) {
+                n.serviceWorker.controller.postMessage({ type: "deregister" });
+            }
+        }
+
+        // If we're already coi: do nothing. Perhaps it's due to this script doing its job, or COOP/COEP are
+        // already set from the origin server. Also if the browser has no notion of crossOriginIsolated, just give up here.
+        if (window.crossOriginIsolated !== false || !coi.shouldRegister()) return;
+
+        if (!window.isSecureContext) {
+            !coi.quiet && console.log("COOP/COEP Service Worker not registered, a secure context is required.");
+            return;
+        }
+
+        // In some environments (e.g. Firefox private mode) this won't be available
+        if (!n.serviceWorker) {
+            !coi.quiet && console.error("COOP/COEP Service Worker not registered, perhaps due to private mode.");
+            return;
+        }
+
+        n.serviceWorker.register(window.document.currentScript.src).then(
+            (registration) => {
+                !coi.quiet && console.log("COOP/COEP Service Worker registered", registration.scope);
+
+                registration.addEventListener("updatefound", () => {
+                    !coi.quiet && console.log("Reloading page to make use of updated COOP/COEP Service Worker.");
+                    window.sessionStorage.setItem("coiReloadedBySelf", "updatefound");
+                    coi.doReload();
+                });
+
+                // If the registration is active, but it's not controlling the page
+                if (registration.active && !n.serviceWorker.controller) {
+                    !coi.quiet && console.log("Reloading page to make use of COOP/COEP Service Worker.");
+                    window.sessionStorage.setItem("coiReloadedBySelf", "notcontrolling");
+                    coi.doReload();
+                }
+            },
+            (err) => {
+                !coi.quiet && console.error("COOP/COEP Service Worker failed to register:", err);
+            }
+        );
+    })();
+}
