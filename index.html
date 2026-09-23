@@ -1,897 +1,1461 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirror · Search</title>
-<style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    <title>Dreading · Privacy is a right.</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="coi-serviceworker.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a1a;
+            min-height: 100vh;
+            overflow: hidden;
+        }
 
-    :root {
-        --bg-0: #06060a;
-        --bg-1: #0b0b12;
-        --glass: rgba(255,255,255,0.035);
-        --glass-hi: rgba(255,255,255,0.06);
-        --border: rgba(255,255,255,0.07);
-        --border-hi: rgba(255,255,255,0.12);
-        --text: #eaeaf2;
-        --text-dim: #8a8aa0;
-        --text-mute: #565669;
-        --accent: #4a9eff;
-        --accent-glow: rgba(74,158,255,0.35);
-        --red: #ff5f57;
-        --yellow: #febc2e;
-        --green: #28c840;
-    }
+        /* ANIMATED GALAXY BACKGROUND */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at 20% 50%, #1a0533 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, #0d1b3e 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, #1a0a2e 0%, transparent 60%),
+                        #0a0a1a;
+            overflow: hidden;
+            animation: galaxyPulse 8s ease-in-out infinite alternate;
+        }
 
-    html, body {
-        height: 100%;
-        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-        background: var(--bg-0);
-        color: var(--text);
-        overflow: hidden;
-        -webkit-font-smoothing: antialiased;
-    }
+        @keyframes galaxyPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
 
-    .bg-layer {
-        position: fixed; inset: 0; z-index: 0;
-        background:
-            radial-gradient(ellipse 80% 50% at 20% 0%, rgba(74,158,255,0.10), transparent 60%),
-            radial-gradient(ellipse 70% 50% at 80% 100%, rgba(155,77,255,0.08), transparent 60%),
-            var(--bg-0);
-    }
-    .bg-grid {
-        position: absolute; inset: 0;
-        background-image:
-            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-        background-size: 60px 60px;
-        mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
-        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
-        animation: gridDrift 30s linear infinite;
-    }
-    @keyframes gridDrift {
-        0%   { background-position: 0 0, 0 0; }
-        100% { background-position: 60px 60px, 60px 60px; }
-    }
-    .bg-glow {
-        position: absolute; width: 500px; height: 500px; border-radius: 50%;
-        filter: blur(100px); opacity: 0.4;
-        animation: glowFloat 18s ease-in-out infinite alternate;
-    }
-    .bg-glow.g1 { top: -150px; left: -100px; background: radial-gradient(circle, #4a9eff, transparent 70%); }
-    .bg-glow.g2 { bottom: -200px; right: -100px; background: radial-gradient(circle, #9b4dff, transparent 70%); animation-delay: -6s; }
-    .bg-glow.g3 { top: 40%; left: 60%; width: 300px; height: 300px; background: radial-gradient(circle, #ff6b35, transparent 70%); opacity: 0.25; animation-delay: -12s; }
-    @keyframes glowFloat {
-        0%   { transform: translate(0,0) scale(1); }
-        100% { transform: translate(50px,30px) scale(1.15); }
-    }
-    .bg-noise {
-        position: absolute; inset: 0; opacity: 0.03;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        pointer-events: none;
-    }
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
+                radial-gradient(1px 1px at 200px 60px, #fff, transparent),
+                radial-gradient(2px 2px at 250px 20px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 300px 90px, #eee, transparent),
+                radial-gradient(2px 2px at 350px 50px, #fff, transparent),
+                radial-gradient(1px 1px at 400px 30px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 450px 70px, #ddd, transparent),
+                radial-gradient(1px 1px at 500px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 550px 80px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 600px 20px, #eee, transparent),
+                radial-gradient(2px 2px at 650px 60px, #fff, transparent),
+                radial-gradient(1px 1px at 700px 90px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 750px 30px, #ddd, transparent),
+                radial-gradient(1px 1px at 800px 50px, #fff, transparent),
+                radial-gradient(2px 2px at 850px 70px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 900px 40px, #eee, transparent),
+                radial-gradient(2px 2px at 950px 80px, #fff, transparent),
+                radial-gradient(1px 1px at 1000px 20px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 1050px 60px, #ddd, transparent),
+                radial-gradient(1px 1px at 1100px 90px, #fff, transparent);
+            background-size: 200px 200px;
+            opacity: 0.6;
+            animation: twinkle 4s ease-in-out infinite alternate;
+        }
 
-    .splash {
-        position: fixed; inset: 0; z-index: 1000;
-        display: flex; align-items: center; justify-content: center; flex-direction: column;
-        background: rgba(6,6,10,0.95);
-        backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-        transition: opacity 1s ease, transform 1s ease;
-    }
-    .splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
-    .splash-mark {
-        font-size: 72px; font-weight: 200; letter-spacing: -3px; color: var(--text);
-        opacity: 0; animation: fadeUp 1.4s cubic-bezier(0.2,0.9,0.3,1) 0.2s forwards;
-    }
-    .splash-mark span { color: var(--accent); font-weight: 500; }
-    .splash-quote {
-        font-size: 15px; font-weight: 300; color: var(--text-dim);
-        max-width: 560px; text-align: center; margin-top: 24px; padding: 0 24px;
-        line-height: 1.7; letter-spacing: 0.2px;
-        opacity: 0; animation: fadeUp 1.4s cubic-bezier(0.2,0.9,0.3,1) 0.6s forwards;
-    }
-    .splash-quote .author {
-        display: block; margin-top: 12px; font-size: 11px;
-        letter-spacing: 3px; text-transform: uppercase; color: var(--text-mute);
-    }
-    .splash-sub {
-        margin-top: 48px; font-size: 10px; letter-spacing: 6px;
-        text-transform: uppercase; color: var(--text-mute);
-        opacity: 0; animation: fadeUp 1.4s cubic-bezier(0.2,0.9,0.3,1) 1s forwards;
-    }
-    @keyframes fadeUp {
-        0%   { opacity: 0; transform: translateY(16px); filter: blur(6px); }
-        100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-    }
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.9; }
+        }
 
-    .overlay {
-        position: fixed; inset: 0; z-index: 900;
-        background: rgba(6,6,10,0.85);
-        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-        display: none; opacity: 0; transition: opacity 0.7s ease;
-        padding: 24px;
-    }
-    .overlay.show { display: flex; opacity: 1; }
-    .overlay-window {
-        width: 100%; height: 100%; max-width: 1400px; margin: 0 auto;
-        background: var(--bg-1);
-        border: 1px solid var(--border); border-radius: 12px;
-        box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8);
-        display: flex; flex-direction: column; overflow: hidden;
-        transform: scale(0.98);
-        transition: transform 0.7s cubic-bezier(0.2,0.9,0.3,1);
-    }
-    .overlay.show .overlay-window { transform: scale(1); }
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+            animation: floatNebula 15s ease-in-out infinite alternate;
+        }
+        .nebula-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            background: radial-gradient(circle, #6c2bd9, transparent 70%);
+            animation-duration: 18s;
+        }
+        .nebula-2 {
+            width: 350px;
+            height: 350px;
+            bottom: -50px;
+            right: -50px;
+            background: radial-gradient(circle, #1a5fb4, transparent 70%);
+            animation-duration: 22s;
+            animation-delay: 2s;
+        }
+        .nebula-3 {
+            width: 250px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #9b4dff, transparent 70%);
+            animation-duration: 25s;
+            animation-delay: 4s;
+            opacity: 0.12;
+        }
+        .nebula-4 {
+            width: 300px;
+            height: 300px;
+            top: 20%;
+            right: 10%;
+            background: radial-gradient(circle, #ff6b9d, transparent 70%);
+            animation-duration: 20s;
+            animation-delay: 1s;
+            opacity: 0.1;
+        }
 
-    .titlebar {
-        height: 40px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-        border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; padding: 0 16px; gap: 10px;
-        flex-shrink: 0; position: relative;
-    }
-    .traffic { display: flex; gap: 8px; align-items: center; }
-    .tl {
-        width: 12px; height: 12px; border-radius: 50%; border: none;
-        cursor: pointer; padding: 0;
-        display: flex; align-items: center; justify-content: center;
-        transition: transform 0.15s ease, filter 0.15s ease;
-        box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.15);
-    }
-    .tl:hover { filter: brightness(1.15); transform: scale(1.08); }
-    .tl:active { transform: scale(0.92); }
-    .tl.r { background: var(--red); }
-    .tl.y { background: var(--yellow); }
-    .tl.g { background: var(--green); }
-    .tl svg { opacity: 0; transition: opacity 0.15s; width: 6px; height: 6px; }
-    .traffic:hover .tl svg { opacity: 0.55; }
+        @keyframes floatNebula {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.3); }
+            100% { transform: translate(-20px, 40px) scale(0.9); }
+        }
 
-    .win-title {
-        position: absolute; left: 50%; transform: translateX(-50%);
-        font-size: 12px; font-weight: 500; color: var(--text-dim);
-        letter-spacing: 0.3px; max-width: 60%;
-        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        pointer-events: none;
-    }
-    .win-actions { margin-left: auto; display: flex; gap: 8px; }
-    .win-action {
-        background: transparent; border: 1px solid var(--border);
-        color: var(--text-dim); font-size: 11px; font-family: inherit;
-        padding: 4px 12px; border-radius: 6px; cursor: pointer;
-        transition: 0.2s; letter-spacing: 0.3px;
-    }
-    .win-action:hover {
-        background: var(--glass-hi); color: var(--text); border-color: var(--border-hi);
-    }
-    .window-body { flex: 1; position: relative; background: #0a0a0f; }
-    .window-body iframe { width: 100%; height: 100%; border: none; display: block; }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.3);
+            animation: shoot 8s linear infinite;
+        }
+        .shooting-star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .shooting-star:nth-child(2) { top: 30%; left: 60%; animation-delay: 4s; }
+        .shooting-star:nth-child(3) { top: 60%; left: 30%; animation-delay: 2s; }
+        .shooting-star:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; }
+        .shooting-star:nth-child(5) { top: 15%; left: 80%; animation-delay: 3s; }
+        .shooting-star:nth-child(6) { top: 70%; left: 10%; animation-delay: 5s; }
 
-    .main {
-        position: relative; z-index: 5; height: 100vh;
-        display: flex; align-items: center; justify-content: center;
-        padding: 20px; opacity: 0; transition: opacity 0.8s ease 0.3s;
-    }
-    .main.on { opacity: 1; }
+        @keyframes shoot {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            5% { opacity: 1; }
+            15% { transform: translate(-200px, 100px) scale(0); opacity: 0; }
+            100% { opacity: 0; }
+        }
 
-    .app-window {
-        width: 100%; max-width: 820px;
-        background: var(--glass);
-        backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        box-shadow:
-            0 30px 80px -20px rgba(0,0,0,0.7),
-            0 1px 0 0 rgba(255,255,255,0.04) inset;
-        overflow: hidden;
-        animation: windowIn 0.9s cubic-bezier(0.2,0.9,0.3,1);
-        transition: max-width 0.5s cubic-bezier(0.2,0.9,0.3,1);
-    }
-    @keyframes windowIn {
-        0%   { opacity: 0; transform: translateY(20px) scale(0.97); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
+        /* SPLASH SCREEN */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(10, 10, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .splash-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
 
-    .app-window.minimized { max-width: 320px; }
-    .app-window.minimized .app-body { display: none; }
-    .app-window.minimized .app-titlebar { border-bottom: none; }
+        .splash-title {
+            font-size: 80px;
+            font-weight: 300;
+            color: #e8e0f0;
+            text-shadow: 0 0 60px rgba(120, 60, 200, 0.3);
+            letter-spacing: 8px;
+            animation: splashFade 1.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .splash-title span {
+            color: #9b4dff;
+            font-weight: 600;
+        }
 
-    .app-titlebar {
-        height: 44px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
-        border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; padding: 0 18px; gap: 12px;
-        position: relative;
-    }
-    .app-title {
-        position: absolute; left: 50%; transform: translateX(-50%);
-        font-size: 13px; font-weight: 500; color: var(--text-dim);
-        letter-spacing: 0.2px; display: flex; align-items: center; gap: 6px;
-    }
-    .app-title .dot {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: var(--accent); box-shadow: 0 0 8px var(--accent-glow);
-    }
+        .splash-quote {
+            font-size: 18px;
+            color: #8a7aaa;
+            margin-top: 20px;
+            font-style: italic;
+            letter-spacing: 1px;
+            animation: splashFade 1.5s ease 0.3s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            text-align: center;
+            max-width: 600px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
 
-    .app-body { padding: 26px 28px 24px; }
+        .splash-quote .author {
+            display: block;
+            font-size: 14px;
+            color: #6a5a7a;
+            margin-top: 8px;
+            font-style: normal;
+            letter-spacing: 2px;
+        }
 
-    .hero {
-        text-align: center;
-        margin-bottom: 26px;
-    }
-    .hero h1 {
-        font-size: 28px;
-        font-weight: 300;
-        letter-spacing: -0.5px;
-        color: var(--text);
-        margin-bottom: 8px;
-    }
-    .hero h1 span { color: var(--accent); font-weight: 500; }
-    .hero p {
-        font-size: 13px;
-        color: var(--text-dim);
-        letter-spacing: 0.3px;
-    }
+        .splash-sub {
+            font-size: 14px;
+            color: #4a3a5a;
+            margin-top: 40px;
+            letter-spacing: 4px;
+            animation: splashFade 1.5s ease 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-    .search-wrap {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 12px;
-    }
-    .search-input {
-        flex: 1;
-        padding: 15px 18px;
-        background: rgba(0,0,0,0.3);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        color: var(--text);
-        font-family: inherit;
-        font-size: 14.5px;
-        outline: none;
-        transition: 0.2s;
-        letter-spacing: 0.2px;
-    }
-    .search-input::placeholder { color: var(--text-mute); }
-    .search-input:focus {
-        border-color: rgba(74,158,255,0.5);
-        box-shadow: 0 0 0 3px rgba(74,158,255,0.12);
-        background: rgba(0,0,0,0.4);
-    }
+        @keyframes splashFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-    .btn {
-        padding: 15px 28px;
-        border-radius: 12px;
-        border: 1px solid rgba(74,158,255,0.3);
-        background: rgba(74,158,255,0.18);
-        color: var(--accent);
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
-        letter-spacing: 0.4px;
-        white-space: nowrap;
-    }
-    .btn:hover {
-        background: rgba(74,158,255,0.28);
-        box-shadow: 0 0 24px rgba(74,158,255,0.2);
-        transform: translateY(-1px);
-    }
-    .btn:active { transform: translateY(0) scale(0.98); }
+        /* IFRAME FULLSCREEN OVERLAY */
+        .iframe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999999;
+            background: rgba(10, 10, 26, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            flex-direction: column;
+        }
+        .iframe-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
 
-    .hint {
-        font-size: 11.5px;
-        color: var(--text-mute);
-        letter-spacing: 0.2px;
-        line-height: 1.7;
-        padding: 0 4px;
-    }
-    .hint code {
-        background: rgba(255,255,255,0.05);
-        padding: 2px 7px;
-        border-radius: 4px;
-        color: var(--accent);
-        font-family: 'SF Mono', Menlo, monospace;
-        font-size: 10.5px;
-        margin: 0 2px;
-    }
+        .iframe-overlay .iframe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            height: 50px;
+            flex-shrink: 0;
+        }
+        .iframe-overlay .iframe-header .title {
+            color: #8a7aaa;
+            font-size: 13px;
+        }
+        .iframe-overlay .iframe-header .close-btn {
+            padding: 6px 20px;
+            background: rgba(200, 50, 50, 0.2);
+            color: #c87070;
+            border: 1px solid rgba(200, 50, 50, 0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .iframe-overlay .iframe-header .close-btn:hover {
+            background: rgba(200, 50, 50, 0.3);
+        }
 
-    .divider {
-        height: 1px;
-        background: var(--border);
-        margin: 22px 0 18px;
-    }
+        .iframe-overlay .iframe-body {
+            flex: 1;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+        }
+        .iframe-overlay .iframe-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
 
-    .section-label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 10.5px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--text-mute);
-        margin-bottom: 10px;
-    }
-    .clear-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-mute);
-        font-family: inherit;
-        font-size: 10px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .clear-btn:hover { color: var(--red); }
+        /* MAIN UI */
+        .main-wrapper {
+            position: relative;
+            z-index: 5;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .main-wrapper.visible {
+            opacity: 1;
+        }
 
-    .history-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        max-height: 220px;
-        overflow-y: auto;
-    }
-    .history-list::-webkit-scrollbar { width: 6px; }
-    .history-list::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,0.08);
-        border-radius: 3px;
-    }
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 20;
+        }
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .toggle-btn .arrow {
+            display: inline-block;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            line-height: 1;
+        }
+        .toggle-btn .arrow.down {
+            transform: rotate(180deg);
+        }
 
-    .history-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 11px 14px;
-        background: rgba(0,0,0,0.2);
-        border: 1px solid var(--border);
-        border-radius: 9px;
-        font-size: 12.5px;
-        color: var(--text-dim);
-        cursor: pointer;
-        transition: 0.2s;
-        gap: 12px;
-        animation: itemIn 0.4s cubic-bezier(0.2,0.9,0.3,1) backwards;
-    }
-    @keyframes itemIn {
-        0%   { opacity: 0; transform: translateY(6px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
-    .history-item:hover {
-        background: rgba(74,158,255,0.06);
-        border-color: rgba(74,158,255,0.25);
-        color: var(--text);
-    }
-    .history-item .url {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        flex: 1;
-    }
-    .history-item .rm {
-        color: var(--text-mute);
-        font-size: 13px;
-        padding: 2px 6px;
-        transition: 0.2s;
-        flex-shrink: 0;
-    }
-    .history-item .rm:hover { color: var(--red); }
+        .container-wrapper {
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: top center;
+            overflow: hidden;
+        }
+        .container-wrapper.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleY(0);
+            margin-top: -10px;
+        }
+        .container-wrapper.expanded {
+            max-height: 3000px;
+            opacity: 1;
+            pointer-events: all;
+            transform: scaleY(1);
+        }
 
-    .empty {
-        font-size: 11.5px;
-        color: var(--text-mute);
-        padding: 14px 0;
-        letter-spacing: 0.3px;
-        text-align: center;
-    }
+        .container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
 
-    .notifs {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 2000;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-end;
-        pointer-events: none;
-    }
-    .notif {
-        background: rgba(20,20,30,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 11px 16px;
-        color: var(--text-dim);
-        font-size: 12.5px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        animation: notifIn 0.4s cubic-bezier(0.2,0.9,0.3,1);
-        pointer-events: auto;
-        max-width: 280px;
-        letter-spacing: 0.2px;
-    }
-    .notif.out { animation: notifOut 0.5s ease forwards; }
-    @keyframes notifIn {
-        0%   { opacity: 0; transform: translateX(30px) scale(0.9); }
-        100% { opacity: 1; transform: translateX(0) scale(1); }
-    }
-    @keyframes notifOut {
-        0%   { opacity: 1; transform: translateX(0); }
-        100% { opacity: 0; transform: translateX(30px); }
-    }
+        h1 {
+            font-size: 22px;
+            font-weight: 300;
+            color: #e8e0f0;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 20px rgba(100, 50, 200, 0.3);
+            letter-spacing: 1px;
+        }
+        h1 span {
+            color: #9b4dff;
+            font-weight: 400;
+        }
+        h1 .subtitle {
+            color: #6a5a7a;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
 
-    @media (max-width: 640px) {
-        .app-window { max-width: 100%; }
-        .app-window.minimized { max-width: 260px; }
-        .app-body { padding: 20px 18px; }
-        .titlebar, .app-titlebar { padding: 0 12px; }
-        .splash-mark { font-size: 52px; }
-        .splash-quote { font-size: 13px; }
-        .search-wrap { flex-direction: column; }
-        .hero h1 { font-size: 22px; }
-        .overlay { padding: 10px; }
-    }
-</style>
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 6px 14px;
+            border: none;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: Arial, sans-serif;
+            color: #a898b8;
+            border: 1px solid transparent;
+            position: relative;
+            z-index: 10;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #d0c8e0;
+        }
+        .tab-btn.active {
+            background: rgba(120, 60, 200, 0.25);
+            font-weight: 600;
+            color: #d8c8f0;
+            border-color: rgba(120, 60, 200, 0.3);
+        }
+
+        .panel {
+            display: none;
+            padding: 12px 0;
+            position: relative;
+            z-index: 5;
+        }
+        .panel.active {
+            display: block;
+        }
+
+        .link-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .link-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .link-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        .link-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .link-chip {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #c8bcd8;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .link-chip:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(120, 60, 200, 0.3);
+            transform: scale(1.02);
+            color: #e8e0f0;
+        }
+        .link-chip.active-link {
+            background: rgba(120, 60, 200, 0.2);
+            border-color: rgba(120, 60, 200, 0.4);
+            color: #d8c8f0;
+        }
+
+        .locked .link-chip {
+            opacity: 0.3;
+            filter: blur(1px);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .locked .link-chip:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.04);
+        }
+        .unlocked .link-chip {
+            opacity: 1;
+            filter: none;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .update-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            gap: 12px;
+            color: #c8bcd8;
+            font-size: 13px;
+        }
+        .update-item .date {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #8a7aaa;
+        }
+
+        .password-box {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .password-box input {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            font-size: 13px;
+            flex: 1;
+            min-width: 120px;
+            font-family: Arial, sans-serif;
+            color: #e8e0f0;
+            outline: none;
+        }
+        .password-box input::placeholder {
+            color: #6a5a7a;
+        }
+        .password-box input:focus {
+            border-color: rgba(120, 60, 200, 0.3);
+        }
+        .password-box button {
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            color: #b0a0c0;
+            transition: 0.3s;
+        }
+        .password-box button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .error {
+            color: #c87070;
+            display: none;
+            font-size: 12px;
+        }
+        .error.show {
+            display: inline;
+        }
+
+        .badge {
+            background: rgba(200, 100, 50, 0.15);
+            color: #c89070;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .badge-free {
+            background: rgba(50, 200, 100, 0.1);
+            color: #80c890;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .badge-pass {
+            background: rgba(80, 80, 220, 0.12);
+            color: #8090c8;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.04);
+            margin: 12px 0;
+        }
+        .meta {
+            color: #6a5a7a;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #c8bcd8;
+            max-width: 800px;
+        }
+        .info-text h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e8e0f0;
+            margin-bottom: 10px;
+        }
+        .info-text .stats {
+            display: flex;
+            gap: 20px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        .info-text .stats div {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .info-text .stats div .number {
+            font-size: 22px;
+            font-weight: 600;
+            color: #e8e0f0;
+            display: block;
+        }
+        .info-text .stats div .label {
+            font-size: 11px;
+            color: #7a6a8a;
+            margin-top: 4px;
+        }
+
+        .link-count {
+            font-size: 11px;
+            color: #6a5a7a;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
+        /* DISCORD BOTTOM TEXT */
+        .discord-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            font-size: 15px;
+            color: #9b4dff;
+            letter-spacing: 1px;
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(155, 77, 255, 0.3);
+            transition: 0.3s;
+            user-select: text;
+            cursor: text;
+        }
+        .discord-footer:hover {
+            color: #b06dff;
+            text-shadow: 0 0 30px rgba(155, 77, 255, 0.5);
+        }
+
+        /* NOTIFICATIONS */
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #c8bcd8;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: notifSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            pointer-events: auto;
+            min-width: 180px;
+            text-align: center;
+        }
+        .notification.fading {
+            animation: notifFadeOut 0.5s ease forwards;
+        }
+
+        .notification .key-hint {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #9b4dff;
+            margin-left: 6px;
+        }
+
+        @keyframes notifSlideIn {
+            0% { opacity: 0; transform: translateX(40px) scale(0.9); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes notifFadeOut {
+            0% { opacity: 1; transform: translateX(0) scale(1); }
+            100% { opacity: 0; transform: translateX(30px) scale(0.9); }
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 12px; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 5px 10px; font-size: 12px; }
+            .link-grid { max-height: 120px; }
+            .link-chip { font-size: 11px; padding: 4px 10px; }
+            .info-text .stats { gap: 10px; }
+            .info-text .stats div { padding: 10px 14px; flex: 1; min-width: 60px; }
+            .info-text .stats div .number { font-size: 18px; }
+            .splash-title { font-size: 40px; letter-spacing: 4px; }
+            .splash-quote { font-size: 15px; max-width: 90%; }
+            .iframe-overlay .iframe-header { height: 45px; padding: 8px 15px; }
+            .discord-footer { font-size: 13px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="bg-layer">
-    <div class="bg-grid"></div>
-    <div class="bg-glow g1"></div>
-    <div class="bg-glow g2"></div>
-    <div class="bg-glow g3"></div>
-    <div class="bg-noise"></div>
+<!-- ANIMATED GALAXY BACKGROUND -->
+<div class="galaxy-bg">
+    <div class="stars"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
 </div>
 
-<div class="splash" id="splash">
-    <div class="splash-mark">mirror<span>.</span></div>
+<!-- NOTIFICATION CONTAINER -->
+<div class="notification-container" id="notificationContainer"></div>
+
+<!-- SPLASH SCREEN -->
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-title">dreading<span>.</span></div>
     <div class="splash-quote" id="splashQuote">
         Loading...
         <span class="author"></span>
     </div>
-    <div class="splash-sub">search · mirror · browse</div>
+    <div class="splash-sub">privacy is a right.</div>
 </div>
 
-<div class="notifs" id="notifs"></div>
-
-<div class="overlay" id="overlay">
-    <div class="overlay-window">
-        <div class="titlebar">
-            <div class="traffic">
-                <button class="tl r" onclick="closeOverlay()" title="Close (goes to Google Classroom)">
-                    <svg viewBox="0 0 10 10"><path d="M2 2 L8 8 M8 2 L2 8" stroke="#4a0000" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="tl y" onclick="minimizeOverlay()" title="Minimize">
-                    <svg viewBox="0 0 10 10"><path d="M2 5 L8 5" stroke="#4a3a00" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="tl g" onclick="restoreOverlay()" title="Restore">
-                    <svg viewBox="0 0 10 10"><path d="M2 6.5 L5 3.5 L8 6.5" stroke="#003a00" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
-                </button>
-            </div>
-            <div class="win-title" id="overlayTitle">Viewing...</div>
-            <div class="win-actions">
-                <button class="win-action" onclick="closeOverlay()">Close (Esc)</button>
-            </div>
-        </div>
-        <div class="window-body">
-            <iframe id="overlayFrame" src="about:blank" referrerpolicy="no-referrer" allow="pointer-lock; fullscreen; gamepad; autoplay; clipboard-read; clipboard-write" sandbox="allow-scripts allow-forms allow-presentation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-downloads"></iframe>
-        </div>
+<!-- IFRAME FULLSCREEN OVERLAY -->
+<div class="iframe-overlay" id="iframeOverlay">
+    <div class="iframe-header">
+        <span class="title" id="iframeTitle">Viewing...</span>
+        <button class="close-btn" onclick="closeIframeOverlay()">✕ Close (ESC)</button>
+    </div>
+    <div class="iframe-body">
+        <iframe id="overlayIframe" src="about:blank" referrerpolicy="no-referrer" allow="pointer-lock; fullscreen; gamepad; autoplay" sandbox="allow-scripts allow-forms allow-presentation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-downloads"></iframe>
     </div>
 </div>
 
-<div class="main" id="main">
-    <div class="app-window" id="appWindow">
+<!-- MAIN UI -->
+<div class="main-wrapper" id="mainWrapper">
+    <div class="toggle-container">
+        <button class="toggle-btn" id="toggleBtn" onclick="toggleContainer()">
+            <span class="arrow down" id="arrowIcon">▲</span>
+        </button>
+    </div>
 
-        <div class="app-titlebar" id="appTitlebar">
-            <div class="traffic">
-                <button class="tl r" onclick="closeApp()" title="Close (goes to Google Classroom)">
-                    <svg viewBox="0 0 10 10"><path d="M2 2 L8 8 M8 2 L2 8" stroke="#4a0000" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="tl y" onclick="minimizeApp()" title="Minimize">
-                    <svg viewBox="0 0 10 10"><path d="M2 5 L8 5" stroke="#4a3a00" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="tl g" onclick="restoreApp()" title="Expand">
-                    <svg viewBox="0 0 10 10"><path d="M2 6.5 L5 3.5 L8 6.5" stroke="#003a00" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
-                </button>
+    <div class="container-wrapper collapsed" id="containerWrapper">
+        <div class="container" id="mainContainer">
+            <h1>dreading <span>·</span> <span class="subtitle">privacy is a right.</span></h1>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('updates')">Updates</button>
+                <button class="tab-btn" onclick="showTab('info')">Info</button>
+                <button class="tab-btn" onclick="showTab('pass')">Pass</button>
+                <button class="tab-btn" onclick="showTab('exp')">Exp</button>
+                <button class="tab-btn" onclick="showTab('free')">Free</button>
             </div>
-            <div class="app-title">
-                <span class="dot"></span>
-                mirror · search
+
+            <div id="panel-updates" class="panel active">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Updates</h3>
+                <div class="update-item">
+                    <span class="date">today</span>
+                    <span>Mirror engine v2.3 · adblock integrated</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">2d</span>
+                    <span>Password protection added</span>
+                </div>
+                <div class="update-item">
+                    <span class="date">6d</span>
+                    <span>UI refined + fresh animations</span>
+                </div>
+                <div class="divider"></div>
+                <div class="meta">live · free · protected</div>
             </div>
+
+            <div id="panel-info" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Info</h3>
+                <div class="info-text">
+                    <h2>Dreading</h2>
+                    <p style="font-size:16px;color:#8a7aaa;margin-bottom:12px;">portal to unblocked links</p>
+                    <p>fan project about links and stuff, unblocking library, updates every 1-2 weeks, depends on my mood, all thanks to malone lam for funding this, love to all. this whole thing started as a small side project just for me and a couple friends, but it hasn't grew into something way bigger than expected tbh, BUT the goal has always been simple — give people access to people access to stuff they should already have access to, so keep browsing, stay safe, and remember, privacy is a right, not a privilege.</p>
+                    <div class="stats">
+                        <div><span class="number">155+</span><span class="label">TOTAL LINKS</span></div>
+                        <div><span class="number">3</span><span class="label">CATEGORIES</span></div>
+                        <div><span class="number">2</span><span class="label">MONTHS</span></div>
+                        <div><span class="number">ALWAYS</span><span class="label">UPDATED</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-pass" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Pass <span class="badge-pass">protected</span>
+                    <span class="link-count">(5 links)</span>
+                </h3>
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="passPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="passUnlockBtn">unlock</button>
+                    <span class="error" id="passErrorMsg">wrong password</span>
+                </div>
+                <div id="passContent" class="locked">
+                    <div class="link-grid" id="passLinks"></div>
+                    <div class="divider"></div>
+                    <div class="meta">Pass links · 5 entries (password required)</div>
+                </div>
+            </div>
+
+            <div id="panel-exp" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Exp <span class="badge">protected</span>
+                    <span class="link-count">(35 links)</span>
+                </h3>
+                <div class="password-box">
+                    <span style="color:#8a7aaa;">🔐</span>
+                    <input type="password" id="expPasswordInput" placeholder="enter password" autocomplete="off">
+                    <button id="expUnlockBtn">unlock</button>
+                    <span class="error" id="expErrorMsg">wrong password</span>
+                </div>
+                <div id="expContent" class="locked">
+                    <div class="link-grid" id="expLinks"></div>
+                    <div class="divider"></div>
+                    <div class="meta">Exp links · 35 entries (password required)</div>
+                </div>
+            </div>
+
+            <div id="panel-free" class="panel">
+                <h3 style="color:#8a7aaa;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                    Free <span class="badge-free">unlocked</span>
+                    <span class="link-count">(60+ links)</span>
+                </h3>
+                <div class="link-grid" id="freeLinks"></div>
+                <div class="divider"></div>
+                <div class="meta">Free links · 60+ entries</div>
+            </div>
+
+            <!-- DISCORD FOOTER -->
+            <div class="discord-footer">https://discord.gg/gUcqgrcHAh</div>
+
         </div>
-
-        <div class="app-body">
-
-            <div class="hero">
-                <h1>mirror<span>.</span></h1>
-                <p>paste a link · open it instantly</p>
-            </div>
-
-            <div class="search-wrap">
-                <input type="text" class="search-input" id="searchInput" placeholder="paste a link or type a url..." autocomplete="off" spellcheck="false">
-                <button class="btn" onclick="mirrorLink()">Mirror</button>
-            </div>
-            <div class="hint">
-                examples: <code>example.com</code> <code>https://site.com/page</code> <code>cdn.site.com/file.svg</code>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="section-label">
-                <span>Recent mirrors</span>
-                <button class="clear-btn" onclick="clearHistory()">Clear all</button>
-            </div>
-            <div class="history-list" id="historyList"></div>
-
-        </div>
-
     </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════
-   AD BLOCKER
-   ═══════════════════════════════════════════════════════ */
-(function(){
-    'use strict';
-    var ALLOWED = [], blocked = 0;
 
-    var _open = window.open;
-    window.open = function(url, name, f){
-        if (isAllowed(url)) return _open.call(window, url, name, f);
-        blocked++;
-        console.warn('[LOCKDOWN] blocked window.open:', url);
+   // ============================================================
+// DREADING LOCKDOWN - Ad Blocker (runs first)
+// ============================================================
+(function() {
+    'use strict';
+
+    var ALLOWED_DOMAINS = [];
+    var blockedCount = 0;
+
+    var _originalOpen = window.open;
+    window.open = function(url, name, features) {
+        if (isAllowed(url)) return _originalOpen.call(window, url, name, features);
+        blockedCount++;
+        console.warn('[LOCKDOWN] Blocked window.open:', url);
+        dispatchBlocked(url, 'window.open');
         return null;
     };
 
-    document.addEventListener('click', function(e){
+    document.addEventListener('click', function(e) {
         if (e.ctrlKey || e.metaKey || e.shiftKey) {
             var el = e.target;
             while (el && el.tagName !== 'A') el = el.parentElement;
             if (el && el.href) {
                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-                blocked++; return false;
+                blockedCount++;
+                dispatchBlocked(el.href, 'modifier click');
+                return false;
             }
         }
+        
         var el = e.target;
         while (el && el.tagName !== 'A') el = el.parentElement;
         if (!el) return;
+        
         var href = el.getAttribute('href') || '';
         var target = el.getAttribute('target') || '';
+        
         if (target === '_blank' || target === '_new' || target === '_top' || target === '_parent') {
             e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-            blocked++; return false;
+            blockedCount++;
+            dispatchBlocked(href, 'target=' + target);
+            return false;
         }
+        
         if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('/')) {
             if (!isAllowed(href)) {
                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-                blocked++; return false;
+                blockedCount++;
+                dispatchBlocked(href, 'external link');
+                return false;
             }
         }
     }, true);
 
-    document.addEventListener('auxclick', function(e){
+    document.addEventListener('auxclick', function(e) {
         if (e.button === 1) {
             var el = e.target;
             while (el && el.tagName !== 'A') el = el.parentElement;
-            if (el) { e.preventDefault(); e.stopPropagation(); blocked++; }
+            if (el) {
+                e.preventDefault(); e.stopPropagation();
+                blockedCount++;
+                dispatchBlocked(el.href || '', 'middle-click');
+            }
         }
     }, true);
 
-    window.alert = function(m){ console.warn('[LOCKDOWN] alert blocked:', m); };
-    window.confirm = function(){ return false; };
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (form.tagName === 'FORM') {
+            var target = form.getAttribute('target') || '';
+            if (target === '_blank' || target === '_new') {
+                e.preventDefault(); e.stopPropagation();
+                blockedCount++;
+                dispatchBlocked(form.action, 'form target');
+                return false;
+            }
+        }
+    }, true);
 
-    function isAllowed(url){
-        if (!url || !ALLOWED.length) return false;
+    window.alert = function(msg) { console.warn('[LOCKDOWN] Blocked alert:', msg); };
+    window.confirm = function(msg) { console.warn('[LOCKDOWN] Blocked confirm'); return false; };
+
+    function lockdownIframes() {
+        var iframes = document.querySelectorAll('iframe');
+        for (var i = 0; i < iframes.length; i++) {
+            var iframe = iframes[i];
+            var currentSandbox = iframe.getAttribute('sandbox') || '';
+            var cleanSandbox = currentSandbox
+                .replace('allow-popups-to-escape-sandbox', '')
+                .replace('allow-top-navigation', '')
+                .replace('allow-top-navigation-by-user-activation', '')
+                .trim();
+            if (cleanSandbox !== currentSandbox) {
+                iframe.setAttribute('sandbox', cleanSandbox);
+            }
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', lockdownIframes);
+    } else {
+        lockdownIframes();
+    }
+    var iframeObserver = new MutationObserver(function() { lockdownIframes(); });
+    document.addEventListener('DOMContentLoaded', function() {
+        iframeObserver.observe(document.body, { childList: true, subtree: true });
+    });
+
+    function isAllowed(url) {
+        if (!url || ALLOWED_DOMAINS.length === 0) return false;
         try {
-            var h = new URL(url, location.origin).hostname.toLowerCase();
-            for (var i=0; i<ALLOWED.length; i++)
-                if (h === ALLOWED[i] || h.endsWith('.'+ALLOWED[i])) return true;
-        } catch(e){ return false; }
+            var urlObj = new URL(url, window.location.origin);
+            var hostname = urlObj.hostname.toLowerCase();
+            for (var i = 0; i < ALLOWED_DOMAINS.length; i++) {
+                if (hostname === ALLOWED_DOMAINS[i] || hostname.endsWith('.' + ALLOWED_DOMAINS[i])) {
+                    return true;
+                }
+            }
+        } catch (e) { return false; }
         return false;
     }
-    window.Lockdown = {
-        count: function(){ return blocked; },
-        allow: function(d){ if (ALLOWED.indexOf(d) === -1) ALLOWED.push(d); },
-        list: function(){ return ALLOWED.slice(); }
-    };
-    console.log('%c🔒 LOCKDOWN ACTIVE','background:#4a9eff;color:#fff;padding:3px 8px;border-radius:4px;font-weight:600;');
-})();
 
-/* ═══════════════════════════════════════════════════════
-   MAIN
-   ═══════════════════════════════════════════════════════ */
-(function(){
-    'use strict';
-
-    /* ── QUOTES ────────────────────────────────────── */
-    var quotes = [
-        {t:"The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.",a:"Albert Camus"},
-        {t:"Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.",a:"Gary Kovacs"},
-        {t:"The right to privacy is the right to be let alone.",a:"Samuel D. Warren"},
-        {t:"Privacy is power. What people don't know, they can't ruin.",a:"Anonymous"},
-        {t:"The internet is a surveillance state. Privacy is the new civil right.",a:"Edward Snowden"},
-        {t:"Privacy is the foundation of all other rights. Without privacy, there is no freedom.",a:"Anonymous"},
-        {t:"The only true wisdom is in knowing you know nothing.",a:"Socrates"},
-        {t:"Freedom is not worth having if it does not include the freedom to make mistakes.",a:"Mahatma Gandhi"},
-        {t:"Knowledge is power. Information is liberating.",a:"Kofi Annan"},
-        {t:"The secret of getting ahead is getting started.",a:"Mark Twain"},
-        {t:"The best way to predict the future is to create it.",a:"Peter Drucker"},
-        {t:"The only thing we have to fear is fear itself.",a:"Franklin D. Roosevelt"},
-        {t:"Life is what happens when you're busy making other plans.",a:"John Lennon"},
-        {t:"In the middle of difficulty lies opportunity.",a:"Albert Einstein"},
-        {t:"Be yourself; everyone else is already taken.",a:"Oscar Wilde"},
-        {t:"The unexamined life is not worth living.",a:"Socrates"},
-        {t:"I think, therefore I am.",a:"René Descartes"},
-        {t:"The only limit to our realization of tomorrow is our doubts of today.",a:"Franklin D. Roosevelt"},
-        {t:"To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",a:"Ralph Waldo Emerson"},
-        {t:"The greatest glory in living lies not in never falling, but in rising every time we fall.",a:"Nelson Mandela"},
-        {t:"The way to get started is to quit talking and begin doing.",a:"Walt Disney"},
-        {t:"Your time is limited, so don't waste it living someone else's life.",a:"Steve Jobs"},
-        {t:"Privacy is not about hiding something. It's about having control over your own information.",a:"Anonymous"},
-        {t:"The right to privacy is the most important right in the modern world.",a:"Anonymous"},
-        {t:"In a world of surveillance, privacy is the ultimate act of rebellion.",a:"Anonymous"},
-        {t:"The future is already here — it's just not evenly distributed.",a:"William Gibson"},
-        {t:"The universe is under no obligation to make sense to you.",a:"Neil deGrasse Tyson"},
-        {t:"We are all in the gutter, but some of us are looking at the stars.",a:"Oscar Wilde"},
-        {t:"The world is a book and those who do not travel read only one page.",a:"Augustine of Hippo"},
-        {t:"The only impossible journey is the one you never begin.",a:"Tony Robbins"},
-        {t:"The best time to plant a tree was 20 years ago. The second best time is now.",a:"Chinese Proverb"},
-        {t:"It does not matter how slowly you go as long as you do not stop.",a:"Confucius"},
-        {t:"The mind is everything. What you think you become.",a:"Buddha"},
-        {t:"The journey of a thousand miles begins with one step.",a:"Lao Tzu"},
-        {t:"The greatest wealth is to live content with little.",a:"Plato"},
-        {t:"The only way to do great work is to love what you do.",a:"Steve Jobs"},
-        {t:"The future belongs to those who believe in the beauty of their dreams.",a:"Eleanor Roosevelt"},
-        {t:"The only source of knowledge is experience.",a:"Albert Einstein"},
-        {t:"The most beautiful things in the world cannot be seen or touched, they are felt with the heart.",a:"Antoine de Saint-Exupéry"},
-        {t:"The best revenge is massive success.",a:"Frank Sinatra"},
-        {t:"The only way to be truly free is to let go of everything you fear to lose.",a:"Anonymous"},
-        {t:"Privacy is the right to be left alone from the prying eyes of the world.",a:"Anonymous"},
-        {t:"The more we share, the more we have. But some things are meant to be private.",a:"Anonymous"},
-        {t:"The greatest risk is not taking one.",a:"Anonymous"},
-        {t:"The only way to escape the corruptible effect of praise is to go on working.",a:"Albert Einstein"},
-        {t:"The most important thing is to enjoy your life—to be happy—it's all that matters.",a:"Audrey Hepburn"},
-        {t:"The only person you are destined to become is the person you decide to be.",a:"Ralph Waldo Emerson"},
-        {t:"The only truth is that there is no truth.",a:"Anonymous"},
-        {t:"The only thing worth stealing is a kiss from a sleeping child.",a:"Joe Haldeman"},
-        {t:"The only way to discover the limits of the possible is to go beyond them into the impossible.",a:"Arthur C. Clarke"}
-    ];
-
-    /* ── NOTIFICATIONS ─────────────────────────────── */
-    var notifsEl = document.getElementById('notifs');
-    window.showNotif = function(msg){
-        var n = document.createElement('div');
-        n.className = 'notif';
-        n.textContent = msg;
-        notifsEl.appendChild(n);
-        setTimeout(function(){
-            n.classList.add('out');
-            setTimeout(function(){ n.remove(); }, 500);
-        }, 2500);
-        var all = notifsEl.querySelectorAll('.notif');
-        while (all.length > 5) { all[0].remove(); all = notifsEl.querySelectorAll('.notif'); }
-    };
-
-    /* ── SPLASH ────────────────────────────────────── */
-    var splash = document.getElementById('splash');
-    var qEl = document.getElementById('splashQuote');
-    var q = quotes[Math.floor(Math.random()*quotes.length)];
-    qEl.innerHTML = '“' + q.t + '”<span class="author">— ' + q.a + '</span>';
-
-    setTimeout(function(){
-        splash.classList.add('hide');
-        document.getElementById('main').classList.add('on');
-    }, 3200);
-
-    /* ── OVERLAY ───────────────────────────────────── */
-    var overlay = document.getElementById('overlay');
-    var overlayFrame = document.getElementById('overlayFrame');
-    var overlayTitle = document.getElementById('overlayTitle');
-    var overlayWindow = overlay.querySelector('.overlay-window');
-
-    window.openOverlay = function(url, name){
-        overlayTitle.textContent = 'Viewing: ' + (name || url);
-        overlayFrame.src = url;
-        overlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        setTimeout(function(){ overlayFrame.focus(); }, 300);
-        showNotif('Opening ' + (name || url));
-    };
-
-    window.closeOverlay = function(){
-        overlay.classList.remove('show');
-        document.body.style.overflow = '';
-        setTimeout(function(){ overlayFrame.src = 'about:blank'; }, 500);
-        setTimeout(function(){
-            window.location.href = 'https://classroom.google.com';
-        }, 300);
-    };
-
-    window.minimizeOverlay = function(){
-        overlayWindow.style.transition = 'all 0.5s cubic-bezier(0.2,0.9,0.3,1)';
-        overlayWindow.style.maxWidth = '340px';
-        overlayWindow.style.height = '50px';
-        overlayWindow.style.transform = 'translateY(40vh)';
-        overlayWindow.style.borderRadius = '12px';
-
-        var body = overlayWindow.querySelector('.window-body');
-        var actions = overlayWindow.querySelector('.win-actions');
-        if (body) body.style.display = 'none';
-        if (actions) actions.style.display = 'none';
-
-        showNotif('Minimized — click green to restore');
-    };
-
-    window.restoreOverlay = function(){
-        overlayWindow.style.transition = 'all 0.5s cubic-bezier(0.2,0.9,0.3,1)';
-        overlayWindow.style.maxWidth = '';
-        overlayWindow.style.height = '';
-        overlayWindow.style.transform = '';
-        overlayWindow.style.borderRadius = '';
-
-        setTimeout(function(){
-            var body = overlayWindow.querySelector('.window-body');
-            var actions = overlayWindow.querySelector('.win-actions');
-            if (body) body.style.display = '';
-            if (actions) actions.style.display = '';
-        }, 300);
-
-        showNotif('Restored');
-    };
-
-    document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape' && overlay.classList.contains('show')) closeOverlay();
-    });
-
-    /* ── APP WINDOW BUTTONS ────────────────────────── */
-    var appWindow = document.getElementById('appWindow');
-
-    window.closeApp = function(){
-        appWindow.style.animation = 'windowIn 0.35s cubic-bezier(0.2,0.9,0.3,1) reverse';
-        setTimeout(function(){
-            window.location.href = 'https://classroom.google.com';
-        }, 320);
-    };
-
-    window.minimizeApp = function(){
-        appWindow.classList.add('minimized');
-        showNotif('Minimized — click green to expand');
-    };
-
-    window.restoreApp = function(){
-        if (appWindow.classList.contains('minimized')) {
-            appWindow.classList.remove('minimized');
-            showNotif('Expanded');
-        } else {
-            showNotif('Already expanded');
-        }
-    };
-
-    /* ── PASS TAB LINKS (loaded from tab system if present) ── */
-    window.PASS_LINKS = [
-        // Official
-        { n:"Opium Official", u:"https://opium.best/" },
-
-        // Unblocked
-        { n:"Opium SVG 1", u:"https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg" },
-        { n:"Opium Storage", u:"https://storage.googleapis.com/opiumbest/index.html" },
-        { n:"Opium S3 1", u:"https://s3.amazonaws.com/opiumbest/index.html" },
-        { n:"Opium S3 2", u:"https://opiumbest.s3.amazonaws.com/index.html" },
-        { n:"Opium NPM", u:"https://cdn.jsdelivr.net/npm/opiumbest/index.svg" },
-        { n:"Opium GitHub", u:"https://opiumbest.github.io/" },
-        { n:"Opium jsDelivr CDN", u:"https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg" },
-        { n:"Opium Statically", u:"https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg" },
-        { n:"Opium ESM", u:"https://raw.esm.sh/gh/OpiumBest/svg/index.svg" },
-
-        // Branded partnership
-        { n:"Opium Bull S3 1", u:"https://s3.amazonaws.com/opiumbull/index.html" },
-        { n:"Opium Bull Storage", u:"https://storage.googleapis.com/opiumbull/index.html" },
-        { n:"Bull33 jsDelivr", u:"https://cdn.jsdelivr.net/gh/opiumbest/bull33/index.svg" },
-        { n:"Bull33 ESM", u:"https://raw.esm.sh/gh/OpiumBest/bull33/index.svg" },
-        { n:"Bull33 Statically", u:"https://cdn.statically.io/gh/OpiumBest/bull33@main/index.svg" },
-        { n:"Opium Bull S3 2", u:"https://opiumbull.s3.amazonaws.com/index.html" },
-
-        // Unbranded
-        { n:"Clever S3 1", u:"https://s3.amazonaws.com/cleverlearning/index.html" },
-        { n:"Clever S3 2", u:"https://cleverlearning.s3.amazonaws.com/index.html" },
-        { n:"GClassroom", u:"https://storage.googleapis.com/gclassroom/index.html" },
-        { n:"OPM Amplify", u:"https://opm.d2otav0547hwz0.amplifyapp.com/" },
-        { n:"Classroom NPM", u:"https://cdn.jsdelivr.net/npm/classroomlearning/index.svg" }
-    ];
-
-    /* ── SEARCH / MIRROR ───────────────────────────── */
-    var STORE = 'mirror_history_v1';
-    var MAX_HIST = 12;
-
-    function getHist(){
-        try { return JSON.parse(localStorage.getItem(STORE) || '[]'); }
-        catch(e){ return []; }
-    }
-    function saveHist(l){
-        try { localStorage.setItem(STORE, JSON.stringify(l)); } catch(e){}
-    }
-    function addHist(url){
-        var l = getHist().filter(function(x){ return x.url !== url; });
-        l.unshift({ url: url, time: Date.now() });
-        if (l.length > MAX_HIST) l = l.slice(0, MAX_HIST);
-        saveHist(l);
-        renderHist();
-    }
-    function rmHist(url){
-        saveHist(getHist().filter(function(x){ return x.url !== url; }));
-        renderHist();
-    }
-    window.clearHistory = function(){
-        localStorage.removeItem(STORE);
-        renderHist();
-        showNotif('History cleared');
-    };
-
-    function renderHist(){
-        var l = getHist();
-        var box = document.getElementById('historyList');
-        box.innerHTML = '';
-        if (!l.length) {
-            box.innerHTML = '<div class="empty">no recent mirrors yet</div>';
-            return;
-        }
-        l.forEach(function(item, i){
-            var row = document.createElement('div');
-            row.className = 'history-item';
-            row.style.animationDelay = (i * 0.03) + 's';
-
-            var url = document.createElement('span');
-            url.className = 'url';
-            url.textContent = item.url;
-            url.onclick = function(){ openOverlay(item.url, shorten(item.url)); };
-
-            var rm = document.createElement('span');
-            rm.className = 'rm';
-            rm.textContent = '✕';
-            rm.onclick = function(e){ e.stopPropagation(); rmHist(item.url); };
-
-            row.appendChild(url);
-            row.appendChild(rm);
-            box.appendChild(row);
-        });
-    }
-
-    function shorten(url){
+    function dispatchBlocked(url, reason) {
         try {
-            var u = new URL(url);
-            var h = u.hostname.replace(/^www\./, '');
-            return h.length > 28 ? h.slice(0,26) + '…' : h;
-        } catch(e){ return url.length > 28 ? url.slice(0,26) + '…' : url; }
+            window.dispatchEvent(new CustomEvent('dreading:blocked', {
+                detail: { url: url, reason: reason, count: blockedCount }
+            }));
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('Blocked: ' + reason, '🛡️');
+            }
+        } catch (e) {}
     }
 
-    function normalize(input){
-        var url = (input || '').trim();
-        if (!url) return null;
-        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-        try { return new URL(url).href; } catch(e){ return null; }
-    }
-
-    window.mirrorLink = function(){
-        var inp = document.getElementById('searchInput');
-        var url = normalize(inp.value);
-        if (!url) { showNotif('Invalid URL'); return; }
-        addHist(url);
-        openOverlay(url, shorten(url));
-        inp.value = '';
+    window.Lockdown = {
+        count: function() { return blockedCount; },
+        reset: function() { blockedCount = 0; },
+        allow: function(domain) {
+            if (ALLOWED_DOMAINS.indexOf(domain) === -1) {
+                ALLOWED_DOMAINS.push(domain);
+                console.log('[LOCKDOWN] Allowed:', domain);
+            }
+        },
+        list: function() { return ALLOWED_DOMAINS.slice(); }
     };
 
-    document.getElementById('searchInput').addEventListener('keydown', function(e){
-        if (e.key === 'Enter'){ e.preventDefault(); mirrorLink(); }
+    console.log(
+        '%c🔒 DREADING LOCKDOWN ACTIVE%c\n' +
+        'External tabs are blocked. Type %cLockdown.count()%c to see stats.',
+        'background: #e74c3c; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 14px;',
+        'color: #c8bcd8; font-size: 12px;',
+        'background: rgba(255,255,255,0.1); color: #e74c3c; padding: 2px 6px; border-radius: 4px; font-family: monospace;',
+        'color: #6a5a7a;'
+    );
+})();
+
+// ============================================================
+// MAIN MIRROR CODE
+// ============================================================
+(function() {
+    var quotes = [
+        { text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.", author: "Albert Camus" },
+        { text: "Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.", author: "Gary Kovacs" },
+        { text: "The right to privacy is the right to be let alone.", author: "Samuel D. Warren" },
+        { text: "Privacy is power. What people don't know, they can't ruin.", author: "Anonymous" },
+        { text: "The internet is a surveillance state. Privacy is the new civil right.", author: "Edward Snowden" },
+        { text: "Privacy is the foundation of all other rights. Without privacy, there is no freedom.", author: "Anonymous" },
+        { text: "The more you know, the more you realize you know nothing.", author: "Socrates" },
+        { text: "Freedom is not worth having if it does not include the freedom to make mistakes.", author: "Mahatma Gandhi" },
+        { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+        { text: "Knowledge is power. Information is liberating.", author: "Kofi Annan" },
+        { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+        { text: "The only thing we have to fear is fear itself.", author: "Franklin D. Roosevelt" },
+        { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+        { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+        { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+        { text: "The unexamined life is not worth living.", author: "Socrates" },
+        { text: "I think, therefore I am.", author: "René Descartes" },
+        { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+        { text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson" },
+        { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+        { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+        { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+        { text: "The only thing standing between you and your goal is the story you keep telling yourself.", author: "Jordan Belfort" },
+        { text: "Privacy is not about hiding something. It's about having control over your own information.", author: "Anonymous" },
+        { text: "The right to privacy is the most important right in the modern world.", author: "Anonymous" },
+        { text: "In a world of surveillance, privacy is the ultimate act of rebellion.", author: "Anonymous" },
+        { text: "The future is already here — it's just not evenly distributed.", author: "William Gibson" },
+        { text: "The only way to discover the limits of the possible is to go beyond them into the impossible.", author: "Arthur C. Clarke" },
+        { text: "The universe is under no obligation to make sense to you.", author: "Neil deGrasse Tyson" },
+        { text: "We are all in the gutter, but some of us are looking at the stars.", author: "Oscar Wilde" },
+        { text: "The world is a book and those who do not travel read only one page.", author: "Augustine of Hippo" },
+        { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+        { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+        { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+        { text: "The mind is everything. What you think you become.", author: "Buddha" },
+        { text: "The only thing that interferes with my learning is my education.", author: "Albert Einstein" },
+        { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+        { text: "The greatest wealth is to live content with little.", author: "Plato" },
+        { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+        { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+        { text: "The only source of knowledge is experience.", author: "Albert Einstein" },
+        { text: "The most beautiful things in the world cannot be seen or touched, they are felt with the heart.", author: "Antoine de Saint-Exupéry" },
+        { text: "The only truth is that there is no truth.", author: "Anonymous" },
+        { text: "The best revenge is massive success.", author: "Frank Sinatra" },
+        { text: "The only way to be truly free is to let go of everything you fear to lose.", author: "Anonymous" },
+        { text: "Privacy is the right to be left alone from the prying eyes of the world.", author: "Anonymous" },
+        { text: "The more we share, the more we have. But some things are meant to be private.", author: "Anonymous" },
+        { text: "The greatest risk is not taking one.", author: "Anonymous" },
+        { text: "The only way to escape the corruptible effect of praise is to go on working.", author: "Albert Einstein" },
+        { text: "The most important thing is to enjoy your life—to be happy—it's all that matters.", author: "Audrey Hepburn" },
+        { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" }
+    ];
+
+    window.showNotification = function(message, keyHint) {
+        var container = document.getElementById('notificationContainer');
+        var notif = document.createElement('div');
+        notif.className = 'notification';
+        var text = message;
+        if (keyHint) text += ' <span class="key-hint">' + keyHint + '</span>';
+        notif.innerHTML = text;
+        container.appendChild(notif);
+        setTimeout(function() {
+            notif.classList.add('fading');
+            setTimeout(function() {
+                if (notif.parentNode) notif.parentNode.removeChild(notif);
+            }, 500);
+        }, 2500);
+        var notifs = container.querySelectorAll('.notification');
+        while (notifs.length > 5) { notifs[0].remove(); notifs = container.querySelectorAll('.notification'); }
+    };
+
+    function showSplash() {
+        var splash = document.getElementById('splashScreen');
+        var quoteEl = document.getElementById('splashQuote');
+        var randomIndex = Math.floor(Math.random() * quotes.length);
+        var quote = quotes[randomIndex];
+        quoteEl.innerHTML = '"' + quote.text + '"<span class="author">— ' + quote.author + '</span>';
+        setTimeout(function() {
+            splash.classList.add('hidden');
+            document.getElementById('mainWrapper').classList.add('visible');
+            setTimeout(function() {
+                var wrapper = document.getElementById('containerWrapper');
+                var arrow = document.getElementById('arrowIcon');
+                wrapper.classList.remove('collapsed');
+                wrapper.classList.add('expanded');
+                arrow.classList.remove('down');
+                isExpanded = true;
+            }, 400);
+        }, 3500);
+    }
+
+    var isExpanded = false;
+    window.toggleContainer = function() {
+        var wrapper = document.getElementById('containerWrapper');
+        var arrow = document.getElementById('arrowIcon');
+        if (isExpanded) {
+            wrapper.classList.remove('expanded');
+            wrapper.classList.add('collapsed');
+            arrow.classList.add('down');
+            isExpanded = false;
+        } else {
+            wrapper.classList.remove('collapsed');
+            wrapper.classList.add('expanded');
+            arrow.classList.remove('down');
+            isExpanded = true;
+        }
+    };
+
+    // ============================================================
+    // PASS LINKS (21 links - Opium + Clever + GClassroom)
+    // ============================================================
+    var passLinks = [
+        { name: "Opium Official", url: "https://opium.best/" },
+        { name: "Opium SVG 1", url: "https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg" },
+        { name: "Opium Storage", url: "https://storage.googleapis.com/opiumbest/index.html" },
+        { name: "Opium S3 1", url: "https://s3.amazonaws.com/opiumbest/index.html" },
+        { name: "Opium S3 2", url: "https://opiumbest.s3.amazonaws.com/index.html" },
+        { name: "Opium NPM", url: "https://cdn.jsdelivr.net/npm/opiumbest/index.svg" },
+        { name: "Opium GitHub", url: "https://opiumbest.github.io/" },
+        { name: "Opium jsDelivr CDN", url: "https://jsdelivr.b-cdn.net/gh/OpiumBest/svg/index.svg" },
+        { name: "Opium Statically", url: "https://cdn.statically.io/gh/OpiumBest/svg@main/index.svg" },
+        { name: "Opium ESM", url: "https://raw.esm.sh/gh/OpiumBest/svg/index.svg" },
+        { name: "Opium Bull S3 1", url: "https://s3.amazonaws.com/opiumbull/index.html" },
+        { name: "Opium Bull Storage", url: "https://storage.googleapis.com/opiumbull/index.html" },
+        { name: "Bull33 jsDelivr", url: "https://cdn.jsdelivr.net/gh/opiumbest/bull33/index.svg" },
+        { name: "Bull33 ESM", url: "https://raw.esm.sh/gh/OpiumBest/bull33/index.svg" },
+        { name: "Bull33 Statically", url: "https://cdn.statically.io/gh/OpiumBest/bull33@main/index.svg" },
+        { name: "Opium Bull S3 2", url: "https://opiumbull.s3.amazonaws.com/index.html" },
+        { name: "Clever S3 1", url: "https://s3.amazonaws.com/cleverlearning/index.html" },
+        { name: "Clever S3 2", url: "https://cleverlearning.s3.amazonaws.com/index.html" },
+        { name: "GClassroom", url: "https://storage.googleapis.com/gclassroom/index.html" },
+        { name: "OPM Amplify", url: "https://opm.d2otav0547hwz0.amplifyapp.com/" },
+        { name: "Classroom NPM", url: "https://cdn.jsdelivr.net/npm/classroomlearning/index.svg" }
+    ];
+
+    // ============================================================
+    // EXP LINKS (35 links)
+    // ============================================================
+    var expLinks = [
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/copy-2@main/main.svg",
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework/main.svg",
+        "https://zxgzmbkfogafegoaenus.supabase.co/storage/v1/object/public/test/PETEZAH/main.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/timmy-tuffnuckles.svg",
+        "https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/english.svg",
+        "https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg",
+        "https://cdn.jsdelivr.net/gh/PeteZah-G/PeteZahStaticDone@main/boii.svg",
+        "https://quantil.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://gcore.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://fastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://originfastly.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg",
+        "https://cdn.jsdelivr.net/gh/pineapple-petezah/homework@main/main.svg",
+        "https://s3.amazonaws.com/bullproxy/index.html",
+        "https://bullproxy.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/bulldebut/index.html",
+        "https://bulldebut.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/finallybull/index.html",
+        "https://finallybull.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/rahisbullsgoat/index.html",
+        "https://rahisbullsgoat.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/m0ths/index.html",
+        "https://m0ths.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/6q85/index.html",
+        "https://6q85.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/sk7v/index.html",
+        "https://sk7v.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/oiop/index.html",
+        "https://oiop.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/iuyt/index.html",
+        "https://iuyt.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/jlkl/index.html",
+        "https://jlkl.s3.amazonaws.com/index.html"
+    ];
+
+    // ============================================================
+    // FREE LINKS (62 links)
+    // ============================================================
+    var freeLinks = [
+        "https://storage.googleapis.com/fernisbest/index.html",
+        "https://s3.amazonaws.com/fernisbest/index.html",
+        "https://s3.amazonaws.com/fernlinks/index.html",
+        "https://s3.amazonaws.com/classworks/index.html",
+        "https://s3.amazonaws.com/bull33/index.html",
+        "https://s3.amazonaws.com/bullbestyoutuber/index.html",
+        "https://s3.amazonaws.com/bulledu/index.html",
+        "https://s3.amazonaws.com/bullguardian/index.html",
+        "https://s3.amazonaws.com/bullisgoated/index.html",
+        "https://s3.amazonaws.com/bulllightspeed/index.html",
+        "https://s3.amazonaws.com/bullmath/index.html",
+        "https://s3.amazonaws.com/bullubg/index.html",
+        "https://s3.amazonaws.com/iloveliteratures/index.html",
+        "https://s3.amazonaws.com/ilovemaths/index.html",
+        "https://s3.amazonaws.com/lsrelay-extension-production/index.html",
+        "https://s3.amazonaws.com/macrolo/index.html",
+        "https://s3.amazonaws.com/macrologoat/index.html",
+        "https://s3.amazonaws.com/macrolomath/index.html",
+        "https://s3.amazonaws.com/angelfern/index.html",
+        "https://s3.amazonaws.com/deaganfern/index.html",
+        "https://bullbestyoutuber.s3.amazonaws.com/index.html",
+        "https://bulledu.s3.amazonaws.com/index.html",
+        "https://bullguardian.s3.amazonaws.com/index.html",
+        "https://bullisgoated.s3.amazonaws.com/index.html",
+        "https://bulllightspeed.s3.amazonaws.com/index.html",
+        "https://bullmath.s3.amazonaws.com/index.html",
+        "https://bullubg.s3.amazonaws.com/index.html",
+        "https://iloveliteratures.s3.amazonaws.com/index.html",
+        "https://ilovemaths.s3.amazonaws.com/index.html",
+        "https://lsrelay-extension-production.s3.amazonaws.com/index.html",
+        "https://macrolo.s3.amazonaws.com/index.html",
+        "https://macrologoat.s3.amazonaws.com/index.html",
+        "https://macrolomath.s3.amazonaws.com/index.html",
+        "https://angelfern.s3.amazonaws.com/index.html",
+        "https://deaganfern.s3.amazonaws.com/index.html",
+        "https://bullreading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/bullreading/index.html",
+        "https://fern-s3t.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fern-s3t/index.html",
+        "https://fernvcsa.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fernvcsa/index.html",
+        "https://fsmath.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fsmath/index.html",
+        "https://fsreading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fsreading/index.html",
+        "https://fstudentsareinventors.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/fstudentsareinventors/index.html",
+        "https://glwithfinals.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/glwithfinals/index.html",
+        "https://mathvc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/mathvc/index.html",
+        "https://onelastlink.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/onelastlink/index.html",
+        "https://readvc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/readvc/index.html",
+        "https://vcsafern.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsafern/index.html",
+        "https://vcsamath.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsamath/index.html",
+        "https://vcsareading.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/vcsareading/index.html",
+        "https://writevc.s3.amazonaws.com/index.html",
+        "https://s3.amazonaws.com/writevc/index.html"
+    ];
+
+    // ============================================================
+    // PASSWORDS
+    // ============================================================
+    var PASS_PASSWORD = "new update";
+    var EXP_PASSWORD = "dreading bro";
+
+    // ============================================================
+    // RENDER LINKS
+    // ============================================================
+    function renderLinks(containerId, linksArray, type) {
+        var container = document.getElementById(containerId);
+        container.innerHTML = '';
+        for (var i = 0; i < linksArray.length; i++) {
+            var span = document.createElement('span');
+            span.className = 'link-chip';
+            var name, url;
+            if (typeof linksArray[i] === 'object') {
+                name = linksArray[i].name;
+                url = linksArray[i].url;
+            } else {
+                url = linksArray[i];
+                var parts = url.replace('https://', '').replace('http://', '').split('/');
+                name = parts[0].split('.')[0];
+                if (name.length > 20) name = name.substring(0, 18) + '…';
+            }
+            span.textContent = name;
+            span.dataset.url = url;
+            span.onclick = function() {
+                openIframeOverlay(this.dataset.url, this.textContent);
+            };
+            container.appendChild(span);
+        }
+    }
+
+    // ============================================================
+    // OPEN OVERLAY
+    // ============================================================
+    window.openIframeOverlay = function(url, name) {
+        var overlay = document.getElementById('iframeOverlay');
+        var iframe = document.getElementById('overlayIframe');
+        var title = document.getElementById('iframeTitle');
+        title.textContent = 'Viewing: ' + name;
+        iframe.src = url;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        overlay.style.opacity = '0';
+        setTimeout(function() { overlay.style.opacity = '1'; }, 50);
+        showNotification('Opening ' + name + '...', '');
+    };
+
+    // ============================================================
+    // CLOSE OVERLAY
+    // ============================================================
+    window.closeIframeOverlay = function() {
+        var overlay = document.getElementById('iframeOverlay');
+        var iframe = document.getElementById('overlayIframe');
+        overlay.style.opacity = '0';
+        setTimeout(function() {
+            overlay.classList.remove('active');
+            iframe.src = 'about:blank';
+            document.body.style.overflow = '';
+        }, 800);
+        showNotification('Closed', '');
+    };
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            var overlay = document.getElementById('iframeOverlay');
+            if (overlay.classList.contains('active')) closeIframeOverlay();
+        }
     });
 
-    renderHist();
+    // ============================================================
+    // TAB SWITCHING
+    // ============================================================
+    window.showTab = function(tabName) {
+        var panels = document.querySelectorAll('.panel');
+        for (var i = 0; i < panels.length; i++) panels[i].classList.remove('active');
+        document.getElementById('panel-' + tabName).classList.add('active');
+        var allButtons = document.querySelectorAll('.tab-btn');
+        for (var i = 0; i < allButtons.length; i++) allButtons[i].classList.remove('active');
+        for (var i = 0; i < allButtons.length; i++) {
+            if (allButtons[i].textContent.trim().toLowerCase().includes(tabName.toLowerCase())) {
+                allButtons[i].classList.add('active');
+                break;
+            }
+        }
+        document.getElementById('passErrorMsg').classList.remove('show');
+        document.getElementById('expErrorMsg').classList.remove('show');
+    };
 
-    console.log('%c✓ mirror ready','background:#4a9eff;color:#fff;padding:3px 8px;border-radius:4px;font-weight:600;');
-    console.log('Pass tab links loaded:', window.PASS_LINKS.length);
+    // ============================================================
+    // PASS UNLOCK
+    // ============================================================
+    function unlockPass() {
+        var input = document.getElementById('passPasswordInput');
+        var entered = input.value.trim();
+        if (entered === PASS_PASSWORD) {
+            var content = document.getElementById('passContent');
+            content.classList.remove('locked');
+            content.classList.add('unlocked');
+            document.getElementById('passErrorMsg').classList.remove('show');
+            input.value = '';
+            document.getElementById('passUnlockBtn').textContent = 'unlocked';
+            document.getElementById('passUnlockBtn').style.opacity = '0.6';
+            showNotification('Pass unlocked!', '');
+        } else {
+            document.getElementById('passErrorMsg').classList.add('show');
+            showNotification('Wrong password!', '');
+            setTimeout(function() { document.getElementById('passErrorMsg').classList.remove('show'); }, 2000);
+        }
+    }
+
+    // ============================================================
+    // EXP UNLOCK
+    // ============================================================
+    function unlockExp() {
+        var input = document.getElementById('expPasswordInput');
+        var entered = input.value.trim();
+        if (entered === EXP_PASSWORD) {
+            var content = document.getElementById('expContent');
+            content.classList.remove('locked');
+            content.classList.add('unlocked');
+            document.getElementById('expErrorMsg').classList.remove('show');
+            input.value = '';
+            document.getElementById('expUnlockBtn').textContent = 'unlocked';
+            document.getElementById('expUnlockBtn').style.opacity = '0.6';
+            showNotification('Exp unlocked!', '');
+        } else {
+            document.getElementById('expErrorMsg').classList.add('show');
+            showNotification('Wrong password!', '');
+            setTimeout(function() { document.getElementById('expErrorMsg').classList.remove('show'); }, 2000);
+        }
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    renderLinks('passLinks', passLinks, 'pass');
+    renderLinks('expLinks', expLinks, 'exp');
+    renderLinks('freeLinks', freeLinks, 'free');
+
+    document.getElementById('passUnlockBtn').addEventListener('click', unlockPass);
+    document.getElementById('passPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') unlockPass();
+    });
+
+    document.getElementById('expUnlockBtn').addEventListener('click', unlockExp);
+    document.getElementById('expPasswordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') unlockExp();
+    });
+
+    showSplash();
+
+    console.log('Pass password: "new update"');
+    console.log('Exp password: "dreading bro"');
+    console.log(quotes.length + ' quotes loaded');
+    console.log('Ad blocker active - external tabs blocked');
 })();
-</script>
-
-</body>
-</html>
