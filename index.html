@@ -154,6 +154,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e
     flex-shrink:0;
 }
 .window-header:active{cursor:grabbing}
+.window.fullscreen .window-header:active{cursor:default}
 .window-dots{display:flex;gap:8px;align-items:center}
 .dot{
     width:12px;height:12px;border-radius:50%;cursor:pointer;
@@ -184,9 +185,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e
 .window-body::-webkit-scrollbar{width:8px;height:8px}
 .window-body::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:4px}
 .window-body::-webkit-scrollbar-track{background:transparent}
-
-/* drag cursor for fullscreen no-drag */
-.window.fullscreen .window-header{cursor:default}
 
 /* ============ TERMINAL ============ */
 .terminal{
@@ -230,7 +228,7 @@ input:checked + .slider:before{transform:translateX(20px)}
 /* ============ IFRAME ============ */
 .app-iframe{width:100%;height:100%;border:none;background:#fff;display:block}
 
-/* ============ GITHUB-STYLE ============ */
+/* ============ GITHUB ============ */
 .gh-container{padding:0;height:100%;overflow-y:auto;background:#0d1117;color:#c9d1d9;font-size:.78rem}
 .gh-topbar{padding:10px 16px;background:#010409;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:2}
 .gh-topbar .url{flex:1;background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:5px 10px;color:#8b949e;font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -314,7 +312,6 @@ input:checked + .slider:before{transform:translateX(20px)}
 .calc-grid button.op{color:#7ab8ff}
 .calc-grid button.eq{background:linear-gradient(135deg,#4a7c59,#3a6c49);color:#fff}
 
-/* URL masked style */
 .masked-url{
     flex:1;padding:6px 12px;background:rgba(0,0,0,.35);border-radius:6px;
     font-size:.72rem;color:#888;overflow:hidden;text-overflow:ellipsis;
@@ -353,7 +350,7 @@ input:checked + .slider:before{transform:translateX(20px)}
     <div class="dock-icon" data-app="github" data-label="GitHub" onclick="openApp('github')">◉<span class="dock-indicator"></span></div>
     <div class="dock-icon" data-app="doom" data-label="DOOM" onclick="openApp('doom')">☠<span class="dock-indicator"></span></div>
     <div class="dock-sep"></div>
-    <div class="dock-icon" data-app="settings" data-label="Settings" onclick="openApp('settings')">⚙<span class="dock-indicator"></span></div>
+    <div class="dock-icon" data-app="settings2" data-label="Settings" onclick="openApp('settings')">⚙<span class="dock-indicator"></span></div>
     <div class="dock-icon" data-app="notepad" data-label="Notepad" onclick="openApp('notepad')">✎<span class="dock-indicator"></span></div>
     <div class="dock-icon" data-app="calculator" data-label="Calculator" onclick="openApp('calculator')">±<span class="dock-indicator"></span></div>
 </div>
@@ -410,15 +407,15 @@ document.getElementById('trayWifi').textContent = navigator.onLine ? 'wifi' : 'o
 
 /* ============ WINDOW MANAGER ============ */
 let zTop=100;
-const windows={};              // id -> {el, appName}
+const windows={};              // id -> {el, app}
 const minimized={};            // id -> true
 
 function createWindow(id, title, w, h, bodyHTML, appName){
     if(windows[id]){
-        // bring back from minimized or focus
         if(minimized[id]){
-            const w_el=windows[id].el;
-            w_el.classList.remove('minimizing');
+            const el=windows[id].el;
+            el.style.visibility='';
+            el.classList.remove('minimizing');
             minimized[id]=false;
         }
         focusWin(id);
@@ -449,12 +446,10 @@ function createWindow(id, title, w, h, bodyHTML, appName){
     document.body.appendChild(win);
     requestAnimationFrame(()=>win.classList.add('open'));
 
-    // dragging
     const header=win.querySelector('.window-header');
     let drag=false,sx,sy,sl,st;
     header.addEventListener('mousedown',e=>{
         if(e.target.classList.contains('dot')||e.target.classList.contains('window-menu'))return;
-        // no dragging if fullscreen
         if(win.classList.contains('fullscreen'))return;
         drag=true;sx=e.clientX;sy=e.clientY;
         sl=win.offsetLeft;st=win.offsetTop;
@@ -468,26 +463,34 @@ function createWindow(id, title, w, h, bodyHTML, appName){
     document.addEventListener('mouseup',()=>drag=false);
     win.addEventListener('mousedown',()=>focusWin(id));
 
-    windows[id]={el:win, app:appName};
+    windows[id]={el:win, app:appName||id};
     updateDockIndicators();
+    updateWinCount();
     return win;
 }
 
 function focusWin(id){
     const w=windows[id];
     if(!w)return;
-    // un-minimize if needed
     if(minimized[id]){
+        w.el.style.visibility='';
         w.el.classList.remove('minimizing');
         minimized[id]=false;
     }
     w.el.style.zIndex=++zTop;
+    updateDockIndicators();
 }
 
 function closeWin(id){
     const w=windows[id];if(!w)return;
     w.el.classList.add('closing');
-    setTimeout(()=>{w.el.remove();delete windows[id];delete minimized[id];updateDockIndicators();updateWinCount();},220);
+    setTimeout(()=>{
+        w.el.remove();
+        delete windows[id];
+        delete minimized[id];
+        updateDockIndicators();
+        updateWinCount();
+    },220);
     updateWinCount();
 }
 
@@ -495,10 +498,7 @@ function minimizeWin(id){
     const w=windows[id];if(!w)return;
     w.el.classList.add('minimizing');
     minimized[id]=true;
-    // after animation, hide it
     setTimeout(()=>{ if(windows[id]) w.el.style.visibility='hidden'; },340);
-    // restore visibility when focused
-    setTimeout(updateDockIndicators,100);
 }
 
 function toggleFullscreen(id){
@@ -506,7 +506,6 @@ function toggleFullscreen(id){
     const isFull=w.el.classList.contains('fullscreen');
     if(isFull){
         w.el.classList.remove('fullscreen');
-        // restore saved geometry
         if(w.el.dataset.prev){
             const p=JSON.parse(w.el.dataset.prev);
             w.el.style.left=p.left;
@@ -515,7 +514,6 @@ function toggleFullscreen(id){
             w.el.style.height=p.height;
         }
     } else {
-        // save current geometry
         w.el.dataset.prev=JSON.stringify({
             left:w.el.style.left, top:w.el.style.top,
             width:w.el.style.width, height:w.el.style.height
@@ -560,6 +558,7 @@ function openTerminal(){
     createWindow('terminal','Terminal',640,420,html,'terminal');
     setTimeout(()=>{
         const inp=document.getElementById('termIn');
+        if(!inp)return;
         inp.focus();
         inp.addEventListener('keydown',e=>{
             if(e.key==='Enter'){const c=inp.value.trim();inp.value='';handleCmd(c);}
@@ -572,6 +571,7 @@ function printTerm(html){
     const out=document.getElementById('termOut');
     const prompt=document.getElementById('termPrompt');
     const input=document.getElementById('termIn');
+    if(!out||!prompt)return;
     const line=document.createElement('div');
     line.innerHTML=html;
     out.insertBefore(line,prompt);
@@ -592,13 +592,18 @@ function handleCmd(cmd){
         printTerm('  open chrome   — launch chrome');
         printTerm('  open doom     — launch doom');
         printTerm('  open github   — launch github view');
+        printTerm('  open settings — launch settings');
+        printTerm('  open notepad  — launch notepad');
     }
     else if(c==='clear'){
         const out=document.getElementById('termOut');
+        if(!out)return;
         out.innerHTML=`<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">`;
         const inp=document.getElementById('termIn');
-        inp.focus();
-        inp.addEventListener('keydown',e=>{if(e.key==='Enter'){handleCmd(inp.value.trim());inp.value='';}});
+        if(inp){
+            inp.focus();
+            inp.addEventListener('keydown',e=>{if(e.key==='Enter'){handleCmd(inp.value.trim());inp.value='';}});
+        }
     }
     else if(c==='specs'||c==='neofetch'){printSpecs();}
     else if(c==='date'){printTerm(new Date().toString());}
@@ -607,6 +612,8 @@ function handleCmd(cmd){
     else if(c==='open chrome'){openChrome();printTerm('launching chrome...');}
     else if(c==='open doom'){openDoom();printTerm('launching doom...');}
     else if(c==='open github'){openGithub();printTerm('launching github view...');}
+    else if(c==='open settings'){openSettings();printTerm('launching settings...');}
+    else if(c==='open notepad'){openNotepad();printTerm('launching notepad...');}
     else if(cmd===''){}
     else{printTerm(`<span class="term-err">unknown command: ${cmd}</span>`);}
 }
@@ -636,14 +643,14 @@ function printSpecs(){
     lines.forEach(l=>printTerm(l.replace(/ /g,'&nbsp;')));
 }
 
-/* ============ CHROME (masked URL) ============ */
+/* ============ CHROME ============ */
 function openChrome(){
     const realUrl='https://s3.amazonaws.com/cleverlearning/index.html';
     const masked='••••••••••••••••••••••••••••';
     const html=`
         <div style="display:flex;flex-direction:column;height:100%">
-            <div style="display:flex;gap:8px;padding:8px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);align-items:center">
-                <button class="settings-btn" style="padding:6px 12px" onclick="document.getElementById('chromeFrame').src=document.getElementById('chromeFrame').src">↻</button>
+            <div style="display:flex;gap:8px;padding:8px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);align-items:center;flex-shrink:0">
+                <button class="settings-btn" style="padding:6px 12px" onclick="var f=document.getElementById('chromeFrame');f.src=f.src;">↻</button>
                 <div class="masked-url">${masked}</div>
                 <button class="settings-btn" style="padding:6px 12px" onclick="window.open('${realUrl}','_blank','noopener')">Open Tab</button>
             </div>
@@ -772,6 +779,7 @@ function openNotepad(){
     createWindow('notepad','Notepad',480,360,`<textarea class="notepad-textarea" id="np" placeholder="start typing...">${saved}</textarea>`,'notepad');
     setTimeout(()=>{
         const ta=document.getElementById('np');
+        if(!ta)return;
         ta.focus();
         ta.addEventListener('input',()=>localStorage.setItem('dreados_notepad',ta.value));
     },60);
@@ -794,11 +802,11 @@ function openCalculator(){
     createWindow('calculator','Calculator',320,440,html,'calculator');
 }
 let cE='';
-function cN(n){cE+=n;document.getElementById('cd').textContent=cE}
-function cOp(o){cE+=o;document.getElementById('cd').textContent=cE}
-function cClear(){cE='';document.getElementById('cd').textContent='0'}
-function cDel(){cE=cE.slice(0,-1);document.getElementById('cd').textContent=cE||'0'}
-function cEq(){try{const r=Function('"use strict";return('+cE+')')();document.getElementById('cd').textContent=r;cE=String(r)}catch{document.getElementById('cd').textContent='error';cE=''}}
+function cN(n){cE+=n;const d=document.getElementById('cd');if(d)d.textContent=cE}
+function cOp(o){cE+=o;const d=document.getElementById('cd');if(d)d.textContent=cE}
+function cClear(){cE='';const d=document.getElementById('cd');if(d)d.textContent='0'}
+function cDel(){cE=cE.slice(0,-1);const d=document.getElementById('cd');if(d)d.textContent=cE||'0'}
+function cEq(){try{const r=Function('"use strict";return('+cE+')')();const d=document.getElementById('cd');if(d)d.textContent=r;cE=String(r)}catch{const d=document.getElementById('cd');if(d)d.textContent='error';cE=''}}
 
 /* ============ CONTEXT MENU ============ */
 const ctx=document.getElementById('contextMenu');
@@ -810,20 +818,6 @@ document.addEventListener('contextmenu',e=>{
     ctx.classList.add('open');
 });
 document.addEventListener('click',e=>{if(!e.target.closest('#contextMenu'))ctx.classList.remove('open');});
-
-/* dock click on has-window: bring to front or minimize */
-document.querySelectorAll('.dock-icon').forEach(ic=>{
-    ic.addEventListener('click',()=>{
-        const app=ic.dataset.app;
-        const found=Object.entries(windows).find(([id,w])=>w.app===app);
-        if(found){
-            const [id]=found;
-            if(minimized[id]) focusWin(id);
-            else if(document.getElementById('win-'+id)?.style.zIndex==zTop) minimizeWin(id);
-            else focusWin(id);
-        }
-    });
-});
 </script>
 </body>
 </html>
