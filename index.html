@@ -1003,7 +1003,7 @@ function dodgeInit(){
 
 /* ============ TWHG ONLINE EMBED ============ */
 function startTWHG(){
-    const url='https://www.google.com/logos/2010/pacman10-i.html'; // placeholder — user can change
+    const url='https://www.google.com/logos/2010/pacman10-i.html';
     const html=`
         <div style="display:flex;flex-direction:column;height:100%;background:#000">
             <div style="display:flex;gap:8px;padding:8px;background:#1a1a1a;align-items:center;border-bottom:1px solid #333">
@@ -1015,7 +1015,7 @@ function startTWHG(){
             </div>
             <iframe src="${url}" style="flex:1;border:none;background:#000" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
         </div>`;
-    createWindow('twhg','The World\\'s Hardest Game',820,560,html,'games');
+    createWindow('twhg', "The World's Hardest Game", 820, 560, html, 'games');
 }
 
 /* ============ SNAKE ============ */
