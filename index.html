@@ -830,7 +830,7 @@ function openBrowser(){
                 history.push(url);
                 index=history.length-1;
             }
-            content.innerHTML='<iframe class="browser-iframe" src="'+url+'" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>';
+            content.innerHTML='<iframe class="browser-iframe" src="'+url+'" referrerpolicy="no-referrer"></iframe>';
             input.value='•••••••••••••••••••••••••••';
             try{tabLabel.textContent=new URL(url).hostname.replace(/^www\./,'');}catch(e){tabLabel.textContent='New Tab';}
             updateNavBtns();
@@ -871,6 +871,25 @@ function openBrowser(){
             updateNavBtns();
         });
         wireHome();
+
+        /* Hijack middle-click and ctrl+click on any link so they stay in the iframe */
+        document.addEventListener('click', function(e){
+            if(!(e.ctrlKey || e.metaKey || e.shiftKey)) return;
+            const a = e.target.closest('a');
+            if(a && a.href){
+                const f = document.querySelector('.browser-iframe');
+                if(f){ e.preventDefault(); e.stopPropagation(); f.src = a.href; }
+            }
+        }, true);
+
+        document.addEventListener('auxclick', function(e){
+            if(e.button !== 1) return;
+            const a = e.target.closest('a');
+            if(a && a.href){
+                const f = document.querySelector('.browser-iframe');
+                if(f){ e.preventDefault(); e.stopPropagation(); f.src = a.href; }
+            }
+        }, true);
     },80);
 }
 
