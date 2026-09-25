@@ -780,14 +780,14 @@ function openBrowser(){
     const html=`
     <div class="browser" id="browserRoot">
         <div class="browser-tabs">
-            <div class="browser-tab"><div class="fav"></div><div class="label">New Tab</div><div class="close-x">✕</div></div>
-            <button class="browser-newtab" title="New Tab">+</button>
+            <div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div><div class="close-x">✕</div></div>
+            <button class="browser-newtab" title="New Tab" onclick="brHome()">+</button>
         </div>
         <div class="browser-toolbar">
-            <button class="browser-btn" id="brBack" disabled>←</button>
-            <button class="browser-btn" id="brFwd" disabled>→</button>
-            <button class="browser-btn" id="brReload">↻</button>
-            <button class="browser-btn" id="brHome">⌂</button>
+            <button class="browser-btn" id="brBack" disabled title="Back">←</button>
+            <button class="browser-btn" id="brFwd" disabled title="Forward">→</button>
+            <button class="browser-btn" id="brReload" title="Reload">↻</button>
+            <button class="browser-btn" id="brHome" title="Home">⌂</button>
             <div class="browser-omnibox">
                 <span class="lock">🔒</span>
                 <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
@@ -806,31 +806,84 @@ function openBrowser(){
         const content=document.getElementById('brContent');
         const home=document.getElementById('brHome');
         const reload=document.getElementById('brReload');
+        const back=document.getElementById('brBack');
+        const fwd=document.getElementById('brFwd');
+        const tabLabel=document.getElementById('brTabLabel');
         if(!input||!content)return;
+
+        // history tracking
+        window._brHistory = [];
+        window._brIndex = -1;
+
         input.addEventListener('keydown',e=>{
             if(e.key==='Enter'){
                 const v=input.value.trim();
-                if(v)loadUrl(v);
+                if(v && v.indexOf('•••')===-1) loadUrl(v);
             }
         });
-        home.addEventListener('click',()=>{content.innerHTML=renderHomePage();input.value='';wireHome();});
-        reload.addEventListener('click',()=>{const f=content.querySelector('iframe');if(f)f.src=f.src;});
-        wireHome();
-        function wireHome(){
-            content.querySelectorAll('.link-card').forEach(el=>{
-                el.addEventListener('click',()=>{
-                    const url=el.dataset.url;
-                    loadUrl(url);
-                });
-            });
+
+        home.addEventListener('click',()=>brHome());
+        reload.addEventListener('click',()=>{
+            const f=content.querySelector('iframe');
+            if(f)f.src=f.src;
+        });
+        back.addEventListener('click',()=>{
+            if(window._brIndex>0){
+                window._brIndex--;
+                const url=window._brHistory[window._brIndex];
+                renderIframe(url,false);
+            }
+            updateNavBtns();
+        });
+        fwd.addEventListener('click',()=>{
+            if(window._brIndex<window._brHistory.length-1){
+                window._brIndex++;
+                const url=window._brHistory[window._brIndex];
+                renderIframe(url,false);
+            }
+            updateNavBtns();
+        });
+
+        function updateNavBtns(){
+            back.disabled = window._brIndex <= 0;
+            fwd.disabled = window._brIndex >= window._brHistory.length-1;
         }
-        function loadUrl(url){
-            if(!url.startsWith('http'))url='https://'+url;
+
+        function renderIframe(url, pushHistory){
+            if(pushHistory!==false){
+                window._brHistory = window._brHistory.slice(0, window._brIndex+1);
+                window._brHistory.push(url);
+                window._brIndex = window._brHistory.length-1;
+            }
             content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
             input.value='•••••••••••••••••••••••••••';
+            try{
+                const host=new URL(url).hostname.replace(/^www\./,'');
+                tabLabel.textContent=host;
+            }catch(e){tabLabel.textContent='New Tab';}
+            updateNavBtns();
         }
+
+        function loadUrl(url){
+            if(!url.startsWith('http'))url='https://'+url;
+            renderIframe(url,true);
+        }
+
+        window.brHome=function(){
+            content.innerHTML=renderHomePage();
+            input.value='';
+            tabLabel.textContent='New Tab';
+            wireHome();
+        };
+
+        function wireHome(){
+            content.querySelectorAll('.link-card').forEach(el=>{
+                el.addEventListener('click',()=>loadUrl(el.dataset.url));
+            });
+        }
+        wireHome();
     },80);
-}
+        }
 function renderHomePage(){
     // group by tag
     const groups={};
