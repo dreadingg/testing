@@ -1589,7 +1589,7 @@ function pomoStart(min){
         const m=Math.floor(pomoSec/60), s=pomoSec%60;
         const el=document.getElementById('pomoTime');
         if(el)el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-        if(pomoSec<=0){pomoStop();alert('Time\\'s up!');}
+        if(pomoSec<=0){pomoStop();alert("Time's up!");}
     },1000);
     const el=document.getElementById('pomoTime');
     if(el)el.textContent=String(min).padStart(2,'0')+':00';
