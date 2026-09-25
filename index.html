@@ -129,14 +129,26 @@ body.light .settings-row input[type=text]{background:rgba(255,255,255,.7)}
 
 /* GITHUB */
 .gh-container{padding:0;height:100%;overflow-y:auto;background:#0d1117;color:#c9d1d9;font-size:calc(.78rem * var(--ui-scale))}
-.gh-topbar{padding:10px 16px;background:#010409;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px}
+.gh-topbar{padding:10px 16px;background:#010409;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:2}
 .gh-topbar .url{flex:1;background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:5px 10px;color:#8b949e;font-size:calc(.72rem * var(--ui-scale));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gh-topbar .gh-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:calc(.72rem * var(--ui-scale))}
+.gh-topbar .gh-btn:hover{background:#30363d}
 .gh-content{padding:20px 24px}
 .gh-repo-title{font-size:calc(1rem * var(--ui-scale));margin-bottom:12px}
 .gh-repo-title .owner,.gh-repo-title .name{color:#58a6ff}
+.gh-repo-title .name{font-weight:600}
+.gh-badge{font-size:calc(.65rem * var(--ui-scale));padding:1px 7px;border:1px solid #30363d;border-radius:20px;color:#8b949e;margin-left:6px}
+.gh-tabs{display:flex;gap:14px;border-bottom:1px solid #21262d;margin-bottom:16px;font-size:calc(.76rem * var(--ui-scale))}
+.gh-tabs div{padding:8px 0;color:#8b949e;cursor:pointer}
+.gh-tabs div.active{color:#c9d1d9;border-bottom:2px solid #f78166;margin-bottom:-1px}
+.gh-file-row{padding:7px 0;border-bottom:1px solid #161b22;display:flex;gap:10px;align-items:center;font-size:calc(.76rem * var(--ui-scale))}
+.gh-file-row .icon{color:#8b949e}
+.gh-file-row .name{color:#58a6ff;cursor:pointer}
+.gh-file-row .msg{color:#8b949e;flex:1}
+.gh-file-row .time{color:#6e7681;font-size:calc(.7rem * var(--ui-scale))}
 .gh-readme{margin-top:20px;padding:16px;border:1px solid #21262d;border-radius:6px;background:#0d1117}
 .gh-readme h2{font-size:calc(.95rem * var(--ui-scale));margin-bottom:8px;border-bottom:1px solid #21262d;padding-bottom:6px}
+.gh-readme p{color:#8b949e;font-size:calc(.75rem * var(--ui-scale));line-height:1.6;margin-bottom:8px}
 
 /* CONTEXT MENU */
 #contextMenu{position:absolute;background:rgba(18,18,28,.97);backdrop-filter:blur(22px);border:1px solid var(--border);border-radius:10px;padding:6px;display:none;z-index:2000;min-width:200px;box-shadow:0 14px 40px rgba(0,0,0,.7);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s cubic-bezier(.34,1.4,.64,1)}
@@ -165,7 +177,7 @@ body.light .notepad-textarea{background:rgba(255,255,255,.5);color:#222}
 .calc-grid button.eq{background:linear-gradient(135deg,#4a7c59,#3a6c49);color:#fff;grid-row:span 2}
 .calc-help{padding:6px 10px;font-size:calc(.65rem * var(--ui-scale));color:#666;font-family:'Menlo',monospace;text-align:center}
 
-/* ============ DREADDREADGO BROWSER ============ */
+/* DREADDREADGO BROWSER */
 .browser{display:flex;flex-direction:column;height:100%;background:#f7f7f7;color:#333;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 .browser-tabs{display:flex;align-items:center;padding:6px 8px 0;gap:4px;background:#dee1e3;height:calc(38px * var(--ui-scale));flex-shrink:0}
 .browser-tab{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:calc(7px * var(--ui-scale)) calc(14px * var(--ui-scale));background:#f7f7f7;border-radius:8px 8px 0 0;font-size:calc(.72rem * var(--ui-scale));color:#333;max-width:220px}
@@ -186,8 +198,6 @@ body.light .notepad-textarea{background:rgba(255,255,255,.5);color:#222}
 .browser-warn b{color:#5a2a00}
 .browser-content{flex:1;background:#fff;position:relative;overflow:hidden}
 .browser-iframe{width:100%;height:100%;border:none;background:#fff;display:block}
-
-/* DreadDreadGo home */
 .ddg-home{padding:calc(30px * var(--ui-scale)) calc(40px * var(--ui-scale));overflow-y:auto;height:100%;background:#fff;color:#333}
 .ddg-logo{text-align:center;margin-bottom:calc(30px * var(--ui-scale))}
 .ddg-logo .wordmark{position:relative;display:inline-block;font-size:calc(3rem * var(--ui-scale));font-weight:800;letter-spacing:-2px;color:#de5833;font-family:'Segoe UI',Arial,sans-serif;line-height:1;padding:6px 10px}
@@ -330,8 +340,8 @@ let bi=0;
 const desktop=document.getElementById('desktop');
 const savedBg=localStorage.getItem('dreados_bg');
 const wallUrl=localStorage.getItem('dos_wall_url');
-if(savedBg){desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${savedBg})`;}
-else if(wallUrl){desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${wallUrl})`;}
+if(savedBg){desktop.classList.add('wallpaper');desktop.style.backgroundImage='url('+savedBg+')';}
+else if(wallUrl){desktop.classList.add('wallpaper');desktop.style.backgroundImage='url('+wallUrl+')';}
 applySettings();
 
 /* CLOCK */
@@ -360,18 +370,17 @@ function createWindow(id,title,w,h,bodyHTML,appName){
     win.style.top=(Math.max(40,(window.innerHeight-h)/2+off-50))+'px';
     win.style.width=w+'px';win.style.height=h+'px';
     win.style.zIndex=++zTop;
-    win.innerHTML=`
-        <div class="window-header">
-            <div class="window-dots">
-                <div class="dot red"    onclick="event.stopPropagation();closeWin('${id}')"></div>
-                <div class="dot yellow" onclick="event.stopPropagation();minimizeWin('${id}')"></div>
-                <div class="dot green"  onclick="event.stopPropagation();toggleFullscreen('${id}')"></div>
-            </div>
-            <div class="window-title">${title}</div>
-            <div class="window-menu" onclick="event.stopPropagation();">⋯</div>
-        </div>
-        <div class="window-body" id="body-${id}">${bodyHTML}</div>
-        <div class="resize-handle" data-win="${id}"></div>`;
+    win.innerHTML='<div class="window-header">'
+        +'<div class="window-dots">'
+        +'<div class="dot red" onclick="event.stopPropagation();closeWin(\''+id+'\')"></div>'
+        +'<div class="dot yellow" onclick="event.stopPropagation();minimizeWin(\''+id+'\')"></div>'
+        +'<div class="dot green" onclick="event.stopPropagation();toggleFullscreen(\''+id+'\')"></div>'
+        +'</div>'
+        +'<div class="window-title">'+title+'</div>'
+        +'<div class="window-menu" onclick="event.stopPropagation();">⋯</div>'
+        +'</div>'
+        +'<div class="window-body" id="body-'+id+'">'+bodyHTML+'</div>'
+        +'<div class="resize-handle" data-win="'+id+'"></div>';
     document.body.appendChild(win);
     requestAnimationFrame(()=>win.classList.add('open'));
 
@@ -443,9 +452,8 @@ function focusWin(id){const w=windows[id];if(!w)return;
     w.el.style.zIndex=++zTop;updateDockIndicators();}
 function closeWin(id){const w=windows[id];if(!w)return;
     w.el.classList.add('closing');
-    ['snake','pong','breakout','matrix','pipes','dodge','game2048','simon','whack'].forEach(g=>{
-        if(id===g&&window['_'+g+'Int'])clearInterval(window['_'+g+'Int']);
-    });
+    const ivs=['_snakeInt','_pongInt','_brInt','_matrixInt','_pipesInt','_dodgeInt','_g2048Int','_simonInt','_whackInt','_whackTick','_whackSpawn','_pomoInt'];
+    ivs.forEach(k=>{if(window[k])clearInterval(window[k]);});
     setTimeout(()=>{w.el.remove();delete windows[id];delete minimized[id];updateDockIndicators();updateWinCount();},220);
     updateWinCount();}
 function minimizeWin(id){const w=windows[id];if(!w)return;
@@ -482,11 +490,10 @@ function openApp(name){
 
 /* ============ TERMINAL ============ */
 function openTerminal(){
-    const html=`
-        <div class="terminal" id="termOut">
-<span style="color:#666">Welcome to dreadOS 1.0 — type "help" for commands.</span>
-<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">
-        </div>`;
+    const html='<div class="terminal" id="termOut">'
+        +'<span style="color:#666">Welcome to dreadOS 1.0 — type "help" for commands.</span>\n'
+        +'<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">'
+        +'</div>';
     createWindow('terminal','Terminal',720,460,html,'terminal');
     setTimeout(()=>{
         const inp=document.getElementById('termIn');
@@ -505,7 +512,7 @@ function printTerm(html){
     out.insertBefore(line,prompt);out.scrollTop=out.scrollHeight;
 }
 function handleCmd(cmd){
-    printTerm(`<span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span> ${cmd}`);
+    printTerm('<span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span> '+cmd);
     const c=cmd.toLowerCase().trim();
     const parts=c.split(/\s+/);
     const base=parts[0];
@@ -523,7 +530,7 @@ function handleCmd(cmd){
     }
     else if(base==='clear'){
         const out=document.getElementById('termOut');if(!out)return;
-        out.innerHTML=`<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">`;
+        out.innerHTML='<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">';
         const inp=document.getElementById('termIn');
         if(inp){inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter'){handleCmd(inp.value.trim());inp.value='';}});}
     }
@@ -544,7 +551,7 @@ function handleCmd(cmd){
         printTerm('└── <span style="color:#a04bd4">README.md</span>');
     }
     else if(base==='history'){printTerm('(history not saved in this session)');}
-    else if(base==='man'){printTerm(parts[1]?`No manual entry for ${parts[1]}. Try "help".`:'What manual page do you want?');}
+    else if(base==='man'){printTerm(parts[1]?('No manual entry for '+parts[1]+'. Try "help".'):'What manual page do you want?');}
     else if(base==='echo'){printTerm(cmd.substring(5));}
     else if(base==='cowsay'){
         const msg=cmd.substring(7)||'moo';
@@ -583,11 +590,11 @@ function handleCmd(cmd){
     else if(base==='play'){
         const g=parts[1];
         const map={snake:startSnake,tictactoe:startTicTacToe,pong:startPong,memory:startMemory,breakout:startBreakout,dodge:startDodge,twhg:startTWHG,doom:openDoom,2048:start2048,simon:startSimon,whack:startWhack};
-        if(map[g]){map[g]();printTerm(`<span class="term-ok">launching ${g}...</span>`);}
-        else printTerm(`<span class="term-err">unknown game: ${g||'(none)'}</span>`);
+        if(map[g]){map[g]();printTerm('<span class="term-ok">launching '+g+'...</span>');}
+        else printTerm('<span class="term-err">unknown game: '+(g||'(none)')+'</span>');
     }
     else if(cmd===''){}
-    else{printTerm(`<span class="term-err">unknown command: ${cmd}</span> — type "help"`);}
+    else{printTerm('<span class="term-err">unknown command: '+cmd+'</span> — type "help"');}
 }
 
 function printSpecs(){
@@ -608,17 +615,17 @@ function printSpecs(){
         '<span style="color:#7ab8ff;font-weight:600">dread</span><span style="color:#666">@</span><span style="color:#a04bd4;font-weight:600">dreados</span>',
         '<span style="color:#666">──────────────────</span>',
         '<span style="color:#7ab8ff;font-weight:600">OS</span>       dreadOS 1.0 (browser)',
-        '<span style="color:#7ab8ff;font-weight:600">Host</span>     ' + (navigator.userAgentData?.platform||navigator.platform||'unknown'),
-        '<span style="color:#7ab8ff;font-weight:600">Kernel</span>   ' + (navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/)?.[0]||'unknown'),
-        '<span style="color:#7ab8ff;font-weight:600">Uptime</span>   ' + Math.floor(performance.now()/1000) + 's',
+        '<span style="color:#7ab8ff;font-weight:600">Host</span>     '+(navigator.userAgentData?.platform||navigator.platform||'unknown'),
+        '<span style="color:#7ab8ff;font-weight:600">Kernel</span>   '+(navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/)?.[0]||'unknown'),
+        '<span style="color:#7ab8ff;font-weight:600">Uptime</span>   '+Math.floor(performance.now()/1000)+'s',
         '<span style="color:#7ab8ff;font-weight:600">Shell</span>    dreadsh 1.0',
-        '<span style="color:#7ab8ff;font-weight:600">Res</span>      ' + screen.width + 'x' + screen.height,
-        '<span style="color:#7ab8ff;font-weight:600">CPU</span>      ' + (navigator.hardwareConcurrency||'unknown') + ' cores',
-        '<span style="color:#7ab8ff;font-weight:600">RAM</span>      ' + (navigator.deviceMemory?navigator.deviceMemory+' GB':'unknown'),
-        '<span style="color:#7ab8ff;font-weight:600">GPU</span>      ' + gpu,
-        '<span style="color:#7ab8ff;font-weight:600">Lang</span>     ' + navigator.language,
-        '<span style="color:#7ab8ff;font-weight:600">Online</span>   ' + (navigator.onLine?'yes':'no'),
-        '<span style="color:#7ab8ff;font-weight:600">Theme</span>    ' + SETTINGS.theme
+        '<span style="color:#7ab8ff;font-weight:600">Res</span>      '+screen.width+'x'+screen.height,
+        '<span style="color:#7ab8ff;font-weight:600">CPU</span>      '+(navigator.hardwareConcurrency||'unknown')+' cores',
+        '<span style="color:#7ab8ff;font-weight:600">RAM</span>      '+(navigator.deviceMemory?navigator.deviceMemory+' GB':'unknown'),
+        '<span style="color:#7ab8ff;font-weight:600">GPU</span>      '+gpu,
+        '<span style="color:#7ab8ff;font-weight:600">Lang</span>     '+navigator.language,
+        '<span style="color:#7ab8ff;font-weight:600">Online</span>   '+(navigator.onLine?'yes':'no'),
+        '<span style="color:#7ab8ff;font-weight:600">Theme</span>    '+SETTINGS.theme
     ];
     const out=document.getElementById('termOut');
     const prompt=document.getElementById('termPrompt');
@@ -644,7 +651,7 @@ function printSpecs(){
 
 /* ============ MATRIX / PIPES ============ */
 function openMatrix(){
-    const html=`<canvas id="matrixCanvas" class="matrix-canvas"></canvas>`;
+    const html='<canvas id="matrixCanvas" class="matrix-canvas"></canvas>';
     createWindow('matrix','matrix',720,480,html,'terminal');
     setTimeout(()=>{
         const c=document.getElementById('matrixCanvas');if(!c)return;
@@ -669,7 +676,7 @@ function openMatrix(){
     },80);
 }
 function openPipes(){
-    const html=`<canvas id="pipesCanvas" class="matrix-canvas"></canvas>`;
+    const html='<canvas id="pipesCanvas" class="matrix-canvas"></canvas>';
     createWindow('pipes','pipes.sh',720,480,html,'terminal');
     setTimeout(()=>{
         const c=document.getElementById('pipesCanvas');if(!c)return;
@@ -702,112 +709,9 @@ function openPipes(){
 
 /* ============ BROWSER ============ */
 const LINKS=[
-    {name:'Instructure',url:'https://storage.googleapis.com/instructure/index.html',tag:'NEW'},
-    {name:'Grammarly',url:'https://storage.googleapis.com/grammarly/index.html',tag:'REPOST'},
-    {name:'DeltaMath Demo',url:'https://s3.amazonaws.com/deltamath-demo/index.html',tag:'LINK'},
-    {name:'Opium Official',url:'https://opium.best/',tag:'OFFICIAL'},
-    {name:'Opium (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg',tag:'UNBLOCKED'},
-    {name:'Opium (Google)',url:'https://storage.googleapis.com/opiumbest/index.html',tag:'UNBLOCKED'},
-    {name:'Opium (S3)',url:'https://s3.amazonaws.com/opiumbest/index.html',tag:'UNBLOCKED'},
-    {name:'Opium (GitHub Pages)',url:'https://opiumbest.github.io/',tag:'UNBLOCKED'},
-    {name:'OpiumBull (S3)',url:'https://s3.amazonaws.com/opiumbull/index.html',tag:'BRANDED'},
-    {name:'OpiumBull (Google)',url:'https://storage.googleapis.com/opiumbull/index.html',tag:'BRANDED'},
-    {name:'Clever Learning',url:'https://s3.amazonaws.com/cleverlearning/index.html',tag:'UNBRANDED'},
-    {name:'Google Classroom',url:'https://storage.googleapis.com/gclassroom/index.html',tag:'UNBRANDED'},
-    {name:'PeteZah (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg',tag:'PETEZAH'},
-    {name:'Homework Practice',url:'https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg',tag:'PETEZAH'},
-    {name:'Cherri S3',url:'https://cherri-s3-test.s3.amazonaws.com/index.html',tag:'CHERRI'},
-    {name:'CherriMath',url:'https://cherrimath.s3.amazonaws.com/index.html',tag:'CHERRI'},
-    {name:'CherriReading',url:'https://cherrireading.s3.amazonaws.com/index.html',tag:'CHERRI'},
-    {name:'CherriNotes',url:'https://cherrinotes.s3.amazonaws.com/index.html',tag:'CHERRI'},
-    {name:'Bird River',url:'https://come.birdriver.org/',tag:'COLLECTION'},
-    {name:'Fluxus',url:'https://write.fluxus.org/',tag:'COLLECTION'},
-    {name:'Largent',url:'https://sargent.largent.org',tag:'COLLECTION'},
-    {name:'MOLGAS',url:'https://hungarian.oil.molgas.org/',tag:'COLLECTION'},
-    {name:'GhostNation Radio',url:'https://ghostnation.radio.ghostnation.org/',tag:'COLLECTION'},
-    {name:'Bill Cowher',url:'https://about.billcowher.cowher.org/',tag:'COLLECTION'},
-    {name:'Repitch',url:'https://audio.repitch.repich.org/',tag:'COLLECTION'},
-    {name:'Frankenberger',url:'https://foodville.burger.frankenbergerfilm.org/',tag:'COLLECTION'},
-    {name:'Jon Mills Golf',url:'https://about.jon.golf.jonmills.org/',tag:'COLLECTION'},
-];
-
-function openBrowser(){
-    const html=`
-    <div class="browser" id="browserRoot">
-        <div class="browser-tabs">
-            <div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div></div>
-            <button class="browser-newtab" id="brNewTab" title="New Tab">+</button>
-        </div>
-        <div class="browser-toolbar">
-            <button class="browser-btn" id="brBack" disabled title="Back">←</button>
-            <button class="browser-btn" id="brFwd" disabled title="Forward">→</button>
-            <button class="browser-btn" id="brReload" title="Reload">↻</button>
-            <button class="browser-btn" id="brHome" title="Home">⌂</button>
-            <div class="browser-omnibox">
-                <span class="lock">🔒</span>
-                <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
-            </div>
-        </div>
-        <div class="browser-warn"><b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It is a fake browser that only renders pages inside an iframe. Some sites block iframes and won't load.</div>
-        <div class="browser-content" id="brContent">${renderHomePage()}</div>
-    </div>`;
-    createWindow('browser','Browser',900,600,html,'browser');
-    setTimeout(()=>{
-        const input=document.getElementById('brUrl');
-        const content=document.getElementById('brContent');
-        const home=document.getElementById('brHome');
-        const reload=document.getElementById('brReload');
-        const back=document.getElementById('brBack');
-        const fwd=document.getElementById('brFwd');
-        const newTab=document.getElementById('brNewTab');
-        const tabLabel=document.getElementById('brTabLabel');
-        if(!input||!content)return;
-
-        let history=[];
-        let index=-1;
-
-        function updateNavBtns(){
-            back.disabled = index <= 0;
-            fwd.disabled = index >= history.length-1;
-        }
-        function renderIframe(url, push){
-            if(push!==false){
-                history=history.slice(0,index+1);
-                history.push(url);
-                index=history.length-1;
-            }
-            content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
-            input.value='•••••••••••••••••••••••••••';
-            try{tabLabel.textContent=new URL(url).hostname.replace(/^www\./,'');}catch(e){tabLabel.textContent='New Tab';}
-            updateNavBtns();
-        }
-        function loadUrl(url){
-            if(!url.startsWith('http'))url='https://'+url;
-            renderIframe(url,true);
-        }
-        function goHome(){
-            content.innerHTML=renderHomePage();
-            input.value='';
-            tabLabel.textContent='New Tab';
-            wireHome();
-        }
-        function wireHome(){
-            content.querySelectorAll('.link-card').forEach(el=>{
-                el.addEventListener('click',()=>loadUrl(el.dataset.url));
-            });
-        }
-        input.addEventListener('keydown',e=>{
-            if(e.key==='Enter'){
-                const v=input.value.trim();
-                if(v && v.indexOf('•••')===-1) loadUrl(v);
-            }
-        });
-const LINKS=[
-    // New Drop
     {name:'Instructure',url:'https://storage.googleapis.com/instructure/index.html',tag:'NEW DROP'},
     {name:'Grammarly',url:'https://storage.googleapis.com/grammarly/index.html',tag:'NEW DROP'},
     {name:'DeltaMath Demo',url:'https://s3.amazonaws.com/deltamath-demo/index.html',tag:'NEW DROP'},
-    // Opium
     {name:'Opium Official',url:'https://opium.best/',tag:'OPIUM'},
     {name:'Opium (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg',tag:'OPIUM'},
     {name:'Opium (Google)',url:'https://storage.googleapis.com/opiumbest/index.html',tag:'OPIUM'},
@@ -815,20 +719,46 @@ const LINKS=[
     {name:'OpiumBull (S3)',url:'https://s3.amazonaws.com/opiumbull/index.html',tag:'OPIUM'},
     {name:'OpiumBull (Google)',url:'https://storage.googleapis.com/opiumbull/index.html',tag:'OPIUM'},
     {name:'Opium (GitHub Pages)',url:'https://opiumbest.github.io/',tag:'OPIUM'},
-    // PeteZah
     {name:'PeteZah (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg',tag:'PETEZAH'},
     {name:'Homework Practice',url:'https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg',tag:'PETEZAH'},
     {name:'Pizza (Quantil)',url:'https://quantil.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg',tag:'PETEZAH'},
     {name:'Pizza (gcore)',url:'https://gcore.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg',tag:'PETEZAH'},
-    // Cherri
     {name:'Cherri S3',url:'https://cherri-s3-test.s3.amazonaws.com/index.html',tag:'CHERRI'},
     {name:'CherriMath',url:'https://cherrimath.s3.amazonaws.com/index.html',tag:'CHERRI'},
     {name:'CherriReading',url:'https://cherrireading.s3.amazonaws.com/index.html',tag:'CHERRI'},
     {name:'CherriNotes',url:'https://cherrinotes.s3.amazonaws.com/index.html',tag:'CHERRI'},
-    // Clever / Classroom
     {name:'Clever Learning',url:'https://s3.amazonaws.com/cleverlearning/index.html',tag:'SCHOOL'},
     {name:'Google Classroom',url:'https://storage.googleapis.com/gclassroom/index.html',tag:'SCHOOL'},
-    // Collections
+    {name:'5it2 (S3)',url:'https://s3.amazonaws.com/5it2/index.html',tag:'MIRRORS'},
+    {name:'5it2 (us-east-1)',url:'https://s3.us-east-1.amazonaws.com/5it2/index.html',tag:'MIRRORS'},
+    {name:'5it2 (bucket S3)',url:'https://5it2.s3.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'5it2 (bucket us-east-1)',url:'https://5it2.s3.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'5it2 (dualstack)',url:'https://s3.dualstack.us-east-1.amazonaws.com/5it2/index.html',tag:'MIRRORS'},
+    {name:'5it2 (bucket dualstack)',url:'https://5it2.s3.dualstack.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (S3)',url:'https://s3.amazonaws.com/oxe9/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (us-east-1)',url:'https://s3.us-east-1.amazonaws.com/oxe9/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (bucket S3)',url:'https://oxe9.s3.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (bucket us-east-1)',url:'https://oxe9.s3.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (dualstack)',url:'https://s3.dualstack.us-east-1.amazonaws.com/oxe9/index.html',tag:'MIRRORS'},
+    {name:'oxe9 (bucket dualstack)',url:'https://oxe9.s3.dualstack.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'y51x (S3)',url:'https://s3.amazonaws.com/y51x/index.html',tag:'MIRRORS'},
+    {name:'y51x (us-east-1)',url:'https://s3.us-east-1.amazonaws.com/y51x/index.html',tag:'MIRRORS'},
+    {name:'y51x (bucket S3)',url:'https://y51x.s3.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'y51x (bucket us-east-1)',url:'https://y51x.s3.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'y51x (dualstack)',url:'https://s3.dualstack.us-east-1.amazonaws.com/y51x/index.html',tag:'MIRRORS'},
+    {name:'y51x (bucket dualstack)',url:'https://y51x.s3.dualstack.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'cjvr (S3)',url:'https://s3.amazonaws.com/cjvr/index.html',tag:'MIRRORS'},
+    {name:'cjvr (us-east-1)',url:'https://s3.us-east-1.amazonaws.com/cjvr/index.html',tag:'MIRRORS'},
+    {name:'cjvr (bucket S3)',url:'https://cjvr.s3.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'cjvr (bucket us-east-1)',url:'https://cjvr.s3.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'cjvr (dualstack)',url:'https://s3.dualstack.us-east-1.amazonaws.com/cjvr/index.html',tag:'MIRRORS'},
+    {name:'cjvr (bucket dualstack)',url:'https://cjvr.s3.dualstack.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'eo1x (S3)',url:'https://s3.amazonaws.com/eo1x/index.html',tag:'MIRRORS'},
+    {name:'eo1x (us-east-1)',url:'https://s3.us-east-1.amazonaws.com/eo1x/index.html',tag:'MIRRORS'},
+    {name:'eo1x (bucket S3)',url:'https://eo1x.s3.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'eo1x (bucket us-east-1)',url:'https://eo1x.s3.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
+    {name:'eo1x (dualstack)',url:'https://s3.dualstack.us-east-1.amazonaws.com/eo1x/index.html',tag:'MIRRORS'},
+    {name:'eo1x (bucket dualstack)',url:'https://eo1x.s3.dualstack.us-east-1.amazonaws.com/index.html',tag:'MIRRORS'},
     {name:'Bird River',url:'https://come.birdriver.org/',tag:'COLLECTION'},
     {name:'Fluxus',url:'https://write.fluxus.org/',tag:'COLLECTION'},
     {name:'Largent',url:'https://sargent.largent.org',tag:'COLLECTION'},
@@ -851,28 +781,30 @@ const LINKS=[
     {name:'Golf Hall of Fame',url:'https://golf.hall-of-fame.jonmills.org/',tag:'COLLECTION'},
     {name:'US Open Records',url:'https://us.open.records.jonmills.org/',tag:'COLLECTION'},
     {name:'Shop For Pants',url:'https://shopforpantsmathfun.b-cdn.net/',tag:'COLLECTION'},
+    {name:'Classmates',url:'https://iaguws74.allofthisisfortheotherclassmatesbtw.cfd/',tag:'COLLECTION'},
+    {name:'KeyComm Health',url:'https://health.keycommres.org/',tag:'COLLECTION'},
+    {name:'GUST OS',url:'https://cdn.jsdelivr.net/gh/nautilus-os/GUST@latest/svg/site.svg',tag:'SVG'},
+    {name:'PeteZah SVG',url:'https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg',tag:'SVG'},
+    {name:'Homework SVG',url:'https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg',tag:'SVG'}
 ];
 
 function openBrowser(){
-    const html=`
-    <div class="browser" id="browserRoot">
-        <div class="browser-tabs">
-            <div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div></div>
-            <button class="browser-newtab" id="brNewTab" title="New Tab">+</button>
-        </div>
-        <div class="browser-toolbar">
-            <button class="browser-btn" id="brBack" disabled title="Back">←</button>
-            <button class="browser-btn" id="brFwd" disabled title="Forward">→</button>
-            <button class="browser-btn" id="brReload" title="Reload">↻</button>
-            <button class="browser-btn" id="brHome" title="Home">⌂</button>
-            <div class="browser-omnibox">
-                <span class="lock">🔒</span>
-                <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
-            </div>
-        </div>
-        <div class="browser-warn"><b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It's a link launcher that opens sites inside an iframe. Some sites block iframes and won't load.</div>
-        <div class="browser-content" id="brContent">${renderHomePage()}</div>
-    </div>`;
+    const html='<div class="browser" id="browserRoot">'
+        +'<div class="browser-tabs">'
+        +'<div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div></div>'
+        +'<button class="browser-newtab" id="brNewTab" title="New Tab">+</button>'
+        +'</div>'
+        +'<div class="browser-toolbar">'
+        +'<button class="browser-btn" id="brBack" disabled title="Back">←</button>'
+        +'<button class="browser-btn" id="brFwd" disabled title="Forward">→</button>'
+        +'<button class="browser-btn" id="brReload" title="Reload">↻</button>'
+        +'<button class="browser-btn" id="brHome" title="Home">⌂</button>'
+        +'<div class="browser-omnibox"><span class="lock">🔒</span>'
+        +'<input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false"></div>'
+        +'</div>'
+        +'<div class="browser-warn"><b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It is a link launcher that opens sites inside an iframe. Some sites block iframes and won\'t load.</div>'
+        +'<div class="browser-content" id="brContent">'+renderHomePage()+'</div>'
+        +'</div>';
     createWindow('browser','DreadDreadGo',920,620,html,'browser');
     setTimeout(()=>{
         const input=document.getElementById('brUrl');
@@ -898,70 +830,13 @@ function openBrowser(){
                 history.push(url);
                 index=history.length-1;
             }
-            content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
+            content.innerHTML='<iframe class="browser-iframe" src="'+url+'" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>';
             input.value='•••••••••••••••••••••••••••';
             try{tabLabel.textContent=new URL(url).hostname.replace(/^www\./,'');}catch(e){tabLabel.textContent='New Tab';}
             updateNavBtns();
         }
         function loadUrl(url){
-            if(!url.startsWith('http'))url='https://'+url;
-            renderIframe(url,true);
-        }
-        function goHome(){
-            content.innerHTML=renderHomePage();
-            input.value='';
-function openBrowser(){
-    const html=`
-    <div class="browser" id="browserRoot">
-        <div class="browser-tabs">
-            <div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div></div>
-            <button class="browser-newtab" id="brNewTab" title="New Tab">+</button>
-        </div>
-        <div class="browser-toolbar">
-            <button class="browser-btn" id="brBack" disabled title="Back">←</button>
-            <button class="browser-btn" id="brFwd" disabled title="Forward">→</button>
-            <button class="browser-btn" id="brReload" title="Reload">↻</button>
-            <button class="browser-btn" id="brHome" title="Home">⌂</button>
-            <div class="browser-omnibox">
-                <span class="lock">🔒</span>
-                <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
-            </div>
-        </div>
-        <div class="browser-warn"><b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It's a link launcher that opens sites inside an iframe. Some sites block iframes and won't load.</div>
-        <div class="browser-content" id="brContent">${renderHomePage()}</div>
-    </div>`;
-    createWindow('browser','DreadDreadGo',920,620,html,'browser');
-    setTimeout(()=>{
-        const input=document.getElementById('brUrl');
-        const content=document.getElementById('brContent');
-        const home=document.getElementById('brHome');
-        const reload=document.getElementById('brReload');
-        const back=document.getElementById('brBack');
-        const fwd=document.getElementById('brFwd');
-        const newTab=document.getElementById('brNewTab');
-        const tabLabel=document.getElementById('brTabLabel');
-        if(!input||!content)return;
-
-        let history=[];
-        let index=-1;
-
-        function updateNavBtns(){
-            back.disabled = index <= 0;
-            fwd.disabled = index >= history.length-1;
-        }
-        function renderIframe(url, push){
-            if(push!==false){
-                history=history.slice(0,index+1);
-                history.push(url);
-                index=history.length-1;
-            }
-            content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
-            input.value='•••••••••••••••••••••••••••';
-            try{tabLabel.textContent=new URL(url).hostname.replace(/^www\./,'');}catch(e){tabLabel.textContent='New Tab';}
-            updateNavBtns();
-        }
-        function loadUrl(url){
-            if(!url.startsWith('http'))url='https://'+url;
+            if(url.indexOf('http')!==0)url='https://'+url;
             renderIframe(url,true);
         }
         function goHome(){
@@ -1002,16 +877,16 @@ function openBrowser(){
 function renderHomePage(){
     const groups={};
     LINKS.forEach(l=>{if(!groups[l.tag])groups[l.tag]=[];groups[l.tag].push(l);});
-    let html=`<div class="ddg-home">
-        <div class="ddg-logo">
-            <div class="wordmark">DreadDreadGo<span class="sticker">v1.0</span></div>
-            <div class="tagline">pick a link — no tracking, no search bar, no ads</div>
-        </div>`;
+    let html='<div class="ddg-home">'
+        +'<div class="ddg-logo">'
+        +'<div class="wordmark">DreadDreadGo<span class="sticker">v1.0</span></div>'
+        +'<div class="tagline">pick a link — no tracking, no search bar, no ads</div>'
+        +'</div>';
     Object.keys(groups).forEach(tag=>{
-        html+=`<div class="ddg-section"><h3>${tag}</h3><div class="ddg-grid">`;
+        html+='<div class="ddg-section"><h3>'+tag+'</h3><div class="ddg-grid">';
         groups[tag].forEach(l=>{
             let host='';try{host=new URL(l.url).hostname;}catch(e){host=l.url;}
-            html+=`<a class="ddg-link" data-url="${l.url}"><div class="name">${l.name}</div><div class="host">${host}</div><div class="tag">${l.tag}</div></a>`;
+            html+='<a class="ddg-link" data-url="'+l.url+'"><div class="name">'+l.name+'</div><div class="host">'+host+'</div><div class="tag">'+l.tag+'</div></a>';
         });
         html+='</div></div>';
     });
@@ -1021,70 +896,74 @@ function renderHomePage(){
 
 /* ============ GITHUB ============ */
 function openGithub(){
-    const html=`
-        <div class="gh-container">
-            <div class="gh-topbar">
-                <span style="color:#8b949e">←</span><span style="color:#8b949e">→</span><span style="color:#8b949e">↻</span>
-                <div class="url">•••••••••••••••••••••••••••</div>
-                <button class="gh-btn" onclick="window.open('https://github.com/dreadingg','_blank','noopener')">Sign in</button>
-            </div>
-            <div class="gh-content">
-                <div class="gh-repo-title"><span class="owner">dreadingg</span> / <span class="name">dreadOS</span> <span style="font-size:.7rem;padding:1px 7px;border:1px solid #30363d;border-radius:20px;color:#8b949e">Public</span></div>
-                <div class="gh-readme"><h2>dreadOS</h2><p>A browser-based OS-style shell. Terminal, browser, settings, games, school apps.</p></div>
-            </div>
-        </div>`;
-    createWindow('github','github.com/dreadingg/dreadOS',780,540,html,'github');
+    const html='<div class="gh-container">'
+        +'<div class="gh-topbar">'
+        +'<span style="color:#8b949e">←</span><span style="color:#8b949e">→</span><span style="color:#8b949e">↻</span>'
+        +'<div class="url">•••••••••••••••••••••••••••</div>'
+        +'<button class="gh-btn" onclick="window.open(\'https://github.com/dreadingg\',\'_blank\',\'noopener\')">Sign in</button>'
+        +'</div>'
+        +'<div class="gh-content">'
+        +'<div class="gh-repo-title"><span class="owner">dreadingg</span> / <span class="name">dreadOS</span> <span class="gh-badge">Public</span></div>'
+        +'<div class="gh-tabs"><div class="active">&lt;&gt; Code</div><div>◎ Issues</div><div>⑂ Pull requests</div><div>◈ Actions</div><div>☰ Projects</div><div>◍ Wiki</div></div>'
+        +'<div class="gh-file-row"><span class="icon">▤</span><span class="name">README.md</span><span class="msg">initial commit</span><span class="time">just now</span></div>'
+        +'<div class="gh-file-row"><span class="icon">▤</span><span class="name">index.html</span><span class="msg">add dreadOS shell</span><span class="time">just now</span></div>'
+        +'<div class="gh-file-row"><span class="icon">▤</span><span class="name">assets/</span><span class="msg">wallpaper + icons</span><span class="time">just now</span></div>'
+        +'<div class="gh-readme">'
+        +'<h2>dreadOS</h2>'
+        +'<p>A browser-based OS-style shell. Terminal, DreadDreadGo browser, settings, 11 games, and school helper apps. Built by dread.</p>'
+        +'<p>Inspired by AnuraOS. Forked and rebranded.</p>'
+        +'</div>'
+        +'</div>'
+        +'</div>';
+    createWindow('github','github.com/dreadingg/dreadOS',820,580,html,'github');
 }
 
 /* ============ DOOM ============ */
 function openDoom(){
-    const html=`
-        <div style="width:100%;height:100%;background:#000;position:relative;overflow:hidden">
-            <div style="position:absolute;inset:0;background:linear-gradient(180deg,#3a2a1a 0%,#1a0f08 40%,#0a0503 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c9a86a;text-align:center;padding:20px">
-                <div style="font-size:1.4rem;letter-spacing:6px;margin-bottom:14px">D O O M</div>
-                <div style="font-size:.7rem;color:#8a6a3a">Placeholder. Real DOOM goes here.</div>
-            </div>
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#3a1a1a,#1a0808);border-top:2px solid #6a3a1a;display:flex;justify-content:space-between;padding:8px 14px;font-family:'Courier New',monospace;font-size:.75rem;color:#e0c090">
-                <div>AMMO <b style="color:#fff">44</b></div>
-                <div>HEALTH <b style="color:#fff">46%</b></div>
-                <div>ARMS <b style="color:#fff">2 3 4</b></div>
-                <div>ARMOR <b style="color:#fff">58%</b></div>
-            </div>
-        </div>`;
+    const html='<div style="width:100%;height:100%;background:#000;position:relative;overflow:hidden">'
+        +'<div style="position:absolute;inset:0;background:linear-gradient(180deg,#3a2a1a 0%,#1a0f08 40%,#0a0503 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c9a86a;text-align:center;padding:20px">'
+        +'<div style="font-size:1.4rem;letter-spacing:6px;margin-bottom:14px">D O O M</div>'
+        +'<div style="font-size:.7rem;color:#8a6a3a">Placeholder. Real DOOM goes here.</div>'
+        +'</div>'
+        +'<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#3a1a1a,#1a0808);border-top:2px solid #6a3a1a;display:flex;justify-content:space-between;padding:8px 14px;font-family:\'Courier New\',monospace;font-size:.75rem;color:#e0c090">'
+        +'<div>AMMO <b style="color:#fff">44</b></div>'
+        +'<div>HEALTH <b style="color:#fff">46%</b></div>'
+        +'<div>ARMS <b style="color:#fff">2 3 4</b></div>'
+        +'<div>ARMOR <b style="color:#fff">58%</b></div>'
+        +'</div>'
+        +'</div>';
     createWindow('doom','DOOM',680,440,html,'games');
 }
 
 /* ============ GAME MENU ============ */
 function openGameMenu(){
-    const html=`
-        <div class="game-menu">
-            <h2>Games</h2>
-            <p>Pick a game — close it to pick another.</p>
-            <div class="game-card" onclick="startDodge()"><div class="ico">◈</div><div class="name">Dodge</div><div class="desc">TWHG-style arena dodge</div></div>
-            <div class="game-card" onclick="startTWHG()"><div class="ico">✦</div><div class="name">TWHG (online)</div><div class="desc">Online embed</div></div>
-            <div class="game-card" onclick="openDoom()"><div class="ico">☠</div><div class="name">DOOM</div><div class="desc">Placeholder</div></div>
-            <div class="game-card" onclick="startSnake()"><div class="ico">▣</div><div class="name">Snake</div><div class="desc">Classic snake</div></div>
-            <div class="game-card" onclick="startTicTacToe()"><div class="ico">✕</div><div class="name">Tic Tac Toe</div><div class="desc">You vs AI</div></div>
-            <div class="game-card" onclick="startPong()"><div class="ico">▬</div><div class="name">Pong</div><div class="desc">You vs AI</div></div>
-            <div class="game-card" onclick="startMemory()"><div class="ico">◇</div><div class="name">Memory</div><div class="desc">Match 8 pairs</div></div>
-            <div class="game-card" onclick="startBreakout()"><div class="ico">▦</div><div class="name">Breakout</div><div class="desc">Break bricks</div></div>
-            <div class="game-card" onclick="start2048()"><div class="ico">◫</div><div class="name">2048</div><div class="desc">Merge tiles to 2048</div></div>
-            <div class="game-card" onclick="startSimon()"><div class="ico">◐</div><div class="name">Simon</div><div class="desc">Repeat the pattern</div></div>
-            <div class="game-card" onclick="startWhack()"><div class="ico">✱</div><div class="name">Whack-a-Mole</div><div class="desc">30 seconds, click the moles</div></div>
-        </div>`;
+    const html='<div class="game-menu">'
+        +'<h2>Games</h2>'
+        +'<p>Pick a game — close it to pick another.</p>'
+        +'<div class="game-card" onclick="startDodge()"><div class="ico">◈</div><div class="name">Dodge</div><div class="desc">TWHG-style arena dodge</div></div>'
+        +'<div class="game-card" onclick="startTWHG()"><div class="ico">✦</div><div class="name">TWHG (online)</div><div class="desc">Online embed</div></div>'
+        +'<div class="game-card" onclick="openDoom()"><div class="ico">☠</div><div class="name">DOOM</div><div class="desc">Placeholder</div></div>'
+        +'<div class="game-card" onclick="startSnake()"><div class="ico">▣</div><div class="name">Snake</div><div class="desc">Classic snake</div></div>'
+        +'<div class="game-card" onclick="startTicTacToe()"><div class="ico">✕</div><div class="name">Tic Tac Toe</div><div class="desc">You vs AI</div></div>'
+        +'<div class="game-card" onclick="startPong()"><div class="ico">▬</div><div class="name">Pong</div><div class="desc">You vs AI</div></div>'
+        +'<div class="game-card" onclick="startMemory()"><div class="ico">◇</div><div class="name">Memory</div><div class="desc">Match 8 pairs</div></div>'
+        +'<div class="game-card" onclick="startBreakout()"><div class="ico">▦</div><div class="name">Breakout</div><div class="desc">Break bricks</div></div>'
+        +'<div class="game-card" onclick="start2048()"><div class="ico">◫</div><div class="name">2048</div><div class="desc">Merge tiles to 2048</div></div>'
+        +'<div class="game-card" onclick="startSimon()"><div class="ico">◐</div><div class="name">Simon</div><div class="desc">Repeat the pattern</div></div>'
+        +'<div class="game-card" onclick="startWhack()"><div class="ico">✱</div><div class="name">Whack-a-Mole</div><div class="desc">30 seconds, click the moles</div></div>'
+        +'</div>';
     createWindow('games','Games',780,560,html,'games');
 }
 
 /* ============ DODGE ============ */
 function startDodge(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('dodge');openGameMenu()">← Back</button>
-            <div class="game-hud">DEATHS <b id="dodgeDeaths">0</b> LEVEL <b id="dodgeLevel">1</b></div>
-            <canvas id="dodgeCanvas" class="game-canvas" width="480" height="360"></canvas>
-            <button class="game-btn" onclick="dodgeReset()">Restart</button>
-            <div class="game-help">Arrow keys / WASD to move — avoid red circles, reach green zone</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'dodge\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">DEATHS <b id="dodgeDeaths">0</b> LEVEL <b id="dodgeLevel">1</b></div>'
+        +'<canvas id="dodgeCanvas" class="game-canvas" width="480" height="360"></canvas>'
+        +'<button class="game-btn" onclick="dodgeReset()">Restart</button>'
+        +'<div class="game-help">Arrow keys / WASD to move — avoid red circles, reach green zone</div>'
+        +'</div>';
     createWindow('dodge','Dodge',520,500,html,'games');
     setTimeout(()=>dodgeInit(),50);
 }
@@ -1182,30 +1061,28 @@ function dodgeInit(){
 /* ============ TWHG ============ */
 function startTWHG(){
     const url='https://www.google.com/logos/2010/pacman10-i.html';
-    const html=`
-        <div style="display:flex;flex-direction:column;height:100%;background:#000">
-            <div style="display:flex;gap:8px;padding:8px;background:#1a1a1a;align-items:center;border-bottom:1px solid #333">
-                <button class="game-back" style="position:static" onclick="closeWin('twhg');openGameMenu()">← Back</button>
-                <div style="flex:1;padding:6px 12px;background:#000;border-radius:6px;font-size:.7rem;color:#888;font-family:monospace">•••••••••••••••••••••••</div>
-            </div>
-            <div style="padding:10px 14px;background:#2a1a1a;color:#ffb4b4;font-size:.7rem;border-bottom:1px solid #5a2a2a">
-                <b>Note:</b> This tries to embed a TWHG-style game. Most game sites block iframes.
-            </div>
-            <iframe src="${url}" style="flex:1;border:none;background:#000" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-        </div>`;
-    createWindow('twhg',"The World's Hardest Game",820,560,html,'games');
+    const html='<div style="display:flex;flex-direction:column;height:100%;background:#000">'
+        +'<div style="display:flex;gap:8px;padding:8px;background:#1a1a1a;align-items:center;border-bottom:1px solid #333">'
+        +'<button class="game-back" style="position:static" onclick="closeWin(\'twhg\');openGameMenu()">← Back</button>'
+        +'<div style="flex:1;padding:6px 12px;background:#000;border-radius:6px;font-size:.7rem;color:#888;font-family:monospace">•••••••••••••••••••••••</div>'
+        +'</div>'
+        +'<div style="padding:10px 14px;background:#2a1a1a;color:#ffb4b4;font-size:.7rem;border-bottom:1px solid #5a2a2a">'
+        +'<b>Note:</b> This tries to embed a TWHG-style game. Most game sites block iframes.'
+        +'</div>'
+        +'<iframe src="'+url+'" style="flex:1;border:none;background:#000" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>'
+        +'</div>';
+    createWindow('twhg','The World Hardest Game',820,560,html,'games');
 }
 
 /* ============ SNAKE ============ */
 function startSnake(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('snake');openGameMenu()">← Back</button>
-            <div class="game-hud">SCORE <b id="snakeScore">0</b> BEST <b id="snakeBest">${localStorage.getItem('snakeBest')||0}</b></div>
-            <canvas id="snakeCanvas" class="game-canvas" width="360" height="360"></canvas>
-            <button class="game-btn" onclick="snakeReset()">New Game</button>
-            <div class="game-help">Arrow keys / WASD — Space to pause</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'snake\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">SCORE <b id="snakeScore">0</b> BEST <b id="snakeBest">'+(localStorage.getItem('snakeBest')||0)+'</b></div>'
+        +'<canvas id="snakeCanvas" class="game-canvas" width="360" height="360"></canvas>'
+        +'<button class="game-btn" onclick="snakeReset()">New Game</button>'
+        +'<div class="game-help">Arrow keys / WASD — Space to pause</div>'
+        +'</div>';
     createWindow('snake','Snake',400,500,html,'games');
     setTimeout(()=>snakeInit(),50);
 }
@@ -1262,13 +1139,14 @@ function snakeInit(){
 
 /* ============ TIC TAC TOE ============ */
 function startTicTacToe(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('tictactoe');openGameMenu()">← Back</button>
-            <div class="game-hud">YOU <b>X</b> — AI <b>O</b> — <span id="tttStatus">Your turn</span></div>
-            <div class="ttt-grid" id="tttGrid">${Array.from({length:9}).map((_,i)=>`<div class="ttt-cell" data-i="${i}" onclick="tttClick(${i})"></div>`).join('')}</div>
-            <button class="game-btn" onclick="tttReset()">New Game</button>
-        </div>`;
+    const cells=[];
+    for(let i=0;i<9;i++)cells.push('<div class="ttt-cell" data-i="'+i+'" onclick="tttClick('+i+')"></div>');
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'tictactoe\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">YOU <b>X</b> — AI <b>O</b> — <span id="tttStatus">Your turn</span></div>'
+        +'<div class="ttt-grid" id="tttGrid">'+cells.join('')+'</div>'
+        +'<button class="game-btn" onclick="tttReset()">New Game</button>'
+        +'</div>';
     createWindow('tictactoe','Tic Tac Toe',330,420,html,'games');
     setTimeout(()=>tttReset(),50);
 }
@@ -1320,14 +1198,13 @@ function bestTTTMove(){
 
 /* ============ PONG ============ */
 function startPong(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('pong');openGameMenu()">← Back</button>
-            <div class="game-hud">YOU <b id="pongYou">0</b> — AI <b id="pongAi">0</b></div>
-            <canvas id="pongCanvas" class="game-canvas" width="480" height="320"></canvas>
-            <button class="game-btn" onclick="pongReset()">New Game</button>
-            <div class="game-help">Mouse or ↑/↓</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'pong\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">YOU <b id="pongYou">0</b> — AI <b id="pongAi">0</b></div>'
+        +'<canvas id="pongCanvas" class="game-canvas" width="480" height="320"></canvas>'
+        +'<button class="game-btn" onclick="pongReset()">New Game</button>'
+        +'<div class="game-help">Mouse or ↑/↓</div>'
+        +'</div>';
     createWindow('pong','Pong',520,460,html,'games');
     setTimeout(()=>pongInit(),50);
 }
@@ -1374,13 +1251,12 @@ function pongInit(){
 
 /* ============ MEMORY ============ */
 function startMemory(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('memory');openGameMenu()">← Back</button>
-            <div class="game-hud">MOVES <b id="memMoves">0</b> MATCHES <b id="memMatches">0</b>/8</div>
-            <div class="memory-grid" id="memGrid"></div>
-            <button class="game-btn" onclick="memReset()">New Game</button>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'memory\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">MOVES <b id="memMoves">0</b> MATCHES <b id="memMatches">0</b>/8</div>'
+        +'<div class="memory-grid" id="memGrid"></div>'
+        +'<button class="game-btn" onclick="memReset()">New Game</button>'
+        +'</div>';
     createWindow('memory','Memory Match',340,440,html,'games');
     setTimeout(()=>memReset(),50);
 }
@@ -1398,7 +1274,7 @@ function renderMem(){
     grid.innerHTML=memState.deck.map((e,i)=>{
         const isFlipped=memState.flipped.includes(i)||memState.matched.has(i);
         const cls='mem-card'+(isFlipped?' flipped':'')+(memState.matched.has(i)?' matched':'');
-        return `<div class="${cls}" onclick="memClick(${i})">${isFlipped?e:''}</div>`;
+        return '<div class="'+cls+'" onclick="memClick('+i+')">'+(isFlipped?e:'')+'</div>';
     }).join('');
 }
 function memClick(i){
@@ -1418,14 +1294,13 @@ function memClick(i){
 
 /* ============ BREAKOUT ============ */
 function startBreakout(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('breakout');openGameMenu()">← Back</button>
-            <div class="game-hud">SCORE <b id="brScore">0</b> LIVES <b id="brLives">3</b></div>
-            <canvas id="brCanvas" class="game-canvas" width="480" height="360"></canvas>
-            <button class="game-btn" onclick="brReset()">New Game</button>
-            <div class="game-help">Mouse or ←/→</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'breakout\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">SCORE <b id="brScore">0</b> LIVES <b id="brLives">3</b></div>'
+        +'<canvas id="brCanvas" class="game-canvas" width="480" height="360"></canvas>'
+        +'<button class="game-btn" onclick="brReset()">New Game</button>'
+        +'<div class="game-help">Mouse or ←/→</div>'
+        +'</div>';
     createWindow('breakout','Breakout',520,500,html,'games');
     setTimeout(()=>brInit(),50);
 }
@@ -1471,14 +1346,13 @@ function brInit(){
 
 /* ============ 2048 ============ */
 function start2048(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('game2048');openGameMenu()">← Back</button>
-            <div class="game-hud">SCORE <b id="g2048Score">0</b> BEST <b id="g2048Best">${localStorage.getItem('g2048Best')||0}</b></div>
-            <canvas id="g2048Canvas" class="game-canvas" width="360" height="360"></canvas>
-            <button class="game-btn" onclick="g2048Reset()">New Game</button>
-            <div class="game-help">Arrow keys or WASD to merge tiles</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'game2048\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">SCORE <b id="g2048Score">0</b> BEST <b id="g2048Best">'+(localStorage.getItem('g2048Best')||0)+'</b></div>'
+        +'<canvas id="g2048Canvas" class="game-canvas" width="360" height="360"></canvas>'
+        +'<button class="game-btn" onclick="g2048Reset()">New Game</button>'
+        +'<div class="game-help">Arrow keys or WASD to merge tiles</div>'
+        +'</div>';
     createWindow('game2048','2048',400,500,html,'games');
     setTimeout(()=>g2048Init(),50);
 }
@@ -1508,7 +1382,7 @@ function g2048Init(){
             ctx.fillStyle=colors[v]||'#fff';
             ctx.fillRect(c*TILE+4,r*TILE+4,TILE-8,TILE-8);
             if(v){
-                ctx.fillStyle=v>4?'#fff':'#fff';
+                ctx.fillStyle='#fff';
                 ctx.font='bold '+(v>100?24:32)+'px sans-serif';
                 ctx.textAlign='center';ctx.textBaseline='middle';
                 ctx.fillText(String(v),c*TILE+TILE/2,r*TILE+TILE/2);
@@ -1582,14 +1456,13 @@ function g2048Init(){
 
 /* ============ SIMON ============ */
 function startSimon(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('simon');openGameMenu()">← Back</button>
-            <div class="game-hud">LEVEL <b id="simonLevel">0</b> BEST <b id="simonBest">${localStorage.getItem('simonBest')||0}</b></div>
-            <canvas id="simonCanvas" class="game-canvas" width="360" height="360"></canvas>
-            <button class="game-btn" onclick="simonReset()">Start</button>
-            <div class="game-help">Watch the pattern, then click the colors in order</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'simon\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">LEVEL <b id="simonLevel">0</b> BEST <b id="simonBest">'+(localStorage.getItem('simonBest')||0)+'</b></div>'
+        +'<canvas id="simonCanvas" class="game-canvas" width="360" height="360"></canvas>'
+        +'<button class="game-btn" onclick="simonReset()">Start</button>'
+        +'<div class="game-help">Watch the pattern, then click the colors in order</div>'
+        +'</div>';
     createWindow('simon','Simon',400,500,html,'games');
     setTimeout(()=>simonInit(),50);
 }
@@ -1652,16 +1525,11 @@ function simonInit(){
                 setTimeout(nextRound,600);
             }
         } else {
-    ctx.fillStyle='rgba(0,0,0,.7)';
-    ctx.fillRect(0,0,S,S);
-    ctx.fillStyle='#ff5f57';
-    ctx.font='28px sans-serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText('WRONG!', S/2, S/2-20);
-    ctx.fillStyle='#ccc';
-    ctx.font='16px sans-serif';
-    ctx.fillText('Level reached: ' + simon.level, S/2, S/2+20);
+            ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,S,S);
+            ctx.fillStyle='#ff5f57';ctx.font='28px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillText('WRONG!',S/2,S/2-20);
+            ctx.fillStyle='#ccc';ctx.font='16px sans-serif';
+            ctx.fillText('Level reached: '+simon.level,S/2,S/2+20);
         }
     });
     window.simonReset=reset;
@@ -1670,14 +1538,13 @@ function simonInit(){
 
 /* ============ WHACK-A-MOLE ============ */
 function startWhack(){
-    const html=`
-        <div class="game-wrap">
-            <button class="game-back" onclick="closeWin('whack');openGameMenu()">← Back</button>
-            <div class="game-hud">SCORE <b id="whackScore">0</b> TIME <b id="whackTime">30</b>s</div>
-            <canvas id="whackCanvas" class="game-canvas" width="400" height="400"></canvas>
-            <button class="game-btn" onclick="whackReset()">Start</button>
-            <div class="game-help">Click the moles before they hide — 30 seconds</div>
-        </div>`;
+    const html='<div class="game-wrap">'
+        +'<button class="game-back" onclick="closeWin(\'whack\');openGameMenu()">← Back</button>'
+        +'<div class="game-hud">SCORE <b id="whackScore">0</b> TIME <b id="whackTime">30</b>s</div>'
+        +'<canvas id="whackCanvas" class="game-canvas" width="400" height="400"></canvas>'
+        +'<button class="game-btn" onclick="whackReset()">Start</button>'
+        +'<div class="game-help">Click the moles before they hide — 30 seconds</div>'
+        +'</div>';
     createWindow('whack','Whack-a-Mole',440,540,html,'games');
     setTimeout(()=>whackInit(),50);
 }
@@ -1748,30 +1615,29 @@ function whackInit(){
 
 /* ============ SCHOOL APPS ============ */
 function openSchool(){
-    const html=`
-        <div class="game-menu">
-            <h2>School Helpers</h2>
-            <p>Quick utilities for homework, studying, and class.</p>
-            <div class="game-card" onclick="openTimer()"><div class="ico">⏱</div><div class="name">Pomodoro Timer</div><div class="desc">25/5 focus cycles</div></div>
-            <div class="game-card" onclick="openConverter()"><div class="ico">⇄</div><div class="name">Unit Converter</div><div class="desc">Length, weight, temp</div></div>
-            <div class="game-card" onclick="openTyping()"><div class="ico">⌨</div><div class="name">Typing Practice</div><div class="desc">WPM + accuracy</div></div>
-            <div class="game-card" onclick="openFlashcards()"><div class="ico">◫</div><div class="name">Flashcards</div><div class="desc">Make your own Q&A deck</div></div>
-            <div class="game-card" onclick="openGPA()"><div class="ico">Σ</div><div class="name">GPA Calculator</div><div class="desc">Weighted 4.0 GPA</div></div>
-            <div class="game-card" onclick="openEssayTimer()"><div class="ico">✎</div><div class="name">Essay Word Count</div><div class="desc">Word + character count</div></div>
-        </div>`;
+    const html='<div class="game-menu">'
+        +'<h2>School Helpers</h2>'
+        +'<p>Quick utilities for homework, studying, and class.</p>'
+        +'<div class="game-card" onclick="openTimer()"><div class="ico">⏱</div><div class="name">Pomodoro Timer</div><div class="desc">25/5 focus cycles</div></div>'
+        +'<div class="game-card" onclick="openConverter()"><div class="ico">⇄</div><div class="name">Unit Converter</div><div class="desc">Length, weight, temp</div></div>'
+        +'<div class="game-card" onclick="openTyping()"><div class="ico">⌨</div><div class="name">Typing Practice</div><div class="desc">WPM + accuracy</div></div>'
+        +'<div class="game-card" onclick="openFlashcards()"><div class="ico">◫</div><div class="name">Flashcards</div><div class="desc">Make your own Q&A deck</div></div>'
+        +'<div class="game-card" onclick="openGPA()"><div class="ico">Σ</div><div class="name">GPA Calculator</div><div class="desc">Weighted 4.0 GPA</div></div>'
+        +'<div class="game-card" onclick="openEssayTimer()"><div class="ico">✎</div><div class="name">Essay Word Count</div><div class="desc">Word + character count</div></div>'
+        +'</div>';
     createWindow('school','School Apps',780,560,html,'school');
 }
 function openTimer(){
-    const html=`<div class="school-wrap">
-        <h2>Pomodoro Timer</h2>
-        <p>25 minutes focus, 5 minutes break. Classic.</p>
-        <div style="font-size:3rem;text-align:center;font-family:'Menlo',monospace;color:var(--accent)" id="pomoTime">25:00</div>
-        <div class="school-row">
-            <button onclick="pomoStart(25)">Focus 25</button>
-            <button onclick="pomoStart(5)">Break 5</button>
-        </div>
-        <button onclick="pomoStop()" style="background:rgba(200,60,60,.4)">Stop</button>
-    </div>`;
+    const html='<div class="school-wrap">'
+        +'<h2>Pomodoro Timer</h2>'
+        +'<p>25 minutes focus, 5 minutes break. Classic.</p>'
+        +'<div style="font-size:3rem;text-align:center;font-family:Menlo,monospace;color:var(--accent)" id="pomoTime">25:00</div>'
+        +'<div class="school-row">'
+        +'<button onclick="pomoStart(25)">Focus 25</button>'
+        +'<button onclick="pomoStart(5)">Break 5</button>'
+        +'</div>'
+        +'<button onclick="pomoStop()" style="background:rgba(200,60,60,.4)">Stop</button>'
+        +'</div>';
     createWindow('pomodoro','Pomodoro',420,360,html,'school');
 }
 let pomoInt=null, pomoSec=1500;
@@ -1790,27 +1656,26 @@ function pomoStart(min){
 }
 function pomoStop(){if(pomoInt)clearInterval(pomoInt);pomoInt=null;}
 function openConverter(){
-    const html=`<div class="school-wrap">
-        <h2>Unit Converter</h2>
-        <label>Value</label><input type="number" id="convVal" value="1">
-        <label>From</label>
-        <select id="convFrom">
-            <option value="m">Meters</option><option value="km">Kilometers</option>
-            <option value="ft">Feet</option><option value="mi">Miles</option>
-            <option value="kg">Kilograms</option><option value="lb">Pounds</option>
-            <option value="c">Celsius</option><option value="f">Fahrenheit</option>
-        </select>
-        <label>To</label>
-        <select id="convTo">
-            <option value="ft">Feet</option><option value="m">Meters</option>
-            <option value="km">Kilometers</option>
-            <option value="mi">Miles</option><option value="kg">Kilograms</option>
-            <option value="lb">Pounds</option><option value="c">Celsius</option>
-            <option value="f">Fahrenheit</option>
-        </select>
-        <button onclick="doConvert()">Convert</button>
-        <div class="result" id="convResult">Enter values and click convert.</div>
-    </div>`;
+    const html='<div class="school-wrap">'
+        +'<h2>Unit Converter</h2>'
+        +'<label>Value</label><input type="number" id="convVal" value="1">'
+        +'<label>From</label>'
+        +'<select id="convFrom">'
+        +'<option value="m">Meters</option><option value="km">Kilometers</option>'
+        +'<option value="ft">Feet</option><option value="mi">Miles</option>'
+        +'<option value="kg">Kilograms</option><option value="lb">Pounds</option>'
+        +'<option value="c">Celsius</option><option value="f">Fahrenheit</option>'
+        +'</select>'
+        +'<label>To</label>'
+        +'<select id="convTo">'
+        +'<option value="ft">Feet</option><option value="m">Meters</option>'
+        +'<option value="km">Kilometers</option><option value="mi">Miles</option>'
+        +'<option value="kg">Kilograms</option><option value="lb">Pounds</option>'
+        +'<option value="c">Celsius</option><option value="f">Fahrenheit</option>'
+        +'</select>'
+        +'<button onclick="doConvert()">Convert</button>'
+        +'<div class="result" id="convResult">Enter values and click convert.</div>'
+        +'</div>';
     createWindow('converter','Unit Converter',420,520,html,'school');
 }
 function doConvert(){
@@ -1832,35 +1697,40 @@ function doConvert(){
 function openTyping(){
     const sentences=['The quick brown fox jumps over the lazy dog.','Pack my box with five dozen liquor jugs.','How vexingly quick daft zebras jump.','Sphinx of black quartz judge my vow.','The five boxing wizards jump quickly.'];
     const target=sentences[Math.floor(Math.random()*sentences.length)];
-    const html=`<div class="school-wrap">
-        <h2>Typing Practice</h2>
-        <p id="typingTarget" style="font-family:'Menlo',monospace;font-size:.9rem;color:#eee;background:rgba(0,0,0,.4);padding:14px;border-radius:8px">${target}</p>
-        <textarea id="typingInput" rows="3" placeholder="Type the sentence above..."></textarea>
-        <button onclick="checkTyping('${target.replace(/'/g,"\\\\'")}')">Check</button>
-        <div class="result" id="typingResult">Type the sentence and click Check.</div>
-    </div>`;
+    const html='<div class="school-wrap">'
+        +'<h2>Typing Practice</h2>'
+        +'<p id="typingTarget" style="font-family:Menlo,monospace;font-size:.9rem;color:#eee;background:rgba(0,0,0,.4);padding:14px;border-radius:8px">'+target+'</p>'
+        +'<textarea id="typingInput" rows="3" placeholder="Type the sentence above..."></textarea>'
+        +'<button id="typingCheckBtn">Check</button>'
+        +'<div class="result" id="typingResult">Type the sentence and click Check.</div>'
+        +'</div>';
     createWindow('typing','Typing Practice',480,420,html,'school');
-}
-function checkTyping(target){
-    const input=document.getElementById('typingInput').value;
-    const r=document.getElementById('typingResult');
-    let correct=0;
-    const len=Math.min(input.length,target.length);
-    for(let i=0;i<len;i++)if(input[i]===target[i])correct++;
-    const acc=target.length?Math.round(correct/target.length*100):0;
-    r.innerHTML='Accuracy: <b>'+acc+'%</b><br>Characters: '+input.length+' / '+target.length;
+    setTimeout(()=>{
+        const btn=document.getElementById('typingCheckBtn');
+        if(!btn)return;
+        btn.addEventListener('click',()=>{
+            const input=document.getElementById('typingInput').value;
+            const r=document.getElementById('typingResult');
+            let correct=0;
+            const len=Math.min(input.length,target.length);
+            for(let i=0;i<len;i++)if(input[i]===target[i])correct++;
+            const acc=target.length?Math.round(correct/target.length*100):0;
+            r.innerHTML='Accuracy: <b>'+acc+'%</b><br>Characters: '+input.length+' / '+target.length;
+        });
+    },60);
 }
 function openFlashcards(){
     const saved=JSON.parse(localStorage.getItem('dos_flashcards')||'[]');
-    const html=`<div class="school-wrap">
-        <h2>Flashcards</h2>
-        <p>Add question + answer pairs, then quiz yourself.</p>
-        <label>Question</label><input type="text" id="fcQ" placeholder="e.g. What is the capital of France?">
-        <label>Answer</label><input type="text" id="fcA" placeholder="e.g. Paris">
-        <button onclick="addFlashcard()">Add Card</button>
-        <div class="result" id="fcList">${saved.length? saved.map((c,i)=>`<div>${i+1}. ${c.q} → ${c.a}</div>`).join('') : 'No cards yet.'}</div>
-        <button onclick="startFlashcardQuiz()" style="background:rgba(122,184,255,.4)">Quiz Me</button>
-    </div>`;
+    const listHTML = saved.length ? saved.map((c,i)=>'<div>'+(i+1)+'. '+c.q+' → '+c.a+'</div>').join('') : 'No cards yet.';
+    const html='<div class="school-wrap">'
+        +'<h2>Flashcards</h2>'
+        +'<p>Add question + answer pairs, then quiz yourself.</p>'
+        +'<label>Question</label><input type="text" id="fcQ" placeholder="What is the capital of France?">'
+        +'<label>Answer</label><input type="text" id="fcA" placeholder="Paris">'
+        +'<button onclick="addFlashcard()">Add Card</button>'
+        +'<div class="result" id="fcList">'+listHTML+'</div>'
+        +'<button onclick="startFlashcardQuiz()" style="background:rgba(122,184,255,.4)">Quiz Me</button>'
+        +'</div>';
     createWindow('flashcards','Flashcards',480,560,html,'school');
 }
 function addFlashcard(){
@@ -1870,7 +1740,7 @@ function addFlashcard(){
     const saved=JSON.parse(localStorage.getItem('dos_flashcards')||'[]');
     saved.push({q,a});
     localStorage.setItem('dos_flashcards',JSON.stringify(saved));
-    document.getElementById('fcList').innerHTML=saved.map((c,i)=>`<div>${i+1}. ${c.q} → ${c.a}</div>`).join('');
+    document.getElementById('fcList').innerHTML=saved.map((c,i)=>'<div>'+(i+1)+'. '+c.q+' → '+c.a+'</div>').join('');
     document.getElementById('fcQ').value='';
     document.getElementById('fcA').value='';
 }
@@ -1883,48 +1753,38 @@ function startFlashcardQuiz(){
     alert(ans.trim().toLowerCase()===card.a.toLowerCase()?'Correct!':'Nope. Answer: '+card.a);
 }
 function openGPA(){
-    const html=`<div class="school-wrap">
-        <h2>GPA Calculator</h2>
-        <p>Enter course grades and credits. 4.0 scale.</p>
-        <div id="gpaRows">
-            <div class="school-row"><input type="text" placeholder="Course" value="Math"><input type="number" placeholder="Credits" value="3"></div>
-            <div class="school-row"><input type="text" placeholder="Course" value="English"><input type="number" placeholder="Credits" value="3"></div>
-            <div class="school-row"><input type="text" placeholder="Course" value="Science"><input type="number" placeholder="Credits" value="4"></div>
-        </div>
-        <label>Grades (comma separated: A, B+, C, etc.)</label>
-        <input type="text" id="gpaGrades" value="A, B+, A-">
-        <button onclick="calcGPA()">Calculate GPA</button>
-        <div class="result" id="gpaResult">Click calculate.</div>
-    </div>`;
-    createWindow('gpa','GPA Calculator',480,480,html,'school');
+    const html='<div class="school-wrap">'
+        +'<h2>GPA Calculator</h2>'
+        +'<p>Enter course grades and credits. 4.0 scale.</p>'
+        +'<label>Grades (comma separated: A, B+, C, etc.)</label>'
+        +'<input type="text" id="gpaGrades" value="A, B+, A-">'
+        +'<button onclick="calcGPA()">Calculate GPA</button>'
+        +'<div class="result" id="gpaResult">Click calculate.</div>'
+        +'</div>';
+    createWindow('gpa','GPA Calculator',480,380,html,'school');
 }
 function calcGPA(){
     const grades=document.getElementById('gpaGrades').value.split(',').map(s=>s.trim().toUpperCase());
-    const credits=[3,3,4];
     const map={'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D':1.0,'F':0};
     let total=0, tc=0;
-    for(let i=0;i<grades.length;i++){
-        const g=map[grades[i]];
-        const c=credits[i]||3;
-        if(g!==undefined){total+=g*c;tc+=c;}
-    }
+    grades.forEach(g=>{if(map[g]!==undefined){total+=map[g];tc++;}});
     const r=document.getElementById('gpaResult');
-    r.textContent = tc? 'Weighted GPA: '+(total/tc).toFixed(3) : 'No valid grades.';
+    r.textContent = tc? 'Unweighted GPA: '+(total/tc).toFixed(3) : 'No valid grades.';
 }
 function openEssayTimer(){
-    const html=`<div class="school-wrap">
-        <h2>Essay Word Count</h2>
-        <p>Paste your essay. Words and characters update live.</p>
-        <textarea id="essayArea" rows="14" placeholder="Paste your essay here..."></textarea>
-        <div class="result" id="essayResult">Words: 0 · Chars: 0</div>
-    </div>`;
+    const html='<div class="school-wrap">'
+        +'<h2>Essay Word Count</h2>'
+        +'<p>Paste your essay. Words and characters update live.</p>'
+        +'<textarea id="essayArea" rows="14" placeholder="Paste your essay here..."></textarea>'
+        +'<div class="result" id="essayResult">Words: 0 · Chars: 0</div>'
+        +'</div>';
     createWindow('essay','Essay Word Count',560,560,html,'school');
     setTimeout(()=>{
         const ta=document.getElementById('essayArea');
         if(!ta)return;
         ta.addEventListener('input',()=>{
             const t=ta.value;
-            const words=t.trim()?t.trim().split(/\\s+/).length:0;
+            const words=t.trim()?t.trim().split(/\s+/).length:0;
             document.getElementById('essayResult').textContent='Words: '+words+' · Chars: '+t.length;
         });
     },60);
@@ -1932,66 +1792,59 @@ function openEssayTimer(){
 
 /* ============ SETTINGS ============ */
 function openSettings(){
-    const html=`
-        <div style="padding:20px">
-            <div class="settings-section">
-                <div class="settings-label">UI Scale (like Chrome zoom)</div>
-                <div class="settings-row">
-                    <input type="range" id="setUIScale" min="0.5" max="1.25" step="0.05" value="${SETTINGS.uiScale}" oninput="applyUIScale(this.value)">
-                    <span id="uiScaleVal" style="font-size:.75rem;color:#999;width:50px;text-align:right">${Math.round(SETTINGS.uiScale*100)}%</span>
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Theme</div>
-                <div class="settings-row">
-                    <select id="setTheme" class="settings-btn" style="flex:1" onchange="applyTheme(this.value)">
-                        <option value="dark" ${SETTINGS.theme==='dark'?'selected':''}>Dark</option>
-                        <option value="light" ${SETTINGS.theme==='light'?'selected':''}>Light</option>
-                    </select>
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Accent Colors</div>
-                <div class="settings-row">
-                    <label style="font-size:.75rem;color:#999;width:70px">Primary</label>
-                    <input type="color" id="setAccent" value="${SETTINGS.accent}" onchange="applyAccent(this.value)">
-                    <label style="font-size:.75rem;color:#999;width:70px">Secondary</label>
-                    <input type="color" id="setAccent2" value="${SETTINGS.accent2}" onchange="applyAccent2(this.value)">
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Dock Size</div>
-                <div class="settings-row">
-                    <input type="range" id="setDock" min="0.7" max="1.4" step="0.05" value="${SETTINGS.dockScale}" oninput="applyDock(this.value)">
-                    <span id="dockVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">${SETTINGS.dockScale}×</span>
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Window Blur</div>
-                <div class="settings-row">
-                    <input type="range" id="setBlur" min="0" max="40" step="2" value="${SETTINGS.blur}" oninput="applyBlur(this.value)">
-                    <span id="blurVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">${SETTINGS.blur}px</span>
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Animated Background</div>
-                <label class="switch"><input type="checkbox" id="animToggle" ${SETTINGS.anim?'checked':''} onchange="applyAnim(this.checked)"><span class="slider"></span></label>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Wallpaper</div>
-                <div class="settings-row">
-                    <button class="settings-btn" onclick="document.getElementById('bgUpload').click()">Upload</button>
-                    <input type="text" id="wallUrlInput" placeholder="https://image-url..." value="${localStorage.getItem('dos_wall_url')||''}">
-                    <button class="settings-btn" onclick="applyWallUrl()">Set</button>
-                </div>
-                <input type="file" id="bgUpload" accept="image/*" style="display:none" onchange="uploadBg(event)">
-                <button class="settings-btn danger" onclick="resetBg()" style="margin-top:8px">Reset Wallpaper</button>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Danger Zone</div>
-                <button class="settings-btn danger" onclick="resetAllSettings()">Reset All Settings</button>
-            </div>
-        </div>`;
+    const html='<div style="padding:20px">'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">UI Scale</div>'
+        +'<div class="settings-row">'
+        +'<input type="range" id="setUIScale" min="0.5" max="1.25" step="0.05" value="'+SETTINGS.uiScale+'" oninput="applyUIScale(this.value)">'
+        +'<span id="uiScaleVal" style="font-size:.75rem;color:#999;width:50px;text-align:right">'+Math.round(SETTINGS.uiScale*100)+'%</span>'
+        +'</div></div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Theme</div>'
+        +'<div class="settings-row">'
+        +'<select id="setTheme" class="settings-btn" style="flex:1" onchange="applyTheme(this.value)">'
+        +'<option value="dark"'+(SETTINGS.theme==='dark'?' selected':'')+'>Dark</option>'
+        +'<option value="light"'+(SETTINGS.theme==='light'?' selected':'')+'>Light</option>'
+        +'</select></div></div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Accent Colors</div>'
+        +'<div class="settings-row">'
+        +'<label style="font-size:.75rem;color:#999;width:70px">Primary</label>'
+        +'<input type="color" id="setAccent" value="'+SETTINGS.accent+'" onchange="applyAccent(this.value)">'
+        +'<label style="font-size:.75rem;color:#999;width:70px">Secondary</label>'
+        +'<input type="color" id="setAccent2" value="'+SETTINGS.accent2+'" onchange="applyAccent2(this.value)">'
+        +'</div></div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Dock Size</div>'
+        +'<div class="settings-row">'
+        +'<input type="range" id="setDock" min="0.7" max="1.4" step="0.05" value="'+SETTINGS.dockScale+'" oninput="applyDock(this.value)">'
+        +'<span id="dockVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">'+SETTINGS.dockScale+'×</span>'
+        +'</div></div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Window Blur</div>'
+        +'<div class="settings-row">'
+        +'<input type="range" id="setBlur" min="0" max="40" step="2" value="'+SETTINGS.blur+'" oninput="applyBlur(this.value)">'
+        +'<span id="blurVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">'+SETTINGS.blur+'px</span>'
+        +'</div></div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Animated Background</div>'
+        +'<label class="switch"><input type="checkbox" id="animToggle"'+(SETTINGS.anim?' checked':'')+' onchange="applyAnim(this.checked)"><span class="slider"></span></label>'
+        +'</div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Wallpaper</div>'
+        +'<div class="settings-row">'
+        +'<button class="settings-btn" onclick="document.getElementById(\'bgUpload\').click()">Upload</button>'
+        +'<input type="text" id="wallUrlInput" placeholder="https://image-url..." value="'+(localStorage.getItem('dos_wall_url')||'')+'">'
+        +'<button class="settings-btn" onclick="applyWallUrl()">Set</button>'
+        +'</div>'
+        +'<input type="file" id="bgUpload" accept="image/*" style="display:none" onchange="uploadBg(event)">'
+        +'<button class="settings-btn danger" onclick="resetBg()" style="margin-top:8px">Reset Wallpaper</button>'
+        +'</div>'
+        +'<div class="settings-section">'
+        +'<div class="settings-label">Danger Zone</div>'
+        +'<button class="settings-btn danger" onclick="resetAllSettings()">Reset All Settings</button>'
+        +'</div>'
+        +'</div>';
     createWindow('settings','Settings',480,660,html,'settings');
 }
 function applyUIScale(v){SETTINGS.uiScale=parseFloat(v);localStorage.setItem('dos_uiscale',v);applySettings();const el=document.getElementById('uiScaleVal');if(el)el.textContent=Math.round(v*100)+'%';}
@@ -2006,13 +1859,13 @@ function applyWallUrl(){
     if(!u)return;
     localStorage.setItem('dos_wall_url',u);
     localStorage.removeItem('dreados_bg');
-    desktop.style.backgroundImage=`url(${u})`;
+    desktop.style.backgroundImage='url('+u+')';
     desktop.classList.add('wallpaper');
 }
 function uploadBg(e){
     const f=e.target.files[0];if(!f)return;const r=new FileReader();
     r.onload=ev=>{
-        desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${ev.target.result})`;
+        desktop.classList.add('wallpaper');desktop.style.backgroundImage='url('+ev.target.result+')';
         try{localStorage.setItem('dreados_bg',ev.target.result);localStorage.removeItem('dos_wall_url');}
         catch{alert('Image too large to save permanently.');}};
     r.readAsDataURL(f);
@@ -2027,57 +1880,56 @@ function resetAllSettings(){
 /* ============ NOTEPAD ============ */
 function openNotepad(){
     const saved=localStorage.getItem('dreados_notepad')||'';
-    createWindow('notepad','Notepad',480,360,`<textarea class="notepad-textarea" id="np" placeholder="start typing...">${saved}</textarea>`,'notepad');
+    createWindow('notepad','Notepad',480,360,'<textarea class="notepad-textarea" id="np" placeholder="start typing...">'+saved+'</textarea>','notepad');
     setTimeout(()=>{const ta=document.getElementById('np');if(!ta)return;ta.focus();ta.addEventListener('input',()=>localStorage.setItem('dreados_notepad',ta.value));},60);
 }
 
 /* ============ CALCULATOR ============ */
 function openCalculator(){
-    const html=`
-        <div class="calc-wrap">
-            <div class="calc-history" id="calcHist"></div>
-            <div class="calc-display-box">
-                <div class="calc-display" id="cd">0</div>
-                <div class="calc-preview" id="cp"></div>
-            </div>
-            <div class="calc-grid">
-                <button class="fn" onclick="calcFn('sin(')">sin</button>
-                <button class="fn" onclick="calcFn('cos(')">cos</button>
-                <button class="fn" onclick="calcFn('tan(')">tan</button>
-                <button class="fn" onclick="calcFn('log(')">log</button>
-                <button class="fn" onclick="calcFn('ln(')">ln</button>
-                <button class="fn" onclick="calcFn('sqrt(')">√</button>
-                <button class="fn" onclick="calcFn('^')">^</button>
-                <button class="fn" onclick="calcFn('pi')">π</button>
-                <button class="fn" onclick="calcFn('e')">e</button>
-                <button class="fn" onclick="calcFn('!')">n!</button>
-                <button onclick="calcNum('7')">7</button>
-                <button onclick="calcNum('8')">8</button>
-                <button onclick="calcNum('9')">9</button>
-                <button class="op" onclick="calcOp('/')">÷</button>
-                <button class="op" onclick="calcOp('*')">×</button>
-                <button onclick="calcNum('4')">4</button>
-                <button onclick="calcNum('5')">5</button>
-                <button onclick="calcNum('6')">6</button>
-                <button class="op" onclick="calcOp('-')">−</button>
-                <button class="fn" onclick="calcFn('(')">(</button>
-                <button onclick="calcNum('1')">1</button>
-                <button onclick="calcNum('2')">2</button>
-                <button onclick="calcNum('3')">3</button>
-                <button class="op" onclick="calcOp('+')">+</button>
-                <button class="fn" onclick="calcFn(')')">)</button>
-                <button onclick="calcNum('0')">0</button>
-                <button onclick="calcNum('.')">.</button>
-                <button class="fn" onclick="calcFn('x')">x</button>
-                <button class="fn" onclick="calcFn('y')">y</button>
-                <button class="eq" onclick="calcEq()" style="grid-row:span 1;grid-column:span 1">=</button>
-                <button onclick="calcClear()" class="fn">AC</button>
-                <button onclick="calcDel()" class="fn">⌫</button>
-                <button class="fn" onclick="calcFn('=')">ANS</button>
-                <button class="op" onclick="calcOp('%')">%</button>
-            </div>
-            <div class="calc-help">Supports: + − × ÷ ^ % √ sin cos tan log ln π e ( ) x y !</div>
-        </div>`;
+    const html='<div class="calc-wrap">'
+        +'<div class="calc-history" id="calcHist"></div>'
+        +'<div class="calc-display-box">'
+        +'<div class="calc-display" id="cd">0</div>'
+        +'<div class="calc-preview" id="cp"></div>'
+        +'</div>'
+        +'<div class="calc-grid">'
+        +'<button class="fn" onclick="calcFn(\'sin(\')">sin</button>'
+        +'<button class="fn" onclick="calcFn(\'cos(\')">cos</button>'
+        +'<button class="fn" onclick="calcFn(\'tan(\')">tan</button>'
+        +'<button class="fn" onclick="calcFn(\'log(\')">log</button>'
+        +'<button class="fn" onclick="calcFn(\'ln(\')">ln</button>'
+        +'<button class="fn" onclick="calcFn(\'sqrt(\')">√</button>'
+        +'<button class="fn" onclick="calcFn(\'^\')">^</button>'
+        +'<button class="fn" onclick="calcFn(\'pi\')">π</button>'
+        +'<button class="fn" onclick="calcFn(\'e\')">e</button>'
+        +'<button class="fn" onclick="calcFn(\'!\')">n!</button>'
+        +'<button onclick="calcNum(\'7\')">7</button>'
+        +'<button onclick="calcNum(\'8\')">8</button>'
+        +'<button onclick="calcNum(\'9\')">9</button>'
+        +'<button class="op" onclick="calcOp(\'/\')">÷</button>'
+        +'<button class="op" onclick="calcOp(\'*\')">×</button>'
+        +'<button onclick="calcNum(\'4\')">4</button>'
+        +'<button onclick="calcNum(\'5\')">5</button>'
+        +'<button onclick="calcNum(\'6\')">6</button>'
+        +'<button class="op" onclick="calcOp(\'-\')">−</button>'
+        +'<button class="fn" onclick="calcFn(\'(\')">(</button>'
+        +'<button onclick="calcNum(\'1\')">1</button>'
+        +'<button onclick="calcNum(\'2\')">2</button>'
+        +'<button onclick="calcNum(\'3\')">3</button>'
+        +'<button class="op" onclick="calcOp(\'+\')">+</button>'
+        +'<button class="fn" onclick="calcFn(\')\')">)</button>'
+        +'<button onclick="calcNum(\'0\')">0</button>'
+        +'<button onclick="calcNum(\'.\')">.</button>'
+        +'<button class="fn" onclick="calcFn(\'x\')">x</button>'
+        +'<button class="fn" onclick="calcFn(\'y\')">y</button>'
+        +'<button class="eq" onclick="calcEq()">=</button>'
+        +'<button onclick="calcClear()" class="fn">AC</button>'
+        +'<button onclick="calcDel()" class="fn">⌫</button>'
+        +'<button class="fn" onclick="calcFn(\'=\')">ANS</button>'
+        +'<button class="op" onclick="calcOp(\'%\')">%</button>'
+        +'</div>'
+        +'<div class="calc-help">Supports: + − × ÷ ^ % √ sin cos tan log ln π e ( ) x y !</div>'
+        +'</div>';
     createWindow('calculator','Calculator',420,620,html,'calculator');
     window._calcHist = JSON.parse(localStorage.getItem('dreados_calc_hist') || '[]');
     window._calcVars = {x:1, y:2, ans:0};
@@ -2123,7 +1975,7 @@ function calcEq(){
 }
 function renderCalcHist(){
     const h=document.getElementById('calcHist');if(!h)return;
-    h.innerHTML=window._calcHist.map(r=>`<div class="row"><span class="in">${r.in}</span><span class="out">${r.out}</span></div>`).join('');
+    h.innerHTML=window._calcHist.map(r=>'<div class="row"><span class="in">'+r.in+'</span><span class="out">'+r.out+'</span></div>').join('');
 }
 function parseCalc(expr,vars){
     vars=vars||{};
@@ -2173,4 +2025,4 @@ document.addEventListener('contextmenu',e=>{
 document.addEventListener('click',e=>{if(!e.target.closest('#contextMenu'))ctx.classList.remove('open');});
 </script>
 </body>
-</html>
+    </html>
