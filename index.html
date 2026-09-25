@@ -910,6 +910,63 @@ function openBrowser(){
         function goHome(){
             content.innerHTML=renderHomePage();
             input.value='';
+function openBrowser(){
+    const html=`
+    <div class="browser" id="browserRoot">
+        <div class="browser-tabs">
+            <div class="browser-tab"><div class="fav"></div><div class="label" id="brTabLabel">New Tab</div></div>
+            <button class="browser-newtab" id="brNewTab" title="New Tab">+</button>
+        </div>
+        <div class="browser-toolbar">
+            <button class="browser-btn" id="brBack" disabled title="Back">←</button>
+            <button class="browser-btn" id="brFwd" disabled title="Forward">→</button>
+            <button class="browser-btn" id="brReload" title="Reload">↻</button>
+            <button class="browser-btn" id="brHome" title="Home">⌂</button>
+            <div class="browser-omnibox">
+                <span class="lock">🔒</span>
+                <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
+            </div>
+        </div>
+        <div class="browser-warn"><b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It's a link launcher that opens sites inside an iframe. Some sites block iframes and won't load.</div>
+        <div class="browser-content" id="brContent">${renderHomePage()}</div>
+    </div>`;
+    createWindow('browser','DreadDreadGo',920,620,html,'browser');
+    setTimeout(()=>{
+        const input=document.getElementById('brUrl');
+        const content=document.getElementById('brContent');
+        const home=document.getElementById('brHome');
+        const reload=document.getElementById('brReload');
+        const back=document.getElementById('brBack');
+        const fwd=document.getElementById('brFwd');
+        const newTab=document.getElementById('brNewTab');
+        const tabLabel=document.getElementById('brTabLabel');
+        if(!input||!content)return;
+
+        let history=[];
+        let index=-1;
+
+        function updateNavBtns(){
+            back.disabled = index <= 0;
+            fwd.disabled = index >= history.length-1;
+        }
+        function renderIframe(url, push){
+            if(push!==false){
+                history=history.slice(0,index+1);
+                history.push(url);
+                index=history.length-1;
+            }
+            content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
+            input.value='•••••••••••••••••••••••••••';
+            try{tabLabel.textContent=new URL(url).hostname.replace(/^www\./,'');}catch(e){tabLabel.textContent='New Tab';}
+            updateNavBtns();
+        }
+        function loadUrl(url){
+            if(!url.startsWith('http'))url='https://'+url;
+            renderIframe(url,true);
+        }
+        function goHome(){
+            content.innerHTML=renderHomePage();
+            input.value='';
             tabLabel.textContent='New Tab';
             wireHome();
         }
@@ -960,7 +1017,7 @@ function renderHomePage(){
     });
     html+='</div>';
     return html;
-    }
+}
 
 /* ============ GITHUB ============ */
 function openGithub(){
