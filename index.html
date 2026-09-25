@@ -5,8 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dreadOS</title>
 <style>
+:root{
+    --accent:#7ab8ff;
+    --accent-2:#a04bd4;
+    --bg-1:#1a0f2e;
+    --bg-2:#12082a;
+    --bg-3:#0a0a1e;
+    --bg-4:#05050d;
+    --win-bg:rgba(18,18,26,.94);
+    --win-bg-light:rgba(240,240,245,.96);
+    --text:#e0e0e0;
+    --text-light:#1a1a20;
+    --muted:#999;
+    --border:rgba(255,255,255,.08);
+    --blur:22px;
+    --dock-scale:1;
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e0;user-select:none;-webkit-font-smoothing:antialiased}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:var(--text);user-select:none;-webkit-font-smoothing:antialiased}
+body.light{color:var(--text-light)}
 
 /* BOOT */
 #boot{position:fixed;inset:0;background:#05050a;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s cubic-bezier(.4,0,.2,1),visibility .9s}
@@ -14,7 +31,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e
 .boot-logo{font-size:2.8rem;font-weight:200;letter-spacing:10px;color:#fff;margin-bottom:6px}
 .boot-sub{font-size:.7rem;color:#444;letter-spacing:4px;margin-bottom:44px}
 .boot-bar{width:260px;height:2px;background:#15151e;border-radius:2px;overflow:hidden}
-.boot-fill{height:100%;width:0;background:linear-gradient(90deg,#a04bd4,#4a7c59,#7ab8ff);transition:width .3s cubic-bezier(.4,0,.2,1)}
+.boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),#4a7c59,var(--accent));transition:width .3s cubic-bezier(.4,0,.2,1)}
 .boot-status{font-size:.68rem;color:#333;margin-top:16px;font-family:'Courier New',monospace;letter-spacing:1px}
 
 /* DESKTOP */
@@ -25,52 +42,46 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e
         radial-gradient(ellipse 55% 65% at 30% 15%, rgba(90,60,180,.55), transparent 60%),
         radial-gradient(ellipse 45% 55% at 85% 20%, rgba(30,40,90,.7), transparent 65%),
         radial-gradient(ellipse 60% 80% at 90% 85%, rgba(20,25,60,.85), transparent 65%),
-        linear-gradient(110deg,#1a0f2e 0%,#12082a 25%,#0a0a1e 55%,#05050d 85%);
+        linear-gradient(110deg, var(--bg-1) 0%, var(--bg-2) 25%, var(--bg-3) 55%, var(--bg-4) 85%);
     background-size:200% 200%;animation:bgShift 30s ease infinite}
 #desktop.wallpaper{animation:none;background-size:cover;background-position:center}
+#desktop.no-anim{animation:none}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 #desktop::before{content:"";position:absolute;inset:-20%;pointer-events:none;
     background:radial-gradient(circle at 25% 55%,rgba(200,120,220,.25),transparent 35%),
                radial-gradient(circle at 45% 75%,rgba(120,60,200,.20),transparent 40%);
     filter:blur(40px);animation:blobMove 22s ease-in-out infinite alternate}
-@keyframes blobMove{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(6%,-4%,0) scale(1.08)}}
+#desktop.no-anim::before{animation:none}
 
 /* TOPBAR */
-#topbar{position:absolute;top:0;left:0;right:0;height:30px;background:rgba(10,10,18,.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 12px;gap:14px;font-size:.7rem;color:#aaa;z-index:900}
+#topbar{position:absolute;top:0;left:0;right:0;height:30px;background:rgba(10,10,18,.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:14px;font-size:.7rem;color:#aaa;z-index:900}
 #topbar .brand{font-weight:600;color:#fff;letter-spacing:1.5px;font-size:.72rem}
 #topbar .spacer{flex:1}
 #topbar .tray{display:flex;gap:12px;align-items:center;color:#999;font-size:.68rem}
 #topbar .chip{background:rgba(255,255,255,.06);padding:3px 9px;border-radius:10px;font-size:.65rem}
 
 /* DOCK */
-#dock{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(15,15,25,.55);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:8px 12px;display:flex;gap:6px;z-index:900;box-shadow:0 12px 45px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.05)}
-.dock-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s ease;position:relative}
+#dock{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(15,15,25,.55);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--border);border-radius:18px;padding:8px 12px;display:flex;gap:6px;z-index:900;box-shadow:0 12px 45px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.05)}
+.dock-icon{width:calc(42px * var(--dock-scale));height:calc(42px * var(--dock-scale));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:calc(1.05rem * var(--dock-scale));cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .2s ease;position:relative}
 .dock-icon:hover{transform:translate3d(0,-9px,0) scale(1.1);background:rgba(255,255,255,.14)}
 .dock-icon::after{content:attr(data-label);position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font-size:.6rem;color:#ddd;background:rgba(0,0,0,.85);padding:3px 8px;border-radius:6px;opacity:0;pointer-events:none;white-space:nowrap;transition:opacity .18s ease}
 .dock-icon:hover::after{opacity:1}
-.dock-sep{width:1px;background:rgba(255,255,255,.08);margin:6px 3px}
+.dock-sep{width:1px;background:var(--border);margin:6px 3px}
 .dock-indicator{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s ease}
 .dock-icon.has-window .dock-indicator{opacity:.7}
 
 /* WINDOWS */
-.window{position:absolute;background:rgba(18,18,26,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.7);display:flex;flex-direction:column;min-width:280px;min-height:180px;opacity:0;transform:translate3d(0,12px,0) scale(.94);
-    transition:opacity .28s cubic-bezier(.4,0,.2,1),
-               transform .32s cubic-bezier(.34,1.4,.64,1),
-               width .28s cubic-bezier(.4,0,.2,1),
-               height .28s cubic-bezier(.4,0,.2,1),
-               left .28s cubic-bezier(.4,0,.2,1),
-               top .28s cubic-bezier(.4,0,.2,1)}
-/* When dragging, kill transitions on left/top so it's instant */
-.window.dragging{transition:opacity .28s cubic-bezier(.4,0,.2,1),
-                            transform .32s cubic-bezier(.34,1.4,.64,1),
-                            width .28s cubic-bezier(.4,0,.2,1),
-                            height .28s cubic-bezier(.4,0,.2,1)}
+.window{position:absolute;background:var(--win-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.7);display:flex;flex-direction:column;min-width:280px;min-height:180px;opacity:0;transform:translate3d(0,12px,0) scale(.94);
+    transition:opacity .28s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.34,1.4,.64,1),width .28s cubic-bezier(.4,0,.2,1),height .28s cubic-bezier(.4,0,.2,1),left .28s cubic-bezier(.4,0,.2,1),top .28s cubic-bezier(.4,0,.2,1)}
+body.light .window{background:var(--win-bg-light);color:var(--text-light);border-color:rgba(0,0,0,.08)}
+.window.dragging,.window.resizing{transition:opacity .28s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.34,1.4,.64,1)}
 .window.open{opacity:1;transform:translate3d(0,0,0) scale(1)}
 .window.closing{opacity:0;transform:translate3d(0,8px,0) scale(.93)}
 .window.minimizing{opacity:0;transform:translate3d(0,400px,0) scale(.15);transition:opacity .28s ease,transform .34s cubic-bezier(.5,0,.7,.4)}
 .window.fullscreen{border-radius:0;left:0 !important;top:30px !important;width:100vw !important;height:calc(100vh - 30px) !important}
 .window.fullscreen .window-header{cursor:default}
-.window-header{height:34px;background:rgba(255,255,255,.03);display:flex;align-items:center;padding:0 12px;gap:10px;cursor:grab;user-select:none;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;touch-action:none}
+.window-header{height:34px;background:rgba(255,255,255,.03);display:flex;align-items:center;padding:0 12px;gap:10px;cursor:grab;user-select:none;border-bottom:1px solid var(--border);flex-shrink:0;touch-action:none}
+body.light .window-header{background:rgba(0,0,0,.02);border-bottom-color:rgba(0,0,0,.06)}
 .window-header:active{cursor:grabbing}
 .window.fullscreen .window-header:active{cursor:default}
 .window-dots{display:flex;gap:8px;align-items:center}
@@ -82,44 +93,54 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;color:#e0e0e
 .dot.green{background:#28c840}.dot.green::before{content:"+";font-size:10px}
 .dot:hover{filter:brightness(1.2)}.dot:active{transform:scale(.9)}
 .window-title{flex:1;font-size:.74rem;color:#ccc;font-weight:500;letter-spacing:.3px;text-align:center}
+body.light .window-title{color:#333}
 .window-menu{font-size:.85rem;color:#888;cursor:pointer;padding:2px 6px;border-radius:4px}
 .window-menu:hover{background:rgba(255,255,255,.08);color:#ccc}
 .window-body{flex:1;overflow:auto;position:relative;background:transparent}
 .window-body::-webkit-scrollbar{width:8px;height:8px}
 .window-body::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:4px}
+/* RESIZE HANDLE */
+.resize-handle{position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;z-index:10;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.18) 50%,rgba(255,255,255,.18) 60%,transparent 60%,transparent 70%,rgba(255,255,255,.18) 70%,rgba(255,255,255,.18) 80%,transparent 80%);border-bottom-right-radius:10px;touch-action:none}
+.window.fullscreen .resize-handle{display:none}
 
 /* TERMINAL */
 .terminal{background:rgba(6,6,10,.96);color:#c8c8c8;font-family:'Menlo','Courier New',monospace;padding:14px;height:100%;overflow-y:auto;font-size:.76rem;line-height:1.55;white-space:pre-wrap;word-wrap:break-word}
 .terminal::-webkit-scrollbar{width:6px}.terminal::-webkit-scrollbar-thumb{background:#252530;border-radius:3px}
 .term-input{background:transparent;border:none;color:#c8c8c8;font-family:inherit;font-size:.76rem;outline:none;width:70%;caret-color:#c8c8c8}
-.term-user{color:#7ab8ff}.term-host{color:#a04bd4}.term-path{color:#4a7c59}.term-err{color:#ff5f57}.term-ok{color:#4a7c59}
+.term-user{color:var(--accent)}.term-host{color:var(--accent-2)}.term-path{color:#4a7c59}.term-err{color:#ff5f57}.term-ok{color:#4a7c59}
 
 /* SETTINGS */
-.settings-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.settings-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border)}
 .settings-section:last-child{border-bottom:none;margin-bottom:0}
 .settings-label{font-size:.66rem;color:#777;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
-.settings-btn{background:rgba(255,255,255,.06);color:#ddd;border:1px solid rgba(255,255,255,.08);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.76rem;transition:background .15s ease,transform .1s ease}
+body.light .settings-label{color:#666}
+.settings-btn{background:rgba(255,255,255,.06);color:#ddd;border:1px solid var(--border);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.76rem;transition:background .15s ease,transform .1s ease}
 .settings-btn:hover{background:rgba(255,255,255,.12)}.settings-btn:active{transform:scale(.97)}
 .settings-btn.danger{background:rgba(200,60,60,.2);border-color:rgba(200,60,60,.3)}
 .settings-btn.danger:hover{background:rgba(200,60,60,.35)}
+body.light .settings-btn{background:rgba(0,0,0,.04);color:#333;border-color:rgba(0,0,0,.08)}
+body.light .settings-btn:hover{background:rgba(0,0,0,.08)}
 .switch{position:relative;display:inline-block;width:42px;height:22px;vertical-align:middle}
 .switch input{opacity:0;width:0;height:0}
 .slider{position:absolute;cursor:pointer;inset:0;background:#333;transition:.25s;border-radius:22px}
 .slider:before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:#ccc;transition:.25s cubic-bezier(.4,0,.2,1);border-radius:50%}
 input:checked + .slider{background:#4a7c59}
 input:checked + .slider:before{transform:translateX(20px)}
-
-.app-iframe{width:100%;height:100%;border:none;background:#fff;display:block}
+.settings-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.settings-row input[type=range]{flex:1;accent-color:var(--accent)}
+.settings-row input[type=color]{width:44px;height:28px;border:none;background:transparent;cursor:pointer}
+.settings-row input[type=text]{flex:1;padding:8px 12px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;color:inherit;font-size:.76rem;outline:none;font-family:'Menlo',monospace}
+body.light .settings-row input[type=text]{background:rgba(255,255,255,.7)}
 
 /* GITHUB */
 .gh-container{padding:0;height:100%;overflow-y:auto;background:#0d1117;color:#c9d1d9;font-size:.78rem}
 .gh-topbar{padding:10px 16px;background:#010409;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:2}
 .gh-topbar .url{flex:1;background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:5px 10px;color:#8b949e;font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gh-topbar .gh-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:.72rem}
-.gh-topbar .gh-btn:hover{background:#30363d}
 .gh-content{padding:20px 24px}
 .gh-repo-title{font-size:1rem;margin-bottom:12px}
-.gh-repo-title .owner{color:#58a6ff}.gh-repo-title .name{color:#58a6ff;font-weight:600}
+.gh-repo-title .owner,.gh-repo-title .name{color:#58a6ff}
+.gh-repo-title .name{font-weight:600}
 .gh-badge{font-size:.65rem;padding:1px 7px;border:1px solid #30363d;border-radius:20px;color:#8b949e;margin-left:6px}
 .gh-tabs{display:flex;gap:14px;border-bottom:1px solid #21262d;margin-bottom:16px;font-size:.76rem}
 .gh-tabs div{padding:8px 0;color:#8b949e;cursor:pointer}
@@ -129,56 +150,66 @@ input:checked + .slider:before{transform:translateX(20px)}
 .gh-file-row .msg{color:#8b949e;flex:1}.gh-file-row .time{color:#6e7681;font-size:.7rem}
 .gh-readme{margin-top:20px;padding:16px;border:1px solid #21262d;border-radius:6px;background:#0d1117}
 .gh-readme h2{font-size:.95rem;margin-bottom:8px;border-bottom:1px solid #21262d;padding-bottom:6px}
-.gh-readme p{color:#8b949e;font-size:.75rem;line-height:1.6;margin-bottom:8px}
-
-/* DOOM */
-.doom-container{width:100%;height:100%;background:#000;position:relative;overflow:hidden}
-.doom-placeholder{position:absolute;inset:0;
-    background:linear-gradient(180deg,#3a2a1a 0%,#1a0f08 40%,#0a0503 100%),
-               radial-gradient(circle at 50% 60%,rgba(180,100,30,.3),transparent 50%);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c9a86a;text-align:center;padding:20px}
-.doom-placeholder::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.25) 3px 4px),repeating-linear-gradient(90deg,transparent 0 40px,rgba(80,40,10,.15) 40px 42px);pointer-events:none}
-.doom-hud{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#3a1a1a,#1a0808);border-top:2px solid #6a3a1a;display:flex;justify-content:space-between;padding:8px 14px;font-family:'Courier New',monospace;font-size:.75rem;color:#e0c090;z-index:2}
-.doom-hud .stat{display:flex;gap:6px;align-items:center}
-.doom-hud .stat .val{color:#fff;font-weight:700;font-size:.95rem}
-.doom-info{font-size:.7rem;color:#8a6a3a;margin-top:8px;letter-spacing:2px;text-transform:uppercase}
 
 /* CONTEXT MENU */
-#contextMenu{position:absolute;background:rgba(18,18,28,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:6px;display:none;z-index:2000;min-width:190px;box-shadow:0 14px 40px rgba(0,0,0,.7);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s cubic-bezier(.34,1.4,.64,1)}
+#contextMenu{position:absolute;background:rgba(18,18,28,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--border);border-radius:10px;padding:6px;display:none;z-index:2000;min-width:200px;box-shadow:0 14px 40px rgba(0,0,0,.7);opacity:0;transform:scale(.96);transition:opacity .12s ease,transform .12s cubic-bezier(.34,1.4,.64,1)}
 #contextMenu.open{display:block;opacity:1;transform:scale(1)}
 .ctx-item{padding:9px 14px;border-radius:6px;cursor:pointer;font-size:.76rem;color:#ddd;transition:background .12s}
 .ctx-item:hover{background:rgba(255,255,255,.09)}
+.ctx-sep{height:1px;background:var(--border);margin:4px 0}
 
+/* NOTEPAD/CALC */
 .notepad-textarea{width:100%;height:100%;background:rgba(12,12,18,.7);color:#ddd;border:none;outline:none;resize:none;padding:14px;font-family:'Courier New',monospace;font-size:.8rem;line-height:1.5}
-.calc-display{background:rgba(0,0,0,.45);color:#fff;padding:16px;text-align:right;font-size:1.55rem;border-radius:8px;margin-bottom:10px;min-height:2em;word-wrap:break-word;font-weight:300;letter-spacing:1px}
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.calc-grid button{padding:14px 0;background:rgba(255,255,255,.06);color:#ddd;border:1px solid rgba(255,255,255,.05);border-radius:8px;cursor:pointer;font-size:1rem;transition:background .12s ease,transform .08s ease}
-.calc-grid button:hover{background:rgba(255,255,255,.12)}.calc-grid button:active{transform:scale(.96)}
-.calc-grid button.op{color:#7ab8ff}
-.calc-grid button.eq{background:linear-gradient(135deg,#4a7c59,#3a6c49);color:#fff}
+body.light .notepad-textarea{background:rgba(255,255,255,.5);color:#222}
 
-.masked-url{flex:1;padding:6px 12px;background:rgba(0,0,0,.35);border-radius:6px;font-size:.72rem;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Menlo','Courier New',monospace;letter-spacing:1.5px}
+/* SOPHISTICATED CALCULATOR */
+.calc-wrap{display:flex;flex-direction:column;height:100%;padding:12px;gap:8px;background:#0e0e16}
+.calc-history{flex:1;overflow-y:auto;background:rgba(0,0,0,.35);border-radius:8px;padding:10px 14px;font-family:'Menlo','Courier New',monospace;font-size:.76rem;color:#888;min-height:60px;max-height:120px}
+.calc-history .row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.calc-history .row .in{color:#aaa}.calc-history .row .out{color:var(--accent);font-weight:600}
+.calc-display-box{background:rgba(0,0,0,.5);border-radius:8px;padding:14px 16px;text-align:right}
+.calc-display{font-size:1.4rem;font-weight:300;color:#fff;letter-spacing:.5px;word-wrap:break-word;min-height:1.6em;font-family:'Menlo','Courier New',monospace}
+.calc-preview{font-size:.8rem;color:var(--accent);min-height:1.2em;font-family:'Menlo','Courier New',monospace}
+.calc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.calc-grid button{padding:12px 0;background:rgba(255,255,255,.06);color:#ddd;border:1px solid rgba(255,255,255,.05);border-radius:8px;cursor:pointer;font-size:.9rem;font-family:'Menlo','Courier New',monospace;transition:background .12s ease,transform .08s ease}
+.calc-grid button:hover{background:rgba(255,255,255,.12)}
+.calc-grid button:active{transform:scale(.96)}
+.calc-grid button.op{color:var(--accent)}
+.calc-grid button.fn{color:#ff9d5c;font-size:.8rem}
+.calc-grid button.eq{background:linear-gradient(135deg,#4a7c59,#3a6c49);color:#fff;grid-row:span 2}
+.calc-grid button.wide{grid-column:span 2}
+.calc-help{padding:6px 10px;font-size:.65rem;color:#666;font-family:'Menlo',monospace;text-align:center}
 
-/* GAME WINDOWS */
+/* GAMES */
+.game-menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:18px;background:#0e0e16;height:100%;overflow-y:auto}
+.game-menu h2{grid-column:1/-1;font-size:.9rem;color:#ddd;margin-bottom:4px;font-weight:500;letter-spacing:.5px}
+.game-menu p{grid-column:1/-1;font-size:.72rem;color:#888;margin-bottom:14px}
+.game-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 14px;cursor:pointer;transition:all .18s ease;display:flex;flex-direction:column;gap:6px;text-align:left}
+.game-card:hover{background:rgba(122,184,255,.1);border-color:rgba(122,184,255,.4);transform:translateY(-2px)}
+.game-card .ico{font-size:1.6rem;color:var(--accent)}
+.game-card .name{font-size:.82rem;color:#e8e8e8;font-weight:500}
+.game-card .desc{font-size:.68rem;color:#888;line-height:1.4}
+
 .game-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0a0a12;color:#ddd;padding:12px;gap:10px}
 .game-hud{display:flex;gap:16px;font-size:.75rem;color:#999;font-family:'Menlo','Courier New',monospace}
-.game-hud b{color:#7ab8ff;font-weight:600}
+.game-hud b{color:var(--accent);font-weight:600}
 .game-canvas{background:#050510;border:1px solid #2a2a35;border-radius:6px;display:block;max-width:100%}
 .game-btn{background:rgba(255,255,255,.06);color:#ddd;border:1px solid rgba(255,255,255,.1);padding:8px 18px;border-radius:8px;cursor:pointer;font-size:.8rem;transition:background .15s}
 .game-btn:hover{background:rgba(255,255,255,.14)}
 .game-help{font-size:.7rem;color:#666;text-align:center;font-family:'Menlo',monospace}
-
-/* MEMORY */
+.game-back{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);color:#ddd;border:1px solid rgba(255,255,255,.1);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.7rem;z-index:5}
+.game-back:hover{background:rgba(0,0,0,.7)}
 .memory-grid{display:grid;grid-template-columns:repeat(4,64px);gap:8px}
 .mem-card{width:64px;height:64px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;transition:background .15s,transform .15s;color:transparent}
 .mem-card.flipped{background:rgba(74,124,89,.25);color:#fff;border-color:rgba(74,124,89,.6)}
 .mem-card.matched{background:rgba(122,184,255,.15);color:#fff;border-color:rgba(122,184,255,.5);cursor:default}
-
-/* TIC TAC TOE */
 .ttt-grid{display:grid;grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);gap:6px}
-.ttt-cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:300;color:#7ab8ff;transition:background .15s}
+.ttt-cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:300;color:var(--accent);transition:background .15s}
 .ttt-cell:hover:empty{background:rgba(255,255,255,.1)}
-.ttt-cell.x{color:#7ab8ff}.ttt-cell.o{color:#ff9d5c}
+.ttt-cell.x{color:var(--accent)}.ttt-cell.o{color:#ff9d5c}
+
+/* MATRIX / PIPES */
+.matrix-canvas{width:100%;height:100%;display:block;background:#000}
 </style>
 </head>
 <body>
@@ -205,27 +236,48 @@ input:checked + .slider:before{transform:translateX(20px)}
 
 <div id="dock">
     <div class="dock-icon" data-app="terminal" data-label="Terminal" onclick="openApp('terminal')">▣<span class="dock-indicator"></span></div>
-    <div class="dock-icon" data-app="chrome" data-label="Chrome" onclick="openApp('chrome')">◐<span class="dock-indicator"></span></div>
-    <div class="dock-icon" data-app="settings" data-label="Files" onclick="openApp('settings')">▤<span class="dock-indicator"></span></div>
-    <div class="dock-sep"></div>
-    <div class="dock-icon" data-app="github" data-label="GitHub" onclick="openApp('github')">◉<span class="dock-indicator"></span></div>
-    <div class="dock-icon" data-app="doom" data-label="DOOM" onclick="openApp('doom')">☠<span class="dock-indicator"></span></div>
-    <div class="dock-sep"></div>
+    <div class="dock-icon" data-app="browser" data-label="Browser" onclick="openApp('browser')">◐<span class="dock-indicator"></span></div>
     <div class="dock-icon" data-app="settings" data-label="Settings" onclick="openApp('settings')">⚙<span class="dock-indicator"></span></div>
+    <div class="dock-sep"></div>
+    <div class="dock-icon" data-app="games" data-label="Games" onclick="openApp('games')">▶<span class="dock-indicator"></span></div>
+    <div class="dock-icon" data-app="github" data-label="GitHub" onclick="openApp('github')">◉<span class="dock-indicator"></span></div>
+    <div class="dock-sep"></div>
     <div class="dock-icon" data-app="notepad" data-label="Notepad" onclick="openApp('notepad')">✎<span class="dock-indicator"></span></div>
     <div class="dock-icon" data-app="calculator" data-label="Calculator" onclick="openApp('calculator')">±<span class="dock-indicator"></span></div>
 </div>
 
 <div id="contextMenu">
     <div class="ctx-item" onclick="openApp('terminal')">Open Terminal</div>
-    <div class="ctx-item" onclick="openApp('github')">Open GitHub</div>
-    <div class="ctx-item" onclick="openApp('doom')">Open DOOM</div>
-    <div class="ctx-item" onclick="openApp('settings')">Change Wallpaper</div>
+    <div class="ctx-item" onclick="openApp('browser')">Open Browser</div>
+    <div class="ctx-item" onclick="openApp('games')">Open Games</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="openApp('settings')">Settings</div>
     <div class="ctx-item" onclick="closeAllWindows()">Close All Windows</div>
 </div>
 
 <script>
-/* BOOT */
+/* ============ SETTINGS LOAD ============ */
+const SETTINGS = {
+    theme: localStorage.getItem('dos_theme') || 'dark',
+    accent: localStorage.getItem('dos_accent') || '#7ab8ff',
+    accent2: localStorage.getItem('dos_accent2') || '#a04bd4',
+    dockScale: parseFloat(localStorage.getItem('dos_dockscale') || '1'),
+    blur: parseInt(localStorage.getItem('dos_blur') || '22'),
+    anim: localStorage.getItem('dos_anim') !== 'off'
+};
+function applySettings(){
+    document.documentElement.style.setProperty('--accent', SETTINGS.accent);
+    document.documentElement.style.setProperty('--accent-2', SETTINGS.accent2);
+    document.documentElement.style.setProperty('--dock-scale', SETTINGS.dockScale);
+    document.documentElement.style.setProperty('--blur', SETTINGS.blur + 'px');
+    document.body.classList.toggle('light', SETTINGS.theme === 'light');
+    desktop.classList.toggle('no-anim', !SETTINGS.anim);
+    if(!localStorage.getItem('dreados_bg') && !localStorage.getItem('dos_wall_url')){
+        desktop.classList.remove('wallpaper');
+    }
+}
+
+/* ============ BOOT ============ */
 const bootSteps=[[12,"loading kernel modules..."],[28,"initializing display server..."],[46,"mounting virtual filesystem..."],[64,"starting window manager..."],[80,"loading user profile..."],[94,"applying wallpaper..."],[100,"welcome, dread."]];
 let bi=0;
 (function runBoot(){
@@ -239,10 +291,13 @@ let bi=0;
     setTimeout(runBoot,340);
 })();
 
-/* DESKTOP */
+/* ============ DESKTOP ============ */
 const desktop=document.getElementById('desktop');
 const savedBg=localStorage.getItem('dreados_bg');
-if(savedBg){desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${savedBg})`}
+const wallUrl=localStorage.getItem('dos_wall_url');
+if(savedBg){desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${savedBg})`;}
+else if(wallUrl){desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${wallUrl})`;}
+applySettings();
 
 /* CLOCK */
 function updateClock(){const d=new Date();
@@ -253,7 +308,7 @@ if(navigator.getBattery){navigator.getBattery().then(b=>{const u=()=>document.ge
 else{document.getElementById('trayBattery').style.display='none';}
 document.getElementById('trayWifi').textContent=navigator.onLine?'wifi':'offline';
 
-/* WINDOW MANAGER */
+/* ============ WINDOW MANAGER ============ */
 let zTop=100;
 const windows={};
 const minimized={};
@@ -280,11 +335,12 @@ function createWindow(id,title,w,h,bodyHTML,appName){
             <div class="window-title">${title}</div>
             <div class="window-menu" onclick="event.stopPropagation();">⋯</div>
         </div>
-        <div class="window-body" id="body-${id}">${bodyHTML}</div>`;
+        <div class="window-body" id="body-${id}">${bodyHTML}</div>
+        <div class="resize-handle" data-win="${id}"></div>`;
     document.body.appendChild(win);
     requestAnimationFrame(()=>win.classList.add('open'));
 
-    /* ==== FAST DRAG using Pointer Events + capture ==== */
+    /* drag */
     const header=win.querySelector('.window-header');
     let drag=false, sx=0, sy=0, sl=0, st=0, pid=null;
     header.addEventListener('pointerdown', e=>{
@@ -300,12 +356,10 @@ function createWindow(id,title,w,h,bodyHTML,appName){
     });
     header.addEventListener('pointermove', e=>{
         if(!drag||e.pointerId!==pid)return;
-        // use transform for the smoothest possible movement — but since window uses left/top,
-        // we set left/top directly with transitions disabled
         win.style.left=(sl+e.clientX-sx)+'px';
         win.style.top =(st+e.clientY-sy)+'px';
     });
-    function endDrag(e){
+    function endDrag(){
         if(!drag)return;
         drag=false;
         try{header.releasePointerCapture(pid);}catch(_){}
@@ -314,8 +368,39 @@ function createWindow(id,title,w,h,bodyHTML,appName){
     }
     header.addEventListener('pointerup', endDrag);
     header.addEventListener('pointercancel', endDrag);
-    win.addEventListener('mousedown',()=>focusWin(id));
 
+    /* resize */
+    const rH=win.querySelector('.resize-handle');
+    let resizing=false, rx=0, ry=0, rw=0, rh=0, rpid=null;
+    rH.addEventListener('pointerdown', e=>{
+        if(win.classList.contains('fullscreen'))return;
+        resizing=true; rpid=e.pointerId;
+        rx=e.clientX; ry=e.clientY;
+        rw=win.offsetWidth; rh=win.offsetHeight;
+        win.classList.add('resizing');
+        rH.setPointerCapture(rpid);
+        focusWin(id);
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    rH.addEventListener('pointermove', e=>{
+        if(!resizing||e.pointerId!==rpid)return;
+        const newW=Math.max(280, rw + (e.clientX - rx));
+        const newH=Math.max(180, rh + (e.clientY - ry));
+        win.style.width=newW+'px';
+        win.style.height=newH+'px';
+    });
+    function endResize(){
+        if(!resizing)return;
+        resizing=false;
+        try{rH.releasePointerCapture(rpid);}catch(_){}
+        rpid=null;
+        win.classList.remove('resizing');
+    }
+    rH.addEventListener('pointerup', endResize);
+    rH.addEventListener('pointercancel', endResize);
+
+    win.addEventListener('mousedown',()=>focusWin(id));
     windows[id]={el:win,app:appName||id};
     updateDockIndicators();updateWinCount();
     return win;
@@ -325,6 +410,12 @@ function focusWin(id){const w=windows[id];if(!w)return;
     w.el.style.zIndex=++zTop;updateDockIndicators();}
 function closeWin(id){const w=windows[id];if(!w)return;
     w.el.classList.add('closing');
+    // stop any game intervals if any
+    if(id==='snake')clearInterval(window._snakeInt);
+    if(id==='pong')clearInterval(window._pongInt);
+    if(id==='breakout')clearInterval(window._brInt);
+    if(id==='matrix')clearInterval(window._matrixInt);
+    if(id==='pipes')clearInterval(window._pipesInt);
     setTimeout(()=>{w.el.remove();delete windows[id];delete minimized[id];updateDockIndicators();updateWinCount();},220);
     updateWinCount();}
 function minimizeWin(id){const w=windows[id];if(!w)return;
@@ -345,30 +436,34 @@ function updateDockIndicators(){document.querySelectorAll('.dock-icon').forEach(
     ic.classList.toggle('has-window',hasOpen);});}
 function updateWinCount(){const el=document.getElementById('winCount');if(el)el.textContent=Object.keys(windows).length;}
 
-/* LAUNCHER */
+/* ============ APP LAUNCHER ============ */
 function openApp(name){
     if(name==='terminal')return openTerminal();
-    if(name==='chrome')return openChrome();
+    if(name==='browser')return openBrowser();
     if(name==='settings')return openSettings();
     if(name==='notepad')return openNotepad();
     if(name==='calculator')return openCalculator();
     if(name==='github')return openGithub();
-    if(name==='doom')return openDoom();
+    if(name==='games')return openGameMenu();
+    // direct game opens
     if(name==='snake')return startSnake();
     if(name==='tictactoe')return startTicTacToe();
     if(name==='pong')return startPong();
     if(name==='memory')return startMemory();
     if(name==='breakout')return startBreakout();
+    if(name==='dodge')return startDodge();
+    if(name==='twhg')return startTWHG();
+    if(name==='doom')return openDoom();
 }
 
-/* TERMINAL */
+/* ============ TERMINAL ============ */
 function openTerminal(){
     const html=`
         <div class="terminal" id="termOut">
 <span style="color:#666">Welcome to dreadOS 1.0 — type "help" for commands.</span>
 <span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">
         </div>`;
-    createWindow('terminal','Terminal',640,420,html,'terminal');
+    createWindow('terminal','Terminal',680,440,html,'terminal');
     setTimeout(()=>{
         const inp=document.getElementById('termIn');
         if(!inp)return;
@@ -388,94 +483,336 @@ function printTerm(html){
 function handleCmd(cmd){
     printTerm(`<span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span> ${cmd}`);
     const c=cmd.toLowerCase().trim();
-    if(c==='help'){
-        printTerm('<span class="term-ok">Commands:</span>');
-        printTerm('  help          — this list');
-        printTerm('  specs         — device specs');
-        printTerm('  neofetch      — fancy sysinfo');
-        printTerm('  clear         — clear screen');
-        printTerm('  date          — current time');
-        printTerm('  whoami        — current user');
-        printTerm('  echo [text]   — repeat');
-        printTerm('  open chrome   — launch chrome');
-        printTerm('  open doom     — launch doom');
-        printTerm('  open github   — launch github view');
-        printTerm('  open settings — launch settings');
-        printTerm('  open notepad  — launch notepad');
+    const parts=c.split(/\s+/);
+    const base=parts[0];
+
+    if(base==='help'){
+        printTerm('<span class="term-ok">General:</span>');
+        printTerm('  help               — this list');
+        printTerm('  clear              — clear screen');
+        printTerm('  date               — current time');
+        printTerm('  whoami             — current user');
+        printTerm('  uname [-a]         — system info');
+        printTerm('  pwd                — print working dir');
+        printTerm('  ls                 — list files (fake)');
+        printTerm('  cd [dir]           — change dir (fake)');
+        printTerm('  cat [file]         — read file (fake)');
+        printTerm('  echo [text]        — repeat text');
+        printTerm('  tree               — directory tree');
+        printTerm('  history            — command history');
+        printTerm('  man [cmd]          — manual page');
+        printTerm('<span class="term-ok">Fun:</span>');
+        printTerm('  neofetch / specs   — system info with logo');
+        printTerm('  cowsay [text]      — cow says');
+        printTerm('  fortune            — random quote');
+        printTerm('  sl                 — steam locomotive');
+        printTerm('  matrix             — matrix rain (press any key to exit)');
+        printTerm('  pipes.sh           — animated pipes');
+        printTerm('<span class="term-ok">Apps:</span>');
+        printTerm('  open browser       — launch browser');
+        printTerm('  open settings      — launch settings');
+        printTerm('  open games         — launch game menu');
+        printTerm('  open notepad       — launch notepad');
         printTerm('<span class="term-ok">Games:</span>');
-        printTerm('  play snake     — classic snake game');
-        printTerm('  play tictactoe — tic tac toe vs AI');
-        printTerm('  play pong      — pong vs AI');
-        printTerm('  play memory    — memory card match');
-        printTerm('  play breakout  — brick breaker');
+        printTerm('  play snake | tictactoe | pong | memory | breakout | dodge | twhg | doom');
     }
-    else if(c==='clear'){
+    else if(base==='clear'){
         const out=document.getElementById('termOut');if(!out)return;
         out.innerHTML=`<span id="termPrompt"><span class="term-user">dread</span><span style="color:#666">@</span><span class="term-host">dreados</span><span class="term-path">:~$</span></span> <input class="term-input" id="termIn" autocomplete="off" spellcheck="false">`;
         const inp=document.getElementById('termIn');
         if(inp){inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter'){handleCmd(inp.value.trim());inp.value='';}});}
     }
-    else if(c==='specs'||c==='neofetch'){printSpecs();}
-    else if(c==='date'){printTerm(new Date().toString());}
-    else if(c==='whoami'){printTerm('dread');}
-    else if(c.startsWith('echo ')){printTerm(cmd.substring(5));}
-    else if(c==='open chrome'){openChrome();printTerm('launching chrome...');}
-    else if(c==='open doom'){openDoom();printTerm('launching doom...');}
-    else if(c==='open github'){openGithub();printTerm('launching github view...');}
-    else if(c==='open settings'){openSettings();printTerm('launching settings...');}
-    else if(c==='open notepad'){openNotepad();printTerm('launching notepad...');}
-    /* ==== GAMES ==== */
-    else if(c==='play snake'||c==='snake'){printTerm('<span class="term-ok">launching snake...</span>');openApp('snake');}
-    else if(c==='play tictactoe'||c==='play tic tac toe'||c==='tictactoe'){printTerm('<span class="term-ok">launching tic tac toe...</span>');openApp('tictactoe');}
-    else if(c==='play pong'||c==='pong'){printTerm('<span class="term-ok">launching pong...</span>');openApp('pong');}
-    else if(c==='play memory'||c==='memory'){printTerm('<span class="term-ok">launching memory...</span>');openApp('memory');}
-    else if(c==='play breakout'||c==='breakout'){printTerm('<span class="term-ok">launching breakout...</span>');openApp('breakout');}
+    else if(base==='specs'||base==='neofetch'){printSpecs();}
+    else if(base==='date'){printTerm(new Date().toString());}
+    else if(base==='whoami'){printTerm('dread');}
+    else if(base==='uname'){
+        if(parts[1]==='-a')printTerm('dreadOS 1.0 dreados x86_64 browser/JS '+(navigator.userAgent.match(/Chrome\/[\d.]+/)?.[0]||''));
+        else printTerm('dreadOS');
+    }
+    else if(base==='pwd'){printTerm('/home/dread');}
+    else if(base==='ls'){
+        printTerm('<span style="color:#7ab8ff">Documents/</span>  <span style="color:#7ab8ff">Downloads/</span>  <span style="color:#7ab8ff">Pictures/</span>');
+        printTerm('<span style="color:#a04bd4">.bashrc</span>  <span style="color:#a04bd4">.profile</span>  <span style="color:#a04bd4">notes.txt</span>  <span style="color:#a04bd4">README.md</span>');
+    }
+    else if(base==='cd'){printTerm('(fake shell — no real filesystem)');}
+    else if(base==='cat'){printTerm('(fake shell — no real filesystem)');}
+    else if(base==='tree'){
+        printTerm('/home/dread');
+        printTerm('├── Documents/');
+        printTerm('│   ├── <span style="color:#a04bd4">homework.txt</span>');
+        printTerm('│   └── <span style="color:#a04bd4">notes.md</span>');
+        printTerm('├── Downloads/');
+        printTerm('│   └── <span style="color:#a04bd4">game.zip</span>');
+        printTerm('├── Pictures/');
+        printTerm('└── <span style="color:#a04bd4">README.md</span>');
+    }
+    else if(base==='history'){printTerm('(history not saved in this session)');}
+    else if(base==='man'){
+        if(parts[1])printTerm(`No manual entry for <span class="term-ok">${parts[1]}</span>. Try <span class="term-ok">help</span>.`);
+        else printTerm('What manual page do you want?');
+    }
+    else if(base==='echo'){printTerm(cmd.substring(5));}
+    else if(base==='cowsay'){
+        const msg=cmd.substring(7)||'moo';
+        const top=' '+'_'.repeat(msg.length+2);
+        const bot=' '+'-'.repeat(msg.length+2);
+        printTerm(top);
+        printTerm('< '+msg+' >');
+        printTerm(bot);
+        printTerm('        \\   ^__^');
+        printTerm('         \\  (oo)\\_______');
+        printTerm('            (__)\\       )\\/\\');
+        printTerm('                ||----w |');
+        printTerm('                ||     ||');
+    }
+    else if(base==='fortune'){
+        const f=['The best way to predict the future is to invent it.',
+                 'Simplicity is the ultimate sophistication.',
+                 'Talk is cheap. Show me the code.',
+                 'Deleted code is debugged code.',
+                 'It works on my machine.',
+                 'Have you tried turning it off and on again?',
+                 'There are only two hard things in CS: cache invalidation, naming things, and off-by-one errors.',
+                 'Weeks of coding can save you hours of planning.'];
+        printTerm(f[Math.floor(Math.random()*f.length)]);
+    }
+    else if(base==='sl'){
+        printTerm('      ====        ________                ___________ ');
+        printTerm('  _D _|  |_______/        \\__I_I_____===__|_________| ');
+        printTerm('   |(_)---  |   H\\________/ |   |        =|___ ___|   ');
+        printTerm('   /     |  |   H  |  |     |   |         ||_| |_||   ');
+        printTerm('  |      |  |   H  |__--------------------| [___] |   ');
+        printTerm('  | ________|___H__/__|_____/[][]~\\_______|       |   ');
+        printTerm('  |/ |   |-----------I_____I [][] []  D   |=======|__ ');
+        printTerm('__/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__ ');
+        printTerm(' |/-=|___|=    ||    ||    ||    |_____/~\\___/        ');
+        printTerm('  \\_/      \\O=====O=====O=====O_/      \\_/            ');
+    }
+    else if(base==='matrix'){openMatrix();}
+    else if(base==='pipes.sh'||base==='pipes'){openPipes();}
+    /* apps */
+    else if(c==='open browser'){openBrowser();printTerm('<span class="term-ok">launching browser...</span>');}
+    else if(c==='open settings'){openSettings();printTerm('<span class="term-ok">launching settings...</span>');}
+    else if(c==='open notepad'){openNotepad();printTerm('<span class="term-ok">launching notepad...</span>');}
+    else if(c==='open github'){openGithub();printTerm('<span class="term-ok">launching github...</span>');}
+    else if(c==='open games'){openGameMenu();printTerm('<span class="term-ok">launching game menu...</span>');}
+    /* games */
+    else if(base==='play'){
+        const g=parts[1];
+        const map={snake:startSnake,tictactoe:startTicTacToe,pong:startPong,memory:startMemory,breakout:startBreakout,dodge:startDodge,twhg:startTWHG,doom:openDoom};
+        if(map[g]){map[g]();printTerm(`<span class="term-ok">launching ${g}...</span>`);}
+        else printTerm(`<span class="term-err">unknown game: ${g||'(none)'}</span> — try: snake, tictactoe, pong, memory, breakout, dodge, twhg, doom`);
+    }
     else if(cmd===''){}
     else{printTerm(`<span class="term-err">unknown command: ${cmd}</span> — type "help"`);}
 }
+
 function printSpecs(){
     const gl=document.createElement('canvas').getContext('webgl');
     const dbg=gl.getExtension('WEBGL_debug_renderer_info');
     const gpu=dbg?gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL):'unknown';
-    const lines=[
-        '        ▄▄▄▄▄▄▄▄▄▄▄        ',
-        '      ▄█  dreadOS  █▄      ',
-        '     ██  ─────────  ██     ',
-        '      ▀▀▀▀▀▀▀▀▀▀▀▀▀        ',
-        '',
-        ' OS       dreadOS 1.0 (browser)',
-        ' Host     '+(navigator.userAgentData?.platform||navigator.platform||'unknown'),
-        ' Kernel   '+(navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/)?.[0]||'unknown'),
-        ' Uptime   '+Math.floor(performance.now()/1000)+'s',
-        ' Shell    dreadsh 1.0',
-        ' Res      '+screen.width+'x'+screen.height,
-        ' CPU      '+(navigator.hardwareConcurrency||'unknown')+' cores',
-        ' RAM      '+(navigator.deviceMemory?navigator.deviceMemory+' GB':'unknown'),
-        ' GPU      '+gpu,
-        ' Lang     '+navigator.language,
-        ' Touch    '+(navigator.maxTouchPoints>0?'yes':'no'),
-        ' Online   '+(navigator.onLine?'yes':'no')
-    ];
-    lines.forEach(l=>printTerm(l.replace(/ /g,'&nbsp;')));
+    const A='<span style="color:var(--accent)">';
+    const Z='</span>';
+    printTerm(`${A}      ██████╗ ${Z}`);
+    printTerm(`${A}      ██╔══██╗${Z}    dread@dreados`);
+    printTerm(`${A}      ██║  ██║${Z}    ─────────────`);
+    printTerm(`${A}      ██║  ██║${Z}    OS       dreadOS 1.0 (browser)`);
+    printTerm(`${A}      ██████╔╝${Z}    Host     ${(navigator.userAgentData?.platform||navigator.platform||'unknown')}`);
+    printTerm(`${A}      ╚═════╝ ${Z}    Kernel   ${(navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/)?.[0]||'unknown')}`);
+    printTerm(`                  Uptime   ${Math.floor(performance.now()/1000)}s`);
+    printTerm(`                  Shell    dreadsh 1.0`);
+    printTerm(`                  Res      ${screen.width}x${screen.height}`);
+    printTerm(`                  CPU      ${(navigator.hardwareConcurrency||'unknown')} cores`);
+    printTerm(`                  RAM      ${(navigator.deviceMemory?navigator.deviceMemory+' GB':'unknown')}`);
+    printTerm(`                  GPU      ${gpu}`);
+    printTerm(`                  Lang     ${navigator.language}`);
+    printTerm(`                  Online   ${(navigator.onLine?'yes':'no')}`);
+    printTerm(`                  Theme    ${SETTINGS.theme}`);
 }
 
-/* CHROME */
-function openChrome(){
-    const realUrl='https://s3.amazonaws.com/cleverlearning/index.html';
-    const masked='••••••••••••••••••••••••••••';
+/* ============ MATRIX / PIPES ============ */
+function openMatrix(){
+    const html=`<canvas id="matrixCanvas" class="matrix-canvas"></canvas>`;
+    createWindow('matrix','matrix',720,480,html,'terminal');
+    setTimeout(()=>{
+        const c=document.getElementById('matrixCanvas');
+        if(!c)return;
+        c.width=c.clientWidth;c.height=c.clientHeight;
+        const ctx=c.getContext('2d');
+        const cols=Math.floor(c.width/14);
+        const drops=Array(cols).fill(1);
+        const chars='アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEF';
+        function draw(){
+            ctx.fillStyle='rgba(0,0,0,0.08)';ctx.fillRect(0,0,c.width,c.height);
+            ctx.fillStyle='#0f0';ctx.font='14px monospace';
+            for(let i=0;i<drops.length;i++){
+                ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*14,drops[i]*14);
+                if(drops[i]*14>c.height&&Math.random()>0.975)drops[i]=0;
+                drops[i]++;
+            }
+        }
+        clearInterval(window._matrixInt);
+        window._matrixInt=setInterval(draw,50);
+        const stop=()=>{clearInterval(window._matrixInt);document.removeEventListener('keydown',stop);};
+        document.addEventListener('keydown',stop);
+    },80);
+}
+function openPipes(){
+    const html=`<canvas id="pipesCanvas" class="matrix-canvas"></canvas>`;
+    createWindow('pipes','pipes.sh',720,480,html,'terminal');
+    setTimeout(()=>{
+        const c=document.getElementById('pipesCanvas');
+        if(!c)return;
+        c.width=c.clientWidth;c.height=c.clientHeight;
+        const ctx=c.getContext('2d');
+        ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
+        const pipeChars='│─┌┐└┘├┤┬┴┼';
+        const colors=['#7ab8ff','#a04bd4','#4a7c59','#febc2e','#ff5f57'];
+        let pipes=[];
+        for(let i=0;i<8;i++){
+            pipes.push({x:Math.floor(Math.random()*c.width/16)*16,y:Math.floor(Math.random()*c.height/16)*16,dx:[1,-1,0,0][Math.floor(Math.random()*4)],dy:[0,0,1,-1][Math.floor(Math.random()*4)],color:colors[Math.floor(Math.random()*colors.length)]});
+        }
+        function draw(){
+            ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,c.width,c.height);
+            ctx.font='16px monospace';
+            pipes.forEach(p=>{
+                ctx.fillStyle=p.color;
+                ctx.fillText(pipeChars[Math.floor(Math.random()*pipeChars.length)],p.x,p.y);
+                p.x+=p.dx*16;p.y+=p.dy*16;
+                if(Math.random()<0.15){const opts=[[1,0],[-1,0],[0,1],[0,-1]].filter(d=>!(d[0]===-p.dx&&d[1]===-p.dy));const n=opts[Math.floor(Math.random()*opts.length)];p.dx=n[0];p.dy=n[1];}
+                if(p.x<0||p.x>c.width||p.y<0||p.y>c.height){p.x=Math.floor(Math.random()*c.width/16)*16;p.y=Math.floor(Math.random()*c.height/16)*16;}
+            });
+        }
+        clearInterval(window._pipesInt);
+        window._pipesInt=setInterval(draw,80);
+        const stop=()=>{clearInterval(window._pipesInt);document.removeEventListener('keydown',stop);};
+        document.addEventListener('keydown',stop);
+    },80);
+}
+
+/* ============ BROWSER ============ */
+const LINKS=[
+    {name:'Instructure',url:'https://storage.googleapis.com/instructure/index.html',tag:'NEW DROP'},
+    {name:'Grammarly',url:'https://storage.googleapis.com/grammarly/index.html',tag:'REPOST'},
+    {name:'DeltaMath Demo',url:'https://s3.amazonaws.com/deltamath-demo/index.html',tag:'LINK'},
+    {name:'Opium Official',url:'https://opium.best/',tag:'OFFICIAL'},
+    {name:'Opium (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/OpiumBest/svg/index.svg',tag:'UNBLOCKED'},
+    {name:'Opium (Google)',url:'https://storage.googleapis.com/opiumbest/index.html',tag:'UNBLOCKED'},
+    {name:'Opium (S3)',url:'https://s3.amazonaws.com/opiumbest/index.html',tag:'UNBLOCKED'},
+    {name:'Opium (jsDelivr NPM)',url:'https://cdn.jsdelivr.net/npm/opiumbest/index.svg',tag:'UNBLOCKED'},
+    {name:'Opium (GitHub Pages)',url:'https://opiumbest.github.io/',tag:'UNBLOCKED'},
+    {name:'OpiumBull (S3)',url:'https://s3.amazonaws.com/opiumbull/index.html',tag:'BRANDED'},
+    {name:'OpiumBull (Google)',url:'https://storage.googleapis.com/opiumbull/index.html',tag:'BRANDED'},
+    {name:'OpiumBull (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/opiumbest/bull33/index.svg',tag:'BRANDED'},
+    {name:'Clever Learning',url:'https://s3.amazonaws.com/cleverlearning/index.html',tag:'UNBRANDED'},
+    {name:'Google Classroom',url:'https://storage.googleapis.com/gclassroom/index.html',tag:'UNBRANDED'},
+    {name:'PeteZah (jsDelivr)',url:'https://cdn.jsdelivr.net/gh/petezahiscool/svg@main/index.svg',tag:'PETEZAH'},
+    {name:'Homework Practice',url:'https://cdn.jsdelivr.net/gh/homeworkpractive/svg@main/index.svg',tag:'PETEZAH'},
+    {name:'Pizza (Quantil)',url:'https://quantil.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg',tag:'PETEZAH'},
+    {name:'Pizza (gcore)',url:'https://gcore.jsdelivr.net/gh/homeworkpractive/svg@acfa607/pizza.svg',tag:'PETEZAH'},
+    {name:'Cherri S3',url:'https://cherri-s3-test.s3.amazonaws.com/index.html',tag:'CHERRI'},
+    {name:'CherriMath',url:'https://cherrimath.s3.amazonaws.com/index.html',tag:'CHERRI'},
+    {name:'CherriReading',url:'https://cherrireading.s3.amazonaws.com/index.html',tag:'CHERRI'},
+    {name:'CherriNotes',url:'https://cherrinotes.s3.amazonaws.com/index.html',tag:'CHERRI'},
+    {name:'Bird River',url:'https://come.birdriver.org/',tag:'COLLECTION'},
+    {name:'Fluxus',url:'https://write.fluxus.org/',tag:'COLLECTION'},
+    {name:'Largent',url:'https://sargent.largent.org',tag:'COLLECTION'},
+    {name:'MOLGAS',url:'https://hungarian.oil.molgas.org/',tag:'COLLECTION'},
+    {name:'Oil from MOLGAS',url:'https://oilfrom.molgas.org/',tag:'COLLECTION'},
+    {name:'ShareRoute',url:'https://plan.yourtrip.shareroute.org/',tag:'COLLECTION'},
+    {name:'GhostNation Radio',url:'https://ghostnation.radio.ghostnation.org/',tag:'COLLECTION'},
+    {name:'Radio GhostNation',url:'https://radio.ghostnation.org/',tag:'COLLECTION'},
+    {name:'Bill Cowher',url:'https://about.billcowher.cowher.org/',tag:'COLLECTION'},
+    {name:'Football Legends',url:'https://football.legends.billcowher.cowher.org/',tag:'COLLECTION'},
+    {name:'Learn About Cowher',url:'https://learn.about.billcowher.cowher.org/',tag:'COLLECTION'},
+    {name:'Repitch Audio',url:'https://audio.repitch.repich.org/',tag:'COLLECTION'},
+    {name:'Repitch Voice',url:'https://voice.pitch.repich.org/',tag:'COLLECTION'},
+    {name:'Frankenberger Food',url:'https://foodville.burger.frankenbergerfilm.org/',tag:'COLLECTION'},
+    {name:'Ultimate Sandwich',url:'https://ultimate.sandwich.frankenbergerfilm.org/',tag:'COLLECTION'},
+    {name:'Jon Mills Golf',url:'https://about.jon.golf.jonmills.org/',tag:'COLLECTION'},
+    {name:'Golf Hall of Fame',url:'https://golf.hall-of-fame.jonmills.org/',tag:'COLLECTION'},
+    {name:'US Open Records',url:'https://us.open.records.jonmills.org/',tag:'COLLECTION'},
+];
+
+function openBrowser(){
     const html=`
-        <div style="display:flex;flex-direction:column;height:100%">
-            <div style="display:flex;gap:8px;padding:8px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);align-items:center;flex-shrink:0">
-                <button class="settings-btn" style="padding:6px 12px" onclick="var f=document.getElementById('chromeFrame');f.src=f.src;">↻</button>
-                <div class="masked-url">${masked}</div>
-                <button class="settings-btn" style="padding:6px 12px" onclick="window.open('${realUrl}','_blank','noopener')">Open Tab</button>
+    <div class="browser" id="browserRoot">
+        <div class="browser-tabs">
+            <div class="browser-tab"><div class="fav"></div><div class="label">New Tab</div><div class="close-x">✕</div></div>
+            <button class="browser-newtab" title="New Tab">+</button>
+        </div>
+        <div class="browser-toolbar">
+            <button class="browser-btn" id="brBack" disabled>←</button>
+            <button class="browser-btn" id="brFwd" disabled>→</button>
+            <button class="browser-btn" id="brReload">↻</button>
+            <button class="browser-btn" id="brHome">⌂</button>
+            <div class="browser-omnibox">
+                <span class="lock">🔒</span>
+                <input type="text" id="brUrl" placeholder="Search or enter address" spellcheck="false">
             </div>
-            <iframe id="chromeFrame" src="${realUrl}" class="app-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation" style="flex:1"></iframe>
-        </div>`;
-    createWindow('chrome','Chrome',820,560,html,'chrome');
+        </div>
+        <div class="browser-warn">
+            <b>⚠ Notice:</b> This is NOT a real proxy / unblocker. It is a fake browser that only renders pages inside an iframe. Some sites block iframes and won't load.
+        </div>
+        <div class="browser-content" id="brContent">
+            ${renderHomePage()}
+        </div>
+    </div>`;
+    createWindow('browser','Browser',900,600,html,'browser');
+    setTimeout(()=>{
+        const input=document.getElementById('brUrl');
+        const content=document.getElementById('brContent');
+        const home=document.getElementById('brHome');
+        const reload=document.getElementById('brReload');
+        if(!input||!content)return;
+        input.addEventListener('keydown',e=>{
+            if(e.key==='Enter'){
+                const v=input.value.trim();
+                if(v)loadUrl(v);
+            }
+        });
+        home.addEventListener('click',()=>{content.innerHTML=renderHomePage();input.value='';wireHome();});
+        reload.addEventListener('click',()=>{const f=content.querySelector('iframe');if(f)f.src=f.src;});
+        wireHome();
+        function wireHome(){
+            content.querySelectorAll('.link-card').forEach(el=>{
+                el.addEventListener('click',()=>{
+                    const url=el.dataset.url;
+                    loadUrl(url);
+                });
+            });
+        }
+        function loadUrl(url){
+            if(!url.startsWith('http'))url='https://'+url;
+            content.innerHTML=`<iframe class="browser-iframe" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals" referrerpolicy="no-referrer"></iframe>`;
+            input.value='•••••••••••••••••••••••••••';
+        }
+    },80);
+}
+function renderHomePage(){
+    // group by tag
+    const groups={};
+    LINKS.forEach(l=>{ if(!groups[l.tag])groups[l.tag]=[]; groups[l.tag].push(l); });
+    let html=`<div class="browser-home">
+        <h1>New Tab</h1>
+        <div class="sub">Quick links — click any to open (if the site allows embedding).</div>`;
+    Object.keys(groups).forEach(tag=>{
+        html+=`<h3>${tag}</h3><div class="link-grid">`;
+        groups[tag].forEach(l=>{
+            let host='';try{host=new URL(l.url).hostname;}catch(e){host=l.url;}
+            html+=`<a class="link-card" data-url="${l.url}">
+                <div class="name">${l.name}</div>
+                <div class="host">${host}</div>
+                <div class="tag">${l.tag}</div>
+            </a>`;
+        });
+        html+='</div>';
+    });
+    html+='</div>';
+    return html;
 }
 
-/* GITHUB */
+/* ============ GITHUB ============ */
 function openGithub(){
     const html=`
         <div class="gh-container">
@@ -489,110 +826,209 @@ function openGithub(){
                 <div class="gh-tabs"><div class="active">&lt;&gt; Code</div><div>◎ Issues</div><div>⑂ Pull requests</div><div>◈ Actions</div><div>☰ Projects</div><div>◍ Wiki</div></div>
                 <div class="gh-file-row"><span class="icon">▤</span><span class="name">README.md</span><span class="msg">initial commit</span><span class="time">just now</span></div>
                 <div class="gh-file-row"><span class="icon">▤</span><span class="name">index.html</span><span class="msg">add dreadOS shell</span><span class="time">just now</span></div>
-                <div class="gh-file-row"><span class="icon">▤</span><span class="name">assets/</span><span class="msg">add wallpaper + icons</span><span class="time">just now</span></div>
-                <div class="gh-readme"><h2>dreadOS</h2><p>A browser-based OS-style shell. Terminal, Chrome, Settings, DOOM window, GitHub view. Built by dread.</p><p>Inspired by AnuraOS. Forked and rebranded.</p></div>
+                <div class="gh-readme"><h2>dreadOS</h2><p>A browser-based OS-style shell. Terminal, browser, settings, games. Built by dread.</p></div>
             </div>
         </div>`;
     createWindow('github','github.com/dreadingg/dreadOS',780,540,html,'github');
 }
 
-/* DOOM */
+/* ============ DOOM (placeholder) ============ */
 function openDoom(){
     const html=`
-        <div class="doom-container">
-            <div class="doom-placeholder">
+        <div class="doom-container" style="width:100%;height:100%;background:#000;position:relative;overflow:hidden">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,#3a2a1a 0%,#1a0f08 40%,#0a0503 100%),radial-gradient(circle at 50% 60%,rgba(180,100,30,.3),transparent 50%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c9a86a;text-align:center;padding:20px">
                 <div style="font-size:1.4rem;letter-spacing:6px;margin-bottom:14px">D O O M</div>
-                <div class="doom-info">placeholder window</div>
                 <div style="font-size:.7rem;color:#8a6a3a;margin-top:20px;max-width:80%;line-height:1.6">Swap this for a real playable DOOM<br>using js-dos + Freedoom inside this window.</div>
             </div>
-            <div class="doom-hud">
-                <div class="stat">AMMO <span class="val">44</span></div>
-                <div class="stat">HEALTH <span class="val">46%</span></div>
-                <div class="stat">ARMS <span class="val">2 3 4</span></div>
-                <div class="stat">ARMOR <span class="val">58%</span></div>
-                <div class="stat">KEY <span class="val">◆ ◇ ◇</span></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,#3a1a1a,#1a0808);border-top:2px solid #6a3a1a;display:flex;justify-content:space-between;padding:8px 14px;font-family:'Courier New',monospace;font-size:.75rem;color:#e0c090">
+                <div>AMMO <span style="color:#fff;font-weight:700">44</span></div>
+                <div>HEALTH <span style="color:#fff;font-weight:700">46%</span></div>
+                <div>ARMS <span style="color:#fff;font-weight:700">2 3 4</span></div>
+                <div>ARMOR <span style="color:#fff;font-weight:700">58%</span></div>
+                <div>KEY <span style="color:#fff;font-weight:700">◆ ◇ ◇</span></div>
             </div>
         </div>`;
-    createWindow('doom','DOOM',680,440,html,'doom');
+    createWindow('doom','DOOM',680,440,html,'games');
 }
 
-/* SETTINGS */
-function openSettings(){
+/* ============ GAME MENU ============ */
+function openGameMenu(){
     const html=`
-        <div style="padding:20px">
-            <div class="settings-section">
-                <div class="settings-label">Wallpaper</div>
-                <p style="margin-bottom:12px;color:#999;font-size:.76rem;line-height:1.5">Upload an image to set as your desktop wallpaper.</p>
-                <button class="settings-btn" onclick="document.getElementById('bgUpload').click()">Upload Image</button>
-                <button class="settings-btn danger" onclick="resetBg()">Reset</button>
-                <input type="file" id="bgUpload" accept="image/*" style="display:none" onchange="uploadBg(event)">
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">Animated Background</div>
-                <label class="switch"><input type="checkbox" id="animToggle" checked onchange="toggleAnim()"><span class="slider"></span></label>
-                <span style="margin-left:10px;color:#999;font-size:.76rem">Purple flow</span>
-            </div>
-            <div class="settings-section">
-                <div class="settings-label">System</div>
-                <p style="color:#999;font-size:.76rem;line-height:1.6">OS: dreadOS 1.0<br>User: dread<br>Windows open: <span id="winCount">0</span></p>
-            </div>
+        <div class="game-menu">
+            <h2>Games</h2>
+            <p>Pick a game — close it to pick another.</p>
+            <div class="game-card" onclick="startDodge()"><div class="ico">◈</div><div class="name">Dodge</div><div class="desc">World's-Hardest-style arena dodge</div></div>
+            <div class="game-card" onclick="startTWHG()"><div class="ico">✦</div><div class="name">TWHG (online)</div><div class="desc">World's Hardest Game — embedded iframe</div></div>
+            <div class="game-card" onclick="openDoom()"><div class="ico">☠</div><div class="name">DOOM</div><div class="desc">Placeholder DOOM window</div></div>
+            <div class="game-card" onclick="startSnake()"><div class="ico">▣</div><div class="name">Snake</div><div class="desc">Classic snake with high score</div></div>
+            <div class="game-card" onclick="startTicTacToe()"><div class="ico">✕</div><div class="name">Tic Tac Toe</div><div class="desc">You vs AI</div></div>
+            <div class="game-card" onclick="startPong()"><div class="ico">▬</div><div class="name">Pong</div><div class="desc">You vs AI, first to 5</div></div>
+            <div class="game-card" onclick="startMemory()"><div class="ico">◇</div><div class="name">Memory</div><div class="desc">Match 8 pairs of emojis</div></div>
+            <div class="game-card" onclick="startBreakout()"><div class="ico">▦</div><div class="name">Breakout</div><div class="desc">Break all the bricks</div></div>
         </div>`;
-    createWindow('settings','Settings',460,470,html,'settings');
-    updateWinCount();
-}
-function uploadBg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();
-    r.onload=ev=>{desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${ev.target.result})`;
-        try{localStorage.setItem('dreados_bg',ev.target.result);}catch{alert('Image too large to save permanently.');}};
-    r.readAsDataURL(f);}
-function resetBg(){desktop.classList.remove('wallpaper');desktop.style.backgroundImage='';localStorage.removeItem('dreados_bg');}
-function toggleAnim(){const on=document.getElementById('animToggle').checked;
-    if(on&&!localStorage.getItem('dreados_bg')){desktop.classList.remove('wallpaper');}
-    else if(!on){const bg=localStorage.getItem('dreados_bg');desktop.style.backgroundImage=bg?`url(${bg})`:'linear-gradient(135deg,#1a0f2e,#05050d)';desktop.classList.add('wallpaper');}}
-
-/* NOTEPAD */
-function openNotepad(){
-    const saved=localStorage.getItem('dreados_notepad')||'';
-    createWindow('notepad','Notepad',480,360,`<textarea class="notepad-textarea" id="np" placeholder="start typing...">${saved}</textarea>`,'notepad');
-    setTimeout(()=>{const ta=document.getElementById('np');if(!ta)return;ta.focus();ta.addEventListener('input',()=>localStorage.setItem('dreados_notepad',ta.value));},60);
+    createWindow('games','Games',700,520,html,'games');
 }
 
-/* CALCULATOR */
-function openCalculator(){
+/* ============ DODGE (TWHG-style clone) ============ */
+function startDodge(){
     const html=`
-        <div style="padding:14px">
-            <div class="calc-display" id="cd">0</div>
-            <div class="calc-grid">
-                <button onclick="cClear()">C</button><button onclick="cDel()">⌫</button>
-                <button class="op" onclick="cOp('%')">%</button><button class="op" onclick="cOp('/')">/</button>
-                <button onclick="cN('7')">7</button><button onclick="cN('8')">8</button><button onclick="cN('9')">9</button><button class="op" onclick="cOp('*')">×</button>
-                <button onclick="cN('4')">4</button><button onclick="cN('5')">5</button><button onclick="cN('6')">6</button><button class="op" onclick="cOp('-')">−</button>
-                <button onclick="cN('1')">1</button><button onclick="cN('2')">2</button><button onclick="cN('3')">3</button><button class="op" onclick="cOp('+')">+</button>
-                <button onclick="cN('0')" style="grid-column:span 2">0</button><button onclick="cN('.')">.</button><button class="eq" onclick="cEq()">=</button>
-            </div>
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('dodge');openGameMenu()">← Back</button>
+            <div class="game-hud">DEATHS <b id="dodgeDeaths">0</b> LEVEL <b id="dodgeLevel">1</b></div>
+            <canvas id="dodgeCanvas" class="game-canvas" width="480" height="360"></canvas>
+            <button class="game-btn" onclick="dodgeReset()">Restart</button>
+            <div class="game-help">Arrow keys / WASD to move the blue square — reach the green zone, avoid red circles</div>
         </div>`;
-    createWindow('calculator','Calculator',320,440,html,'calculator');
+    createWindow('dodge','Dodge',520,500,html,'games');
+    setTimeout(()=>dodgeInit(),50);
 }
-let cE='';
-function cN(n){cE+=n;const d=document.getElementById('cd');if(d)d.textContent=cE}
-function cOp(o){cE+=o;const d=document.getElementById('cd');if(d)d.textContent=cE}
-function cClear(){cE='';const d=document.getElementById('cd');if(d)d.textContent='0'}
-function cDel(){cE=cE.slice(0,-1);const d=document.getElementById('cd');if(d)d.textContent=cE||'0'}
-function cEq(){try{const r=Function('"use strict";return('+cE+')')();const d=document.getElementById('cd');if(d)d.textContent=r;cE=String(r)}catch{const d=document.getElementById('cd');if(d)d.textContent='error';cE=''}}
+let dodge=null;
+function dodgeInit(){
+    const canvas=document.getElementById('dodgeCanvas');if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width,H=canvas.height;
+    const PLAYER=10;
+    const levels=[
+        {start:{x:20,y:H/2}, goal:{x:W-40,y:H/2,w:20,h:60}, walls:[], enemies:[{x:W/2,y:H/2,r:8,vx:0,vy:1.2,range:H-20,dir:1}]},
+        {start:{x:20,y:20}, goal:{x:W-40,y:H-60,w:20,h:60}, walls:[{x:W/2-40,y:H/2-40,w:80,h:80}], enemies:[{x:W/2,y:30,r:9,vx:0,vy:1.6,range:H-40,dir:1},{x:W/2,y:H-30,r:9,vx:0,vy:-1.6,range:H-40,dir:-1}]},
+        {start:{x:20,y:H/2}, goal:{x:W-40,y:H/2,w:20,h:60}, walls:[{x:W/3,y:0,w:20,h:H/3},{x:W/3,y:H*2/3,w:20,h:H/3}], enemies:[{x:W/2,y:H/4,r:8,vx:1.8,vy:0,range:W-40,dir:1},{x:W/2,y:H*3/4,r:8,vx:-1.8,vy:0,range:W-40,dir:-1}]},
+    ];
+    function reset(){
+        dodge={
+            level:0,
+            deaths:0,
+            player:{x:levels[0].start.x,y:levels[0].start.y},
+            walls:[],
+            enemies:[]
+        };
+        loadLevel(0);
+    }
+    function loadLevel(i){
+        dodge.level=i;
+        const L=levels[i];
+        dodge.player.x=L.start.x;dodge.player.y=L.start.y;
+        dodge.walls=L.walls.map(w=>({...w}));
+        dodge.enemies=L.enemies.map(e=>({...e, baseY:e.y, baseX:e.x, t:0}));
+        document.getElementById('dodgeLevel').textContent=i+1;
+        document.getElementById('dodgeDeaths').textContent=dodge.deaths;
+    }
+    function draw(){
+        ctx.fillStyle='#0a0a18';ctx.fillRect(0,0,W,H);
+        // border
+        ctx.strokeStyle='#3a3a55';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);
+        // goal
+        const L=levels[dodge.level];
+        ctx.fillStyle='rgba(74,124,89,.6)';
+        ctx.fillRect(L.goal.x,L.goal.y,L.goal.w,L.goal.h);
+        ctx.strokeStyle='#4a7c59';ctx.lineWidth=2;
+        ctx.strokeRect(L.goal.x,L.goal.y,L.goal.w,L.goal.h);
+        // walls
+        ctx.fillStyle='#3a3a55';
+        dodge.walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,w.h));
+        // enemies
+        ctx.fillStyle='#ff5f57';
+        dodge.enemies.forEach(e=>{
+            ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fill();
+        });
+        // player
+        ctx.fillStyle='#7ab8ff';
+        ctx.fillRect(dodge.player.x,dodge.player.y,PLAYER,PLAYER);
+    }
+    function step(){
+        if(!dodge)return;
+        const L=levels[dodge.level];
+        // move enemies
+        dodge.enemies.forEach(e=>{
+            e.t+=1;
+            e.y+=e.vy;e.x+=e.vx;
+            if(e.y>e.baseY+e.range)e.vy=-Math.abs(e.vy);
+            if(e.y<e.baseY-e.range)e.vy=Math.abs(e.vy);
+            if(e.x>e.baseX+e.range)e.vx=-Math.abs(e.vx);
+            if(e.x<e.baseX-e.range)e.vx=Math.abs(e.vx);
+        });
+        // collision with enemies
+        const p={x:dodge.player.x+PLAYER/2,y:dodge.player.y+PLAYER/2};
+        for(const e of dodge.enemies){
+            const dx=p.x-e.x, dy=p.y-e.y;
+            if(Math.sqrt(dx*dx+dy*dy) < e.r+PLAYER/2){
+                dodge.deaths++;
+                document.getElementById('dodgeDeaths').textContent=dodge.deaths;
+                dodge.player.x=L.start.x;dodge.player.y=L.start.y;
+                return;
+            }
+        }
+        // walls
+        for(const w of dodge.walls){
+            if(p.x>w.x-2 && p.x<w.x+w.w+2 && p.y>w.y-2 && p.y<w.y+w.h+2){
+                // push back to start
+                dodge.player.x=L.start.x;dodge.player.y=L.start.y;
+                return;
+            }
+        }
+        // check goal
+        if(dodge.player.x+PLAYER>L.goal.x && dodge.player.x<L.goal.x+L.goal.w &&
+           dodge.player.y+PLAYER>L.goal.y && dodge.player.y<L.goal.y+L.goal.h){
+            if(dodge.level+1 < levels.length){
+                loadLevel(dodge.level+1);
+            } else {
+                ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,W,H);
+                ctx.fillStyle='#4a7c59';ctx.font='24px sans-serif';ctx.textAlign='center';
+                ctx.fillText('YOU WIN!',W/2,H/2-10);
+                ctx.fillStyle='#ccc';ctx.font='14px sans-serif';
+                ctx.fillText('Deaths: '+dodge.deaths,W/2,H/2+20);
+            }
+        }
+        draw();
+    }
+    const keys={};
+    window.dodgeKey=e=>{
+        keys[e.key.toLowerCase()]=true;
+        if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))e.preventDefault();
+    };
+    window.dodgeKeyUp=e=>{keys[e.key.toLowerCase()]=false;};
+    document.addEventListener('keydown',window.dodgeKey);
+    document.addEventListener('keyup',window.dodgeKeyUp);
+    window.dodgeReset=()=>{dodge.deaths=0;loadLevel(0);document.getElementById('dodgeDeaths').textContent=0;};
+    reset();
+    clearInterval(window._dodgeInt);
+    window._dodgeInt=setInterval(()=>{
+        const spd=3;
+        if(keys['arrowup']||keys['w'])dodge.player.y=Math.max(0,dodge.player.y-spd);
+        if(keys['arrowdown']||keys['s'])dodge.player.y=Math.min(H-PLAYER,dodge.player.y+spd);
+        if(keys['arrowleft']||keys['a'])dodge.player.x=Math.max(0,dodge.player.x-spd);
+        if(keys['arrowright']||keys['d'])dodge.player.x=Math.min(W-PLAYER,dodge.player.x+spd);
+        step();
+    },1000/60);
+}
 
-/* ============================================================
-   GAMES
-   ============================================================ */
+/* ============ TWHG ONLINE EMBED ============ */
+function startTWHG(){
+    const url='https://www.google.com/logos/2010/pacman10-i.html'; // placeholder — user can change
+    const html=`
+        <div style="display:flex;flex-direction:column;height:100%;background:#000">
+            <div style="display:flex;gap:8px;padding:8px;background:#1a1a1a;align-items:center;border-bottom:1px solid #333">
+                <button class="game-back" style="position:static" onclick="closeWin('twhg');openGameMenu()">← Back</button>
+                <div style="flex:1;padding:6px 12px;background:#000;border-radius:6px;font-size:.7rem;color:#888;font-family:monospace">•••••••••••••••••••••••</div>
+            </div>
+            <div style="padding:10px 14px;background:#2a1a1a;color:#ffb4b4;font-size:.7rem;border-bottom:1px solid #5a2a2a">
+                <b>Note:</b> This tries to embed a TWHG-style game. Most game sites block iframes. If it doesn't load, ask me to build a full original clone.
+            </div>
+            <iframe src="${url}" style="flex:1;border:none;background:#000" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>`;
+    createWindow('twhg','The World\\'s Hardest Game',820,560,html,'games');
+}
 
-/* ---------- SNAKE ---------- */
+/* ============ SNAKE ============ */
 function startSnake(){
     const html=`
-        <div class="game-wrap">
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('snake');openGameMenu()">← Back</button>
             <div class="game-hud">SCORE <b id="snakeScore">0</b> BEST <b id="snakeBest">${localStorage.getItem('snakeBest')||0}</b></div>
             <canvas id="snakeCanvas" class="game-canvas" width="360" height="360"></canvas>
             <button class="game-btn" onclick="snakeReset()">New Game</button>
-            <div class="game-help">Arrow keys / WASD to move — Space to pause</div>
+            <div class="game-help">Arrow keys / WASD — Space to pause</div>
         </div>`;
-    createWindow('snake','Snake',400,500,html,'snake');
+    createWindow('snake','Snake',400,500,html,'games');
     setTimeout(()=>snakeInit(),50);
 }
 let snake=null;
@@ -602,25 +1038,17 @@ function snakeInit(){
     const size=18, tiles=20;
     function reset(){
         snake={x:10,y:10,dx:1,dy:0,cells:[{x:10,y:10}],food:randFood(),score:0,paused:false,dead:false};
-        document.getElementById('snakeScore').textContent=0;
+        const s=document.getElementById('snakeScore');if(s)s.textContent=0;
     }
-    function randFood(){
-        return {x:Math.floor(Math.random()*tiles),y:Math.floor(Math.random()*tiles)};
-    }
+    function randFood(){return {x:Math.floor(Math.random()*tiles),y:Math.floor(Math.random()*tiles)};}
     function draw(){
         ctx.fillStyle='#050510';ctx.fillRect(0,0,canvas.width,canvas.height);
-        // grid
         ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;
         for(let i=0;i<=tiles;i++){ctx.beginPath();ctx.moveTo(i*size,0);ctx.lineTo(i*size,tiles*size);ctx.stroke();
             ctx.beginPath();ctx.moveTo(0,i*size);ctx.lineTo(tiles*size,i*size);ctx.stroke();}
-        // food
         ctx.fillStyle='#ff5f57';
         ctx.beginPath();ctx.arc(snake.food.x*size+size/2,snake.food.y*size+size/2,size/2-2,0,Math.PI*2);ctx.fill();
-        // snake
-        snake.cells.forEach((c,i)=>{
-            ctx.fillStyle=i===0?'#7ab8ff':'#4a7c59';
-            ctx.fillRect(c.x*size+1,c.y*size+1,size-2,size-2);
-        });
+        snake.cells.forEach((c,i)=>{ctx.fillStyle=i===0?'#7ab8ff':'#4a7c59';ctx.fillRect(c.x*size+1,c.y*size+1,size-2,size-2);});
         if(snake.paused){ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle='#fff';ctx.font='20px sans-serif';ctx.textAlign='center';ctx.fillText('PAUSED',canvas.width/2,canvas.height/2);}
         if(snake.dead){ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -633,13 +1061,13 @@ function snakeInit(){
         if(head.x<0||head.x>=tiles||head.y<0||head.y>=tiles||snake.cells.some(c=>c.x===head.x&&c.y===head.y)){
             snake.dead=true;draw();
             const best=parseInt(localStorage.getItem('snakeBest')||0);
-            if(snake.score>best){localStorage.setItem('snakeBest',snake.score);document.getElementById('snakeBest').textContent=snake.score;}
+            if(snake.score>best){localStorage.setItem('snakeBest',snake.score);const b=document.getElementById('snakeBest');if(b)b.textContent=snake.score;}
             return;
         }
         snake.cells.unshift(head);
         if(head.x===snake.food.x&&head.y===snake.food.y){
             snake.score++;snake.food=randFood();
-            document.getElementById('snakeScore').textContent=snake.score;
+            const s=document.getElementById('snakeScore');if(s)s.textContent=snake.score;
         } else snake.cells.pop();
         draw();
     }
@@ -659,17 +1087,18 @@ function snakeInit(){
     window._snakeInt=setInterval(step,100);
 }
 
-/* ---------- TIC TAC TOE ---------- */
+/* ============ TIC TAC TOE ============ */
 function startTicTacToe(){
     const html=`
-        <div class="game-wrap">
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('tictactoe');openGameMenu()">← Back</button>
             <div class="game-hud">YOU <b>X</b> — AI <b>O</b> — <span id="tttStatus">Your turn</span></div>
             <div class="ttt-grid" id="tttGrid">
                 ${Array.from({length:9}).map((_,i)=>`<div class="ttt-cell" data-i="${i}" onclick="tttClick(${i})"></div>`).join('')}
             </div>
             <button class="game-btn" onclick="tttReset()">New Game</button>
         </div>`;
-    createWindow('tictactoe','Tic Tac Toe',330,420,html,'tictactoe');
+    createWindow('tictactoe','Tic Tac Toe',330,420,html,'games');
     setTimeout(()=>tttReset(),50);
 }
 let tttBoard=null, tttDone=false;
@@ -677,23 +1106,21 @@ function tttReset(){
     tttBoard=['','','','','','','','',''];
     tttDone=false;
     document.querySelectorAll('#tttGrid .ttt-cell').forEach(c=>{c.textContent='';c.className='ttt-cell';});
-    document.getElementById('tttStatus').textContent='Your turn';
+    const s=document.getElementById('tttStatus');if(s)s.textContent='Your turn';
 }
 function tttClick(i){
     if(tttDone||tttBoard[i])return;
-    tttBoard[i]='X';
-    updateTTT();
+    tttBoard[i]='X';updateTTT();
     if(checkTTT('X'))return;
     if(tttBoard.every(c=>c))return;
-    // AI move after small delay
-    document.getElementById('tttStatus').textContent='AI thinking...';
+    const s=document.getElementById('tttStatus');if(s)s.textContent='AI thinking...';
     setTimeout(()=>{
         const move=bestTTTMove();
         if(move!==null){tttBoard[move]='O';updateTTT();
             if(checkTTT('O'))return;
-            if(tttBoard.every(c=>c)){document.getElementById('tttStatus').textContent='Draw!';tttDone=true;return;}
+            if(tttBoard.every(c=>c)){const s=document.getElementById('tttStatus');if(s)s.textContent='Draw!';tttDone=true;return;}
         }
-        document.getElementById('tttStatus').textContent='Your turn';
+        const s2=document.getElementById('tttStatus');if(s2)s2.textContent='Your turn';
     },250);
 }
 function updateTTT(){
@@ -704,24 +1131,17 @@ function updateTTT(){
 }
 function checkTTT(p){
     const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    for(const w of wins){
-        if(tttBoard[w[0]]===p&&tttBoard[w[1]]===p&&tttBoard[w[2]]===p){
-            document.getElementById('tttStatus').textContent=p==='X'?'You win!':'AI wins!';
-            tttDone=true;return true;
-        }
-    }
+    for(const w of wins){if(tttBoard[w[0]]===p&&tttBoard[w[1]]===p&&tttBoard[w[2]]===p){
+        const s=document.getElementById('tttStatus');if(s)s.textContent=p==='X'?'You win!':'AI wins!';tttDone=true;return true;}}
     return false;
 }
 function bestTTTMove(){
-    // Try win, then block, then center, then corner, then random
     const empty=tttBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
     if(!empty.length)return null;
-    for(const p of ['O','X']){
-        for(const i of empty){
-            const copy=[...tttBoard];copy[i]=p;
-            const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            if(wins.some(w=>copy[w[0]]===p&&copy[w[1]]===p&&copy[w[2]]===p))return i;
-        }
+    for(const p of ['O','X'])for(const i of empty){
+        const copy=[...tttBoard];copy[i]=p;
+        const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        if(wins.some(w=>copy[w[0]]===p&&copy[w[1]]===p&&copy[w[2]]===p))return i;
     }
     if(tttBoard[4]==='')return 4;
     const corners=[0,2,6,8].filter(i=>tttBoard[i]==='');
@@ -729,16 +1149,17 @@ function bestTTTMove(){
     return empty[Math.floor(Math.random()*empty.length)];
 }
 
-/* ---------- PONG ---------- */
+/* ============ PONG ============ */
 function startPong(){
     const html=`
-        <div class="game-wrap">
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('pong');openGameMenu()">← Back</button>
             <div class="game-hud">YOU <b id="pongYou">0</b> — AI <b id="pongAi">0</b></div>
             <canvas id="pongCanvas" class="game-canvas" width="480" height="320"></canvas>
             <button class="game-btn" onclick="pongReset()">New Game</button>
-            <div class="game-help">Mouse or ↑/↓ to move your paddle</div>
+            <div class="game-help">Mouse or ↑/↓ to move</div>
         </div>`;
-    createWindow('pong','Pong',520,460,html,'pong');
+    createWindow('pong','Pong',520,460,html,'games');
     setTimeout(()=>pongInit(),50);
 }
 let pong=null;
@@ -748,14 +1169,9 @@ function pongInit(){
     const W=canvas.width,H=canvas.height;
     const PH=70,PW=10;
     function reset(){
-        pong={
-            player:{y:H/2-PH/2,x:20,w:PW,h:PH},
-            ai:{y:H/2-PH/2,x:W-30,w:PW,h:PH},
-            ball:{x:W/2,y:H/2,dx:4,dy:2,r:6},
-            you:0,ai:0,over:false
-        };
-        document.getElementById('pongYou').textContent=0;
-        document.getElementById('pongAi').textContent=0;
+        pong={player:{y:H/2-PH/2,x:20,w:PW,h:PH},ai:{y:H/2-PH/2,x:W-30,w:PW,h:PH},ball:{x:W/2,y:H/2,dx:4,dy:2,r:6},you:0,ai:0,over:false};
+        const a=document.getElementById('pongYou');if(a)a.textContent=0;
+        const b=document.getElementById('pongAi');if(b)b.textContent=0;
     }
     function draw(){
         ctx.fillStyle='#050510';ctx.fillRect(0,0,W,H);
@@ -770,51 +1186,41 @@ function pongInit(){
     function step(){
         if(!pong||pong.over)return;
         pong.ball.x+=pong.ball.dx;pong.ball.y+=pong.ball.dy;
-        if(pong.ball.y<0||pong.ball.y>H){pong.ball.dy*=-1;}
-        // paddle collide
-        if(pong.ball.x-pong.ball.r<pong.player.x+pong.player.w&&
-           pong.ball.y>pong.player.y&&pong.ball.y<pong.player.y+pong.player.h&&pong.ball.dx<0){
-            pong.ball.dx*=-1;pong.ball.dx*=1.05;
-        }
-        if(pong.ball.x+pong.ball.r>pong.ai.x&&
-           pong.ball.y>pong.ai.y&&pong.ball.y<pong.ai.y+pong.ai.h&&pong.ball.dx>0){
-            pong.ball.dx*=-1;pong.ball.dx*=1.05;
-        }
-        // scoring
-        if(pong.ball.x<0){pong.ai++;document.getElementById('pongAi').textContent=pong.ai;
-            if(pong.ai>=5){pong.over=true;}else{pong.ball.x=W/2;pong.ball.y=H/2;pong.ball.dx=4;pong.ball.dy=2;}}
-        if(pong.ball.x>W){pong.you++;document.getElementById('pongYou').textContent=pong.you;
-            if(pong.you>=5){pong.over=true;}else{pong.ball.x=W/2;pong.ball.y=H/2;pong.ball.dx=-4;pong.ball.dy=-2;}}
-        // AI follows
+        if(pong.ball.y<0||pong.ball.y>H)pong.ball.dy*=-1;
+        if(pong.ball.x-pong.ball.r<pong.player.x+pong.player.w&&pong.ball.y>pong.player.y&&pong.ball.y<pong.player.y+pong.player.h&&pong.ball.dx<0){
+            pong.ball.dx*=-1;pong.ball.dx*=1.05;}
+        if(pong.ball.x+pong.ball.r>pong.ai.x&&pong.ball.y>pong.ai.y&&pong.ball.y<pong.ai.y+pong.ai.h&&pong.ball.dx>0){
+            pong.ball.dx*=-1;pong.ball.dx*=1.05;}
+        if(pong.ball.x<0){pong.ai++;const a=document.getElementById('pongAi');if(a)a.textContent=pong.ai;
+            if(pong.ai>=5)pong.over=true;else{pong.ball.x=W/2;pong.ball.y=H/2;pong.ball.dx=4;pong.ball.dy=2;}}
+        if(pong.ball.x>W){pong.you++;const a=document.getElementById('pongYou');if(a)a.textContent=pong.you;
+            if(pong.you>=5)pong.over=true;else{pong.ball.x=W/2;pong.ball.y=H/2;pong.ball.dx=-4;pong.ball.dy=-2;}}
         const target=pong.ball.y-PH/2;
         pong.ai.y+=Math.max(-4,Math.min(4,(target-pong.ai.y)*0.08));
         draw();
     }
     window.pongReset=()=>reset();
     window.pongKey=e=>{
-        const k=e.key;
-        if(k==='ArrowUp'){pong.player.y=Math.max(0,pong.player.y-20);e.preventDefault();}
-        if(k==='ArrowDown'){pong.player.y=Math.min(H-PH,pong.player.y+20);e.preventDefault();}
+        if(e.key==='ArrowUp'){pong.player.y=Math.max(0,pong.player.y-20);e.preventDefault();}
+        if(e.key==='ArrowDown'){pong.player.y=Math.min(H-PH,pong.player.y+20);e.preventDefault();}
     };
-    canvas.addEventListener('mousemove',e=>{
-        const r=canvas.getBoundingClientRect();
-        pong.player.y=Math.max(0,Math.min(H-PH,(e.clientY-r.top)-PH/2));
-    });
+    canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();pong.player.y=Math.max(0,Math.min(H-PH,(e.clientY-r.top)-PH/2));});
     document.addEventListener('keydown',window.pongKey);
     reset();
     clearInterval(window._pongInt);
     window._pongInt=setInterval(step,1000/60);
 }
 
-/* ---------- MEMORY MATCH ---------- */
+/* ============ MEMORY ============ */
 function startMemory(){
     const html=`
-        <div class="game-wrap">
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('memory');openGameMenu()">← Back</button>
             <div class="game-hud">MOVES <b id="memMoves">0</b> MATCHES <b id="memMatches">0</b>/8</div>
             <div class="memory-grid" id="memGrid"></div>
             <button class="game-btn" onclick="memReset()">New Game</button>
         </div>`;
-    createWindow('memory','Memory Match',340,440,html,'memory');
+    createWindow('memory','Memory Match',340,440,html,'games');
     setTimeout(()=>memReset(),50);
 }
 let memState=null;
@@ -822,8 +1228,8 @@ function memReset(){
     const emojis=['🍎','🍌','🍇','🍒','🥝','🍑','🍍','🥥'];
     const deck=[...emojis,...emojis].sort(()=>Math.random()-0.5);
     memState={deck,flipped:[],matched:new Set(),moves:0,lock:false};
-    document.getElementById('memMoves').textContent=0;
-    document.getElementById('memMatches').textContent=0;
+    const m=document.getElementById('memMoves');if(m)m.textContent=0;
+    const mm=document.getElementById('memMatches');if(mm)mm.textContent=0;
     renderMem();
 }
 function renderMem(){
@@ -837,34 +1243,29 @@ function renderMem(){
 function memClick(i){
     if(!memState||memState.lock)return;
     if(memState.flipped.includes(i)||memState.matched.has(i))return;
-    memState.flipped.push(i);
-    renderMem();
+    memState.flipped.push(i);renderMem();
     if(memState.flipped.length===2){
-        memState.moves++;
-        document.getElementById('memMoves').textContent=memState.moves;
+        memState.moves++;const m=document.getElementById('memMoves');if(m)m.textContent=memState.moves;
         const [a,b]=memState.flipped;
         if(memState.deck[a]===memState.deck[b]){
-            memState.matched.add(a);memState.matched.add(b);
-            memState.flipped=[];
-            document.getElementById('memMatches').textContent=memState.matched.size/2;
+            memState.matched.add(a);memState.matched.add(b);memState.flipped=[];
+            const mm=document.getElementById('memMatches');if(mm)mm.textContent=memState.matched.size/2;
             renderMem();
-        } else {
-            memState.lock=true;
-            setTimeout(()=>{memState.flipped=[];memState.lock=false;renderMem();},700);
-        }
+        } else {memState.lock=true;setTimeout(()=>{memState.flipped=[];memState.lock=false;renderMem();},700);}
     }
 }
 
-/* ---------- BREAKOUT ---------- */
+/* ============ BREAKOUT ============ */
 function startBreakout(){
     const html=`
-        <div class="game-wrap">
+        <div class="game-wrap" style="position:relative">
+            <button class="game-back" onclick="closeWin('breakout');openGameMenu()">← Back</button>
             <div class="game-hud">SCORE <b id="brScore">0</b> LIVES <b id="brLives">3</b></div>
             <canvas id="brCanvas" class="game-canvas" width="480" height="360"></canvas>
             <button class="game-btn" onclick="brReset()">New Game</button>
             <div class="game-help">Mouse or ←/→ to move paddle</div>
         </div>`;
-    createWindow('breakout','Breakout',520,500,html,'breakout');
+    createWindow('breakout','Breakout',520,500,html,'games');
     setTimeout(()=>brInit(),50);
 }
 let br=null;
@@ -872,16 +1273,13 @@ function brInit(){
     const canvas=document.getElementById('brCanvas');if(!canvas)return;
     const ctx=canvas.getContext('2d');
     const W=canvas.width,H=canvas.height;
-    const PW=90,PH=12,BR=8,BC=9;
+    const PW=90,PH=12,BC=9;
     function reset(){
-        br={
-            paddle:{x:W/2-PW/2,w:PW,h:PH},
-            ball:{x:W/2,y:H-40,dx:3,dy:-3,r:6},
+        br={paddle:{x:W/2-PW/2,w:PW,h:PH},ball:{x:W/2,y:H-40,dx:3,dy:-3,r:6},
             bricks:Array.from({length:5},(_,r)=>Array.from({length:BC},(_,c)=>({x:c*52+10,y:r*22+30,alive:true,color:['#ff5f57','#febc2e','#7ab8ff','#a04bd4','#4a7c59'][r]}))).flat(),
-            score:0,lives:3,over:false
-        };
-        document.getElementById('brScore').textContent=0;
-        document.getElementById('brLives').textContent=3;
+            score:0,lives:3,over:false};
+        const s=document.getElementById('brScore');if(s)s.textContent=0;
+        const l=document.getElementById('brLives');if(l)l.textContent=3;
     }
     function draw(){
         ctx.fillStyle='#050510';ctx.fillRect(0,0,W,H);
@@ -897,28 +1295,15 @@ function brInit(){
         br.ball.x+=br.ball.dx;br.ball.y+=br.ball.dy;
         if(br.ball.x<br.ball.r||br.ball.x>W-br.ball.r)br.ball.dx*=-1;
         if(br.ball.y<br.ball.r)br.ball.dy*=-1;
-        // paddle
-        if(br.ball.y+br.ball.r>H-30&&br.ball.y<H-30+PH&&
-           br.ball.x>br.paddle.x&&br.ball.x<br.paddle.x+br.paddle.w&&br.ball.dy>0){
-            br.ball.dy*=-1;
-            const hit=(br.ball.x-(br.paddle.x+br.paddle.w/2))/(br.paddle.w/2);
-            br.ball.dx=hit*4;
-        }
-        // bricks
-        br.bricks.forEach(b=>{
-            if(!b.alive)return;
+        if(br.ball.y+br.ball.r>H-30&&br.ball.y<H-30+PH&&br.ball.x>br.paddle.x&&br.ball.x<br.paddle.x+br.paddle.w&&br.ball.dy>0){
+            br.ball.dy*=-1;const hit=(br.ball.x-(br.paddle.x+br.paddle.w/2))/(br.paddle.w/2);br.ball.dx=hit*4;}
+        br.bricks.forEach(b=>{if(!b.alive)return;
             if(br.ball.x>b.x&&br.ball.x<b.x+48&&br.ball.y>b.y&&br.ball.y<b.y+16){
                 b.alive=false;br.ball.dy*=-1;br.score+=10;
-                document.getElementById('brScore').textContent=br.score;
-            }
-        });
-        // lost ball
-        if(br.ball.y>H){
-            br.lives--;document.getElementById('brLives').textContent=br.lives;
-            if(br.lives<=0){br.over=true;} else {br.ball.x=W/2;br.ball.y=H-40;br.ball.dx=3;br.ball.dy=-3;}
-        }
-        // win
-        if(br.bricks.every(b=>!b.alive)){br.over=true;}
+                const s=document.getElementById('brScore');if(s)s.textContent=br.score;}});
+        if(br.ball.y>H){br.lives--;const l=document.getElementById('brLives');if(l)l.textContent=br.lives;
+            if(br.lives<=0)br.over=true;else{br.ball.x=W/2;br.ball.y=H-40;br.ball.dx=3;br.ball.dy=-3;}}
+        if(br.bricks.every(b=>!b.alive))br.over=true;
         draw();
     }
     window.brReset=()=>reset();
@@ -926,17 +1311,294 @@ function brInit(){
         if(e.key==='ArrowLeft'){br.paddle.x=Math.max(0,br.paddle.x-30);e.preventDefault();}
         if(e.key==='ArrowRight'){br.paddle.x=Math.min(W-PW,br.paddle.x+30);e.preventDefault();}
     };
-    canvas.addEventListener('mousemove',e=>{
-        const r=canvas.getBoundingClientRect();
-        br.paddle.x=Math.max(0,Math.min(W-PW,(e.clientX-r.left)-PW/2));
-    });
+    canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();br.paddle.x=Math.max(0,Math.min(W-PW,(e.clientX-r.left)-PW/2));});
     document.addEventListener('keydown',window.brKey);
     reset();
     clearInterval(window._brInt);
     window._brInt=setInterval(step,1000/60);
 }
 
-/* CONTEXT MENU */
+/* ============ SETTINGS ============ */
+function openSettings(){
+    const html=`
+        <div style="padding:20px">
+            <div class="settings-section">
+                <div class="settings-label">Theme</div>
+                <div class="settings-row">
+                    <select id="setTheme" class="settings-btn" style="flex:1" onchange="applyTheme(this.value)">
+                        <option value="dark" ${SETTINGS.theme==='dark'?'selected':''}>Dark</option>
+                        <option value="light" ${SETTINGS.theme==='light'?'selected':''}>Light</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Accent Colors</div>
+                <div class="settings-row">
+                    <label style="font-size:.75rem;color:#999;width:70px">Primary</label>
+                    <input type="color" id="setAccent" value="${SETTINGS.accent}" onchange="applyAccent(this.value)">
+                    <label style="font-size:.75rem;color:#999;width:70px">Secondary</label>
+                    <input type="color" id="setAccent2" value="${SETTINGS.accent2}" onchange="applyAccent2(this.value)">
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Dock Size</div>
+                <div class="settings-row">
+                    <input type="range" id="setDock" min="0.7" max="1.4" step="0.05" value="${SETTINGS.dockScale}" oninput="applyDock(this.value)">
+                    <span id="dockVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">${SETTINGS.dockScale}×</span>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Window Blur</div>
+                <div class="settings-row">
+                    <input type="range" id="setBlur" min="0" max="40" step="2" value="${SETTINGS.blur}" oninput="applyBlur(this.value)">
+                    <span id="blurVal" style="font-size:.75rem;color:#999;width:40px;text-align:right">${SETTINGS.blur}px</span>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Animated Background</div>
+                <label class="switch"><input type="checkbox" id="animToggle" ${SETTINGS.anim?'checked':''} onchange="applyAnim(this.checked)"><span class="slider"></span></label>
+                <span style="margin-left:10px;color:#999;font-size:.76rem">Enable flow animation</span>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Wallpaper</div>
+                <p style="margin-bottom:12px;color:#999;font-size:.76rem;line-height:1.5">Upload an image, or paste a URL.</p>
+                <div class="settings-row">
+                    <button class="settings-btn" onclick="document.getElementById('bgUpload').click()">Upload</button>
+                    <input type="text" id="wallUrlInput" placeholder="https://image-url..." value="${localStorage.getItem('dos_wall_url')||''}">
+                    <button class="settings-btn" onclick="applyWallUrl()">Set</button>
+                </div>
+                <input type="file" id="bgUpload" accept="image/*" style="display:none" onchange="uploadBg(event)">
+                <button class="settings-btn danger" onclick="resetBg()" style="margin-top:8px">Reset Wallpaper</button>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">System</div>
+                <p style="color:#999;font-size:.76rem;line-height:1.6">OS: dreadOS 1.0<br>User: dread<br>Windows open: <span id="winCount">0</span></p>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">Danger Zone</div>
+                <button class="settings-btn danger" onclick="resetAllSettings()">Reset All Settings</button>
+            </div>
+        </div>`;
+    createWindow('settings','Settings',480,600,html,'settings');
+    updateWinCount();
+}
+function applyTheme(v){SETTINGS.theme=v;localStorage.setItem('dos_theme',v);applySettings();}
+function applyAccent(v){SETTINGS.accent=v;localStorage.setItem('dos_accent',v);applySettings();}
+function applyAccent2(v){SETTINGS.accent2=v;localStorage.setItem('dos_accent2',v);applySettings();}
+function applyDock(v){SETTINGS.dockScale=parseFloat(v);localStorage.setItem('dos_dockscale',v);applySettings();const el=document.getElementById('dockVal');if(el)el.textContent=v+'×';}
+function applyBlur(v){SETTINGS.blur=parseInt(v);localStorage.setItem('dos_blur',v);applySettings();const el=document.getElementById('blurVal');if(el)el.textContent=v+'px';}
+function applyAnim(v){SETTINGS.anim=v;localStorage.setItem('dos_anim',v?'on':'off');applySettings();}
+function applyWallUrl(){
+    const u=document.getElementById('wallUrlInput').value.trim();
+    if(!u)return;
+    localStorage.setItem('dos_wall_url',u);
+    localStorage.removeItem('dreados_bg');
+    desktop.style.backgroundImage=`url(${u})`;
+    desktop.classList.add('wallpaper');
+}
+function uploadBg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=ev=>{
+        desktop.classList.add('wallpaper');desktop.style.backgroundImage=`url(${ev.target.result})`;
+        try{localStorage.setItem('dreados_bg',ev.target.result);localStorage.removeItem('dos_wall_url');}
+        catch{alert('Image too large to save permanently.');}};
+    r.readAsDataURL(f);}
+function resetBg(){desktop.classList.remove('wallpaper');desktop.style.backgroundImage='';localStorage.removeItem('dreados_bg');localStorage.removeItem('dos_wall_url');}
+function resetAllSettings(){
+    if(!confirm('Reset all dreadOS settings?'))return;
+    ['dos_theme','dos_accent','dos_accent2','dos_dockscale','dos_blur','dos_anim','dos_wall_url','dreados_bg','dreados_notepad','snakeBest'].forEach(k=>localStorage.removeItem(k));
+    location.reload();
+}
+
+/* ============ NOTEPAD ============ */
+function openNotepad(){
+    const saved=localStorage.getItem('dreados_notepad')||'';
+    createWindow('notepad','Notepad',480,360,`<textarea class="notepad-textarea" id="np" placeholder="start typing...">${saved}</textarea>`,'notepad');
+    setTimeout(()=>{const ta=document.getElementById('np');if(!ta)return;ta.focus();ta.addEventListener('input',()=>localStorage.setItem('dreados_notepad',ta.value));},60);
+}
+
+/* ============ SOPHISTICATED CALCULATOR ============ */
+function openCalculator(){
+    const html=`
+        <div class="calc-wrap">
+            <div class="calc-history" id="calcHist"></div>
+            <div class="calc-display-box">
+                <div class="calc-display" id="cd">0</div>
+                <div class="calc-preview" id="cp"></div>
+            </div>
+            <div class="calc-grid">
+                <button class="fn" onclick="calcFn('sin(')">sin</button>
+                <button class="fn" onclick="calcFn('cos(')">cos</button>
+                <button class="fn" onclick="calcFn('tan(')">tan</button>
+                <button class="fn" onclick="calcFn('log(')">log</button>
+                <button class="fn" onclick="calcFn('ln(')">ln</button>
+
+                <button class="fn" onclick="calcFn('sqrt(')">√</button>
+                <button class="fn" onclick="calcFn('^')">^</button>
+                <button class="fn" onclick="calcFn('pi')">π</button>
+                <button class="fn" onclick="calcFn('e')">e</button>
+                <button class="fn" onclick="calcFn('!')">n!</button>
+
+                <button onclick="calcNum('7')">7</button>
+                <button onclick="calcNum('8')">8</button>
+                <button onclick="calcNum('9')">9</button>
+                <button class="op" onclick="calcOp('/')">÷</button>
+                <button class="op" onclick="calcOp('*')">×</button>
+
+                <button onclick="calcNum('4')">4</button>
+                <button onclick="calcNum('5')">5</button>
+                <button onclick="calcNum('6')">6</button>
+                <button class="op" onclick="calcOp('-')">−</button>
+                <button class="fn" onclick="calcFn('(')">(</button>
+
+                <button onclick="calcNum('1')">1</button>
+                <button onclick="calcNum('2')">2</button>
+                <button onclick="calcNum('3')">3</button>
+                <button class="op" onclick="calcOp('+')">+</button>
+                <button class="fn" onclick="calcFn(')')">)</button>
+
+                <button onclick="calcNum('0')">0</button>
+                <button onclick="calcNum('.')">.</button>
+                <button class="fn" onclick="calcFn('x')">x</button>
+                <button class="fn" onclick="calcFn('y')">y</button>
+                <button class="eq" onclick="calcEq()" style="grid-row:auto;grid-column:span 1;grid-row:span 2">=</button>
+
+                <button onclick="calcClear()" class="fn">AC</button>
+                <button onclick="calcDel()" class="fn">⌫</button>
+                <button class="fn" onclick="calcFn('=')">ANS</button>
+                <button class="op" onclick="calcOp('%')">%</button>
+            </div>
+            <div class="calc-help">Supports: + − × ÷ ^ % √ sin cos tan log ln π e ( ) x y !</div>
+        </div>`;
+    createWindow('calculator','Calculator',420,620,html,'calculator');
+    window._calcHist = JSON.parse(localStorage.getItem('dreados_calc_hist') || '[]');
+    window._calcVars = {x:1, y:2, ans:0};
+    renderCalcHist();
+    calcUpdate();
+}
+function calcNum(n){const d=document.getElementById('cd');if(!d)return;d.textContent=(d.textContent==='0'?n:d.textContent+n);calcUpdate();}
+function calcOp(o){const d=document.getElementById('cd');if(!d)return;d.textContent+=o;calcUpdate();}
+function calcFn(f){const d=document.getElementById('cd');if(!d)return;
+    if(f==='pi'){d.textContent=d.textContent==='0'?'pi':d.textContent+'pi';}
+    else if(f==='e'){d.textContent=d.textContent==='0'?'e':d.textContent+'e';}
+    else if(f==='='){d.textContent=d.textContent==='0'?'ans':d.textContent+'ans';}
+    else if(f==='x'||f==='y'){d.textContent=d.textContent==='0'?f:d.textContent+f;}
+    else if(f==='!'){d.textContent+='!';}
+    else {d.textContent=d.textContent==='0'?f:d.textContent+f;}
+    calcUpdate();
+}
+function calcClear(){const d=document.getElementById('cd');if(!d)return;d.textContent='0';const p=document.getElementById('cp');if(p)p.textContent='';}
+function calcDel(){const d=document.getElementById('cd');if(!d)return;if(d.textContent.length<=1){d.textContent='0';}else{d.textContent=d.textContent.slice(0,-1);}calcUpdate();}
+function calcUpdate(){
+    const d=document.getElementById('cd');const p=document.getElementById('cp');
+    if(!d||!p)return;
+    const expr=d.textContent;
+    if(expr==='0'){p.textContent='';return;}
+    try{
+        const v=parseCalc(expr, window._calcVars);
+        if(v!==null && isFinite(v))p.textContent='= '+Math.round(v*1e10)/1e10;
+        else p.textContent='';
+    }catch(e){p.textContent='';}
+}
+function calcEq(){
+    const d=document.getElementById('cd');
+    if(!d)return;
+    const expr=d.textContent;
+    try{
+        const v=parseCalc(expr, window._calcVars);
+        if(v===null||!isFinite(v)){d.textContent='Error';return;}
+        const rounded=Math.round(v*1e10)/1e10;
+        window._calcVars.ans=rounded;
+        window._calcHist.unshift({in:expr, out:String(rounded)});
+        window._calcHist=window._calcHist.slice(0,20);
+        localStorage.setItem('dreados_calc_hist', JSON.stringify(window._calcHist));
+        renderCalcHist();
+        d.textContent=String(rounded);
+        const p=document.getElementById('cp');if(p)p.textContent='';
+    }catch(e){d.textContent='Error';}
+}
+function renderCalcHist(){
+    const h=document.getElementById('calcHist');if(!h)return;
+    h.innerHTML=window._calcHist.map(r=>`<div class="row"><span class="in">${r.in}</span><span class="out">${r.out}</span></div>`).join('');
+}
+/* Full algebra parser: + - * / ^ % ! sqrt sin cos tan log ln () pi e x y ans, implicit multiplication */
+function parseCalc(expr, vars){
+    vars = vars || {};
+    let s = expr
+        .replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-')
+        .replace(/\s+/g,'')
+        .replace(/sqrt/g,'√');
+    // implicit multiplication: 2pi -> 2*pi, 2( -> 2*(, )( -> )*(, 2x -> 2*x, pi( -> pi*(, etc.
+    s = s.replace(/(\d)(pi|e|x|y|ans|√|sin|cos|tan|log|ln|\()/g, '$1*$2');
+    s = s.replace(/(pi|e|x|y|ans|\))(\d|pi|e|x|y|ans|√|sin|cos|tan|log|ln|\()/g, '$1*$2');
+    // Now tokenize & evaluate
+    let pos=0;
+    function peek(){return s[pos];}
+    function next(){return s[pos++];}
+    function match(c){if(s.substr(pos,c.length)===c){pos+=c.length;return true;}return false;}
+    function parseExpr(){
+        let v=parseTerm();
+        while(pos<s.length){
+            if(match('+'))v+=parseTerm();
+            else if(match('-'))v-=parseTerm();
+            else break;
+        }
+        return v;
+    }
+    function parseTerm(){
+        let v=parsePow();
+        while(pos<s.length){
+            if(match('*'))v*=parsePow();
+            else if(match('/')){const d=parsePow();v = d===0 ? NaN : v/d;}
+            else if(match('%'))v%=parsePow();
+            else break;
+        }
+        return v;
+    }
+    function parsePow(){
+        let v=parseFactor();
+        if(match('^'))v=Math.pow(v,parsePow());
+        return v;
+    }
+    function parseFactor(){
+        let v=parseUnary();
+        while(peek()==='!'){next();v=factorial(v);}
+        return v;
+    }
+    function parseUnary(){
+        if(match('-'))return -parseUnary();
+        if(match('+'))return parseUnary();
+        return parsePrimary();
+    }
+    function parsePrimary(){
+        if(peek()==='('){next();const v=parseExpr();if(peek()===')')next();return v;}
+        // constants
+        if(match('pi'))return Math.PI;
+        if(match('e')&&!/[a-z]/.test(s[pos]||''))return Math.E;
+        if(match('ans'))return vars.ans||0;
+        if(match('x'))return vars.x||0;
+        if(match('y'))return vars.y||0;
+        if(match('√'))return Math.sqrt(parsePrimary());
+        if(match('sin'))return Math.sin(parsePrimary());
+        if(match('cos'))return Math.cos(parsePrimary());
+        if(match('tan'))return Math.tan(parsePrimary());
+        if(match('log'))return Math.log10(parsePrimary());
+        if(match('ln'))return Math.log(parsePrimary());
+        // number
+        let start=pos;
+        while(pos<s.length && /[\d.]/.test(s[pos]))pos++;
+        if(pos>start)return parseFloat(s.slice(start,pos));
+        throw new Error('Parse error at '+pos+': '+s.slice(pos));
+    }
+    function factorial(n){
+        if(n<0||!Number.isInteger(n))return NaN;
+        let r=1;for(let i=2;i<=n;i++)r*=i;return r;
+    }
+    const result = parseExpr();
+    if(pos!==s.length)throw new Error('Trailing input');
+    return result;
+}
+
+/* ============ CONTEXT MENU ============ */
 const ctx=document.getElementById('contextMenu');
 document.addEventListener('contextmenu',e=>{
     if(e.target.closest('.window'))return;
@@ -947,4 +1609,4 @@ document.addEventListener('contextmenu',e=>{
 document.addEventListener('click',e=>{if(!e.target.closest('#contextMenu'))ctx.classList.remove('open');});
 </script>
 </body>
-</html>
+    </html>
