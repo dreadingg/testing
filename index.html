@@ -1595,11 +1595,16 @@ function simonInit(){
                 setTimeout(nextRound,600);
             }
         } else {
-            ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,S,S);
-            ctx.fillStyle='#ff5f57';ctx.font='28px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-            ctx.fillText('WRONG!',S/2,S/2-20);
-            ctx.fillStyle='#ccc';ctx.font='16px sans-serif';
-            ctx.fillText('Level reached: '+simon.level,S/2,S/2+20);
+    ctx.fillStyle='rgba(0,0,0,.7)';
+    ctx.fillRect(0,0,S,S);
+    ctx.fillStyle='#ff5f57';
+    ctx.font='28px sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText('WRONG!', S/2, S/2-20);
+    ctx.fillStyle='#ccc';
+    ctx.font='16px sans-serif';
+    ctx.fillText('Level reached: ' + simon.level, S/2, S/2+20);
         }
     });
     window.simonReset=reset;
